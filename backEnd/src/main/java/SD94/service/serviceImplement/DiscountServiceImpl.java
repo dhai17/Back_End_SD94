@@ -186,7 +186,6 @@ public class DiscountServiceImpl implements DiscountService {
     @Override
     public List<Discount> searchAllDiscount(String search) {
         List<Discount> discountList = discountRepository.findDiscountByAll(search);
-        System.out.println("Hải đần");
         return discountList;
     }
 
