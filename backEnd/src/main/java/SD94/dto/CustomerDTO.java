@@ -8,7 +8,7 @@ import java.util.Date;
 public class CustomerDTO {
     private long id;
     private String name;
-    private Date phoneNumber;
+    private String phoneNumber;
     private String email;
     private Date dateBirth;
     private String addRess;

@@ -11,6 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -21,15 +23,15 @@ public class Customer extends Base implements Serializable {
     @Column(name = "name", columnDefinition = "nvarvachar(50) not null unipue")
     private String name;
 
-    @Column(name = "phone_number", columnDefinition = "int null")
+    @Column(name = "phone_number", columnDefinition = "nvarchar(10) null")
     private String phoneNumber;
 
     @Column(name = "email", columnDefinition = "nvarchar(200) null")
     private String email;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @Column(name = "date_birth", columnDefinition = "Datetime null")
-    private LocalDate dateBirth;
+    @Column(name = "date_birth", columnDefinition = "Date null")
+    private Date dateBirth;
 
     @Column(name = "add_ress", columnDefinition = "nvarchar(250) null")
     private String addRess;
