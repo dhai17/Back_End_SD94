@@ -19,7 +19,8 @@ import java.util.Date;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "staff")
-public class NhanVien extends Base implements Serializable {
+public class Staff extends Base implements Serializable {
+
     @Column(name="name", columnDefinition = "nvarchar(256) not null unique")
     private String name;
 
@@ -31,15 +32,11 @@ public class NhanVien extends Base implements Serializable {
     @Column(name = "dayUpdate", columnDefinition = "Datetime null")
     private Date dayUpdate;
 
-    @Column(name = "creator", columnDefinition = "navarchar(256) not null unique")
-    private String creator;
-
     @Column(name = "phoneNumber", columnDefinition = "int null")
     private int phoneNumber;
 
     @Column(name = "email", columnDefinition = "nvarchar(256) not null unique")
     private String email;
-
 
     @Column(name = "gender",  columnDefinition = "bit")
     private Boolean gender;
@@ -47,4 +44,7 @@ public class NhanVien extends Base implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "dateOfBirth", columnDefinition = "Datetime null")
     private Date dateOfBirth;
+
+    @Column(name = "status", columnDefinition = "int null")
+    private int status;
 }
