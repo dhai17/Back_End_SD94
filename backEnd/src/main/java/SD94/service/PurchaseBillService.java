@@ -4,6 +4,7 @@ import SD94.entity.Bill;
 import SD94.entity.Discount;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface PurchaseBillService {
     List<Bill> findAllBill();
 
-//    ResponseEntity<Bill> saveEdit(Bill billUpdate);
+//    ResponseBody<Bill> saveEdit(Bill billUpdate);
 
 //    ResponseEntity<List<Bill>> deleteBill(Long id);
 //

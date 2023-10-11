@@ -58,9 +58,9 @@ public class Bill extends Base implements Serializable {
     @JoinColumn(name = "idStatus", referencedColumnName = "id")
     private StatusBill status;
 
-//    @ManyToOne
-//    @JoinColumn(name = "idCustomer", referencedColumnName = "id")
-//    private Customer customer;
+    @ManyToOne
+    @JoinColumn(name = "idCustomer", referencedColumnName = "id")
+    private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "idStaff", referencedColumnName = "id")
