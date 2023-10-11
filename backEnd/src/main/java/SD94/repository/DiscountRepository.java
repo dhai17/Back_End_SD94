@@ -4,6 +4,7 @@ import SD94.entity.Discount;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -27,4 +28,8 @@ public interface DiscountRepository extends JpaRepository<Discount, Long> {
 
     @Query(value = "select * from discount where name = ?", nativeQuery = true)
     Optional<Discount> findByName(String name);
+
+    @Modifying
+    @Query(value = "update discount set status = ?1 where id = ?2", nativeQuery = true)
+    void updateStatusDiscount(int status, long id);
 }
