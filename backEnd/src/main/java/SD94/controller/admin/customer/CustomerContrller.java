@@ -5,10 +5,7 @@ import SD94.repository.CustomerRepository;
 import SD94.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,8 +22,23 @@ public class CustomerContrller {
         return customerService.findAllCustomer();
     }
 
+    @PostMapping("/api/customer/createCustomer")
+    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customerCreate){
+        return customerService.createCustomer(customerCreate);
+    }
+
     @PutMapping("/api/customer/deleteCustomer={id}")
     public ResponseEntity<List<Customer>> deleteCustomer(@PathVariable("id") Long id){
         return customerService.deleteCustomer(id);
+    }
+
+    @RequestMapping("/api/customer/search={search}")
+    public List<Customer> searchAllCustomer(@PathVariable("search") String search){
+        return customerService.searchAllCustomer(search);
+    }
+
+    @RequestMapping("/api/customer/searchDate={searchDate}")
+    public List<Customer> searchDateCustomer(@PathVariable("searchDate") String searchDate){
+        return customerService.searchDateCustomer(searchDate);
     }
 }

@@ -10,17 +10,17 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 
-@Entity
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "customer")
+@Entity
 public class Customer extends Base implements Serializable {
-    @Column(name = "name", columnDefinition = "nvarvachar(50) not null unipue")
+    @Column(name = "name", columnDefinition = "nvarchar(50) not null")
     private String name;
 
     @Column(name = "phone_number", columnDefinition = "nvarchar(10) null")
