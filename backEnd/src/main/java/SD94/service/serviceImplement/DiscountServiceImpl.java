@@ -4,6 +4,7 @@ import SD94.controller.Message.Message;
 import SD94.entity.Discount;
 import SD94.repository.DiscountRepository;
 import SD94.service.DiscountService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +23,29 @@ public class DiscountServiceImpl implements DiscountService {
     DiscountRepository discountRepository;
 
     //Lấy danh sách
+    @Transactional
     @Override
     public List<Discount> findAllDiscount() {
         List<Discount> discounts = discountRepository.findAllDiscount();
-        return discounts;
+        long homNay = new Date().getTime();
+        for(Discount discount: discounts){
+            long startDate = discount.getStartedDate().getTime();
+            long endDate = discount.getEndDate().getTime();
+            long idDiscount = discount.getId();
+
+            if (endDate < homNay && discount.getStatus() != 2){
+                discountRepository.updateStatusDiscount(2, idDiscount);
+            }
+
+            if(startDate > homNay && discount.getStatus() != 1){
+                discountRepository.updateStatusDiscount(1, idDiscount);
+            }
+            System.out.println("Update thành công");
+        }
+
+        List<Discount> listReturn = discountRepository.findAllDiscount();
+
+        return listReturn;
     }
 
     //Lưu thông tin chỉnh sửa
