@@ -15,7 +15,7 @@ public interface PurchaseBillRepository extends JpaRepository<Bill, Long> {
     @Query(value = "select * from bill where id = ? and is_deleted = false", nativeQuery = true)
     Bill findByID(Long id);
 
-    @Query(value = "update bill set id_status = ?1 where id = ?;", nativeQuery = true)
+    @Query(value = "update bill set id_status = ? where id = ?;", nativeQuery = true)
     void updateStatus(long id_status, long id_bill);
 
 //    @Query(value = "SELECT * FROM bill WHERE is_deleted = false AND (name LIKE %?1% OR maximumvalue LIKE %?1% OR percent_discount LIKE %?1%)", nativeQuery = true)

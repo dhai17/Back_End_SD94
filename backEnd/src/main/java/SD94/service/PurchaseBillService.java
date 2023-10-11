@@ -12,7 +12,8 @@ import java.util.List;
 public interface PurchaseBillService {
     List<Bill> findAllBill();
 
-//    ResponseBody<Bill> saveEdit(Bill billUpdate);
+    void updateStatus(long id_status, long id_bill);
+
 
 //    ResponseEntity<List<Bill>> deleteBill(Long id);
 //
