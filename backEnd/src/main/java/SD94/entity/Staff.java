@@ -31,6 +31,8 @@ public class Staff extends Base implements Serializable {
 
     @Column(name = "email", columnDefinition = "nvarchar(256) not null unique")
     private String email;
+    @Column(name = "pass_word",columnDefinition = "nvarchar(256) null ")
+    private String password;
 
     @Column(name = "gender",  columnDefinition = "bit")
     private Boolean gender;
