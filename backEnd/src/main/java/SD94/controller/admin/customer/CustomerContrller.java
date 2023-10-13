@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CustomerContrller {
@@ -22,7 +23,7 @@ public class CustomerContrller {
         return customerService.findAllCustomer();
     }
 
-    @PostMapping("/api/customer/createCustomer")
+    @PostMapping(value = "/api/customer/createCustomer")
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customerCreate){
         return customerService.createCustomer(customerCreate);
     }
@@ -30,6 +31,16 @@ public class CustomerContrller {
     @PutMapping("/api/customer/deleteCustomer={id}")
     public ResponseEntity<List<Customer>> deleteCustomer(@PathVariable("id") Long id){
         return customerService.deleteCustomer(id);
+    }
+
+    @GetMapping("/api/customer/edit/customerID={id}")
+    public Customer customerEdit(@PathVariable("id") Long id){
+        return customerRepository.findByID(id);
+    }
+
+    @PutMapping("/api/customer/saveUpdate")
+    public ResponseEntity<Customer> saveUpdate(@RequestBody Customer customerUpdate){
+        return customerService.editCustomer(customerUpdate);
     }
 
     @RequestMapping("/api/customer/search={search}")

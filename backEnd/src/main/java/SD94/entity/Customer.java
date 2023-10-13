@@ -1,15 +1,18 @@
 package SD94.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Parent;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
 
@@ -26,10 +29,13 @@ public class Customer extends Base implements Serializable {
     @Column(name = "phone_number", columnDefinition = "nvarchar(10) null")
     private String phoneNumber;
 
+//    @Pattern(regexp = "^[\\w\\.-]+@[\\w\\.-]+$\n", message = "loi email ", payload = ErrorPayload.class)
     @Column(name = "email", columnDefinition = "nvarchar(200) null")
     private String email;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Ho_Chi_Minh")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
+    @Temporal(TemporalType.DATE)
     @Column(name = "date_birth", columnDefinition = "Date null")
     private Date dateBirth;
 
@@ -38,4 +44,5 @@ public class Customer extends Base implements Serializable {
 
     @Column(name = "password", columnDefinition = "nvarchar(20) null")
     private String passWord;
+
 }
