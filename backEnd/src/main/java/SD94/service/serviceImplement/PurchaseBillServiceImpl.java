@@ -1,19 +1,16 @@
 package SD94.service.serviceImplement;
 
 
-import SD94.controller.Message.Message;
 import SD94.entity.Bill;
 import SD94.repository.PurchaseBillRepository;
 import SD94.service.PurchaseBillService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.awt.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Service
 public class PurchaseBillServiceImpl implements PurchaseBillService {
@@ -21,34 +18,91 @@ public class PurchaseBillServiceImpl implements PurchaseBillService {
     PurchaseBillRepository purchaseBillRepository;
 
     @Override
-    public List<Bill> findAllBill() {
-        List<Bill> bills = purchaseBillRepository.findAllBill();
-        System.out.println("sadk");
+    public List<Bill> findAllBill1() {
+        List<Bill> bills = purchaseBillRepository.findAllBill1();
         return bills;
     }
 
     @Override
-    public void updateStatus(long id_status, long id_bill) {
-        purchaseBillRepository.updateStatus(id_status, id_bill);
+    public List<Bill> findAllBill2() {
+        List<Bill> bills = purchaseBillRepository.findAllBill2();
+        return bills;
     }
 
-    //Doi trang thai hoa don
-//    @Override
-//    public ResponseEntity<Bill> saveEdit(Bill billUpdate) {
-//        try {
-//            Optional<Bill> optionalBill = Optional.ofNullable(purchaseBillRepository.findByID(billUpdate.getId()));
-//            if (optionalBill.isPresent()) {
-//                Bill bill = optionalBill.get();
-//                bill.setStatus(billUpdate.getStatus());
-//                purchaseBillRepository.save(bill);
-//                return ResponseEntity.ok(bill);
-//
-//            } else {
-//                return ResponseEntity.notFound().build();
-//            }
-//
-//        } catch (Exception e) {
-//            return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
-//        }
-//    }
+    @Override
+    public List<Bill> findAllBill3() {
+        List<Bill> bills = purchaseBillRepository.findAllBill3();
+        return bills;
+    }
+    @Override
+    public List<Bill> findAllBill4() {
+        List<Bill> bills = purchaseBillRepository.findAllBill4();
+        return bills;
+    }
+
+    @Override
+    public List<Bill> findAllBill5() {
+        List<Bill> bills = purchaseBillRepository.findAllBill5();
+        return bills;
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity<Map<String, Boolean>> updateStatus1(String id_bill) {
+        Long id = Long.valueOf(id_bill);
+        purchaseBillRepository.updateStatus(1L, id);
+        return ResponseEntity.ok().build();
+    }
+    @Transactional
+    @Override
+    public ResponseEntity<Map<String, Boolean>> updateStatus2(String id_bill) {
+        Long id = Long.valueOf(id_bill);
+        purchaseBillRepository.updateStatus(2L, id);
+        return ResponseEntity.ok().build();
+    }
+    @Transactional
+    @Override
+    public ResponseEntity<Map<String, Boolean>> updateStatus3(String id_bill) {
+        Long id = Long.valueOf(id_bill);
+        purchaseBillRepository.updateStatus(3L, id);
+        return ResponseEntity.ok().build();
+    }
+    @Transactional
+    @Override
+    public ResponseEntity<Map<String, Boolean>> updateStatus4(String id_bill) {
+        Long id = Long.valueOf(id_bill);
+        purchaseBillRepository.updateStatus(4L, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity<Map<String, Boolean>> updateStatus5(String id_bill) {
+        Long id = Long.valueOf(id_bill);
+        purchaseBillRepository.updateStatus(5L, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity<Map<String, Boolean>> updateStatusAll2() {
+        List<Bill> list = findAllBill1();
+        for(Bill bill: list){
+            Long id = bill.getId();
+            purchaseBillRepository.updateStatus(2l, id);
+        }
+        return null;
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity<Map<String, Boolean>> updateStatusAll3() {
+        List<Bill> list = findAllBill2();
+        for(Bill bill: list){
+            Long id = bill.getId();
+            purchaseBillRepository.updateStatus(3l, id);
+        }
+        return null;
+    }
+
 }

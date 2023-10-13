@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface CustomerService {
@@ -15,4 +16,6 @@ public interface CustomerService {
     ResponseEntity<List<Customer>> deleteCustomer(Long id);
     List<Customer> searchAllCustomer(String search);
     List<Customer> searchDateCustomer(String searchDate);
+
+
 }
