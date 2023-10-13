@@ -23,7 +23,13 @@ public class PurchaseBillServiceImpl implements PurchaseBillService {
     @Override
     public List<Bill> findAllBill() {
         List<Bill> bills = purchaseBillRepository.findAllBill();
+        System.out.println("sadk");
         return bills;
+    }
+
+    @Override
+    public void updateStatus(long id_status, long id_bill) {
+        purchaseBillRepository.updateStatus(id_status, id_bill);
     }
 
     //Doi trang thai hoa don

@@ -1,9 +1,6 @@
 package SD94.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,11 +14,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "statusBill")
-public class StatusBill extends Base implements Serializable {
+public class StatusBill {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    @Column(name = "status", columnDefinition = "int null")
-    private int status;
-
-
+    @Column(name = "name", columnDefinition = "nvarchar(50) null")
+    private String name;
 
 }
