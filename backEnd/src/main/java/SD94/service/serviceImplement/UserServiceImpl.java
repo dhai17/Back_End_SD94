@@ -12,7 +12,6 @@
 //@Service
 //public class UserServiceImpl  implements UserDetailsService {
 //    @Autowired
-//    UserRepository userRepository;
 //    @Override
 //    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //        Staff user = userRepository.finByUsername(username);
