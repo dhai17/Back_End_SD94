@@ -25,4 +25,7 @@ public interface ProductSizeRepository extends JpaRepository<ProductSize, Long> 
 
     @Query(value = "select * from product_size where name = ?", nativeQuery = true)
     Optional<ProductSize> findByName(String name);
+
+    @Query(value = "SELECT pc.shoe_size AS size_name FROM product_details pd JOIN product_size pc ON pd.id_size = pc.id WHERE pd.id_product = ? GROUP BY pd.id_size\n", nativeQuery = true)
+    List<String> getSize(long id_product);
 }

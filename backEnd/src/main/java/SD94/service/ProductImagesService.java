@@ -21,4 +21,6 @@ public interface ProductImagesService {
 
     List<ProductImages> searchDateProductImages(String searchDate);
 
+    ProductImages saveOrUpdate(ProductImages images);
+
 }

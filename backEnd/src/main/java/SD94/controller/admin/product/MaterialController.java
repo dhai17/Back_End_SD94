@@ -1,7 +1,7 @@
-package SD94.controller.product;
+package SD94.controller.admin.product;
 
-import SD94.entity.ProductSize;
-import SD94.repository.ProductSizeRepository;
+import SD94.entity.ProductMaterial;
+import SD94.repository.ProductMaterialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,14 +12,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
-public class SizeController {
+public class MaterialController {
 
     @Autowired
-    ProductSizeRepository repository;
+    ProductMaterialRepository repository;
 
-    @GetMapping("/size/list")
-    public ResponseEntity<List<ProductSize>> getSize() {
-        List<ProductSize> list = repository.findAll();
+    @GetMapping("/material/list")
+    public ResponseEntity<List<ProductMaterial>> getMaterial() {
+        List<ProductMaterial> list = repository.findAll();
         return ResponseEntity.ok().body(list);
     }
+
 }

@@ -1,7 +1,7 @@
-package SD94.controller.product;
+package SD94.controller.admin.product;
 
-import SD94.entity.ProductMaterial;
-import SD94.repository.ProductMaterialRepository;
+import SD94.entity.ProductColor;
+import SD94.repository.ProductColorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,15 +12,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
-public class MaterialController {
-
+public class ColorController {
     @Autowired
-    ProductMaterialRepository repository;
+    ProductColorRepository repository;
 
-    @GetMapping("/material/list")
-    public ResponseEntity<List<ProductMaterial>> getMaterial() {
-        List<ProductMaterial> list = repository.findAll();
+    @GetMapping("/color/list")
+    public ResponseEntity<List<ProductColor>> getColor() {
+        List<ProductColor> list = repository.findAll();
         return ResponseEntity.ok().body(list);
     }
-
 }

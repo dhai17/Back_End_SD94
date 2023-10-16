@@ -35,4 +35,6 @@ public class ProductImages extends Base implements Serializable {
     @Column(name = "name", columnDefinition = "nvarchar(256) null")
     private String name;
 
+    private byte[] images;
+
 }

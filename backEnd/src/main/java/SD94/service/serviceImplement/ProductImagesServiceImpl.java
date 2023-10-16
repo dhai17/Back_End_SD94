@@ -112,4 +112,10 @@ public class ProductImagesServiceImpl implements ProductImagesService {
         List<ProductImages> list = repository.findByDate(search);
         return list;
     }
+
+    @Override
+    public ProductImages saveOrUpdate(ProductImages images) {
+//        images.setImg(0);
+        return repository.save(images);
+    }
 }

@@ -100,6 +100,7 @@ public class ProductController {
             product.setName(name);
             product.setPrice(priceFomat);
             product.setOrigin(origin);
+            product.setStatus(statusF);
             product.setProductLine(productLine);
             product.setProducer(producerr);
             product.setProductMaterial(productMaterial);
@@ -121,7 +122,7 @@ public class ProductController {
                         productDetails.setProductColor(productColor);
                         productDetails.setProductSize(productSize);
                         productDetails.setQuantity(quantityF);
-                        productDetails.setStatus(statusF);
+//                        productDetails.setStatus(statusF);
                         productDetailsRepository.save(productDetails);
                         productDetailsList.add(productDetails);
                     }
@@ -153,12 +154,5 @@ public class ProductController {
         return productService.searchDateProduct(search);
     }
 
-    @RequestMapping("/select-product-details")
-    public ResponseEntity<ProductDetails> productDetails(@RequestParam("id_product") long id_product,
-                                                         @RequestParam("id_color") long id_color,
-                                                         @RequestParam("id_size") long id_size) {
-        System.out.println(id_product + id_color + id_size);
-        ProductDetails productDetails = productDetailsRepository.findByColorAndSize(id_product, id_color, id_size);
-        return ResponseEntity.ok().body(productDetails);
-    }
+
 }
