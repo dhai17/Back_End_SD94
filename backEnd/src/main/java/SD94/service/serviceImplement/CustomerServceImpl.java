@@ -34,27 +34,6 @@ public class CustomerServceImpl implements CustomerService {
 
     @Override
     public ResponseEntity<Customer> createCustomer(Customer customerCreate) {
-//        public Map<String, Object> createCustomer(Customer customerCreate) {
-//        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-//        Validator validator = factory.getValidator();
-//        Set<ConstraintViolation<Customer>> violations = validator.validate(customerCreate);
-//        Map<String, Object> messages = new HashMap<>();
-//
-//        for (ConstraintViolation<Customer> violation : violations) {
-//            ErrorPayload errorPayload = (ErrorPayload) violation.getConstraintDescriptor().getPayload();
-//            String key = errorPayload.getKey();
-//            messages.put(key, violation.getMessage());
-//        }
-//        if (messages.isEmpty())
-//        {
-//            messages.put("success", "create complete");
-//        }
-//
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("message", messages);
-//        data.put("status", "success");
-//        return data;
-
         Optional<Customer> optionalCustomer = customerRepository.findByName(customerCreate.getName());
         String errorMessage;
         Message errprResponse;
@@ -90,14 +69,6 @@ public class CustomerServceImpl implements CustomerService {
             return new ResponseEntity(errprResponse, HttpStatus.BAD_REQUEST);
         }
 
-        //Ngày sinh
-//        Date dateBirth = customerCreate.getDateBirth();
-//        Date dateC = new Date();
-//        if (dateBirth.after(dateC)){
-//            errorMessage = "Ngày sinh không vượt quá thời gian hiện tại";
-//            errprResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
-//            return new ResponseEntity(errprResponse, HttpStatus.BAD_REQUEST);
-//        }
         Date currentDate = new Date();
         Date dateOfBirth = customerCreate.getDateBirth();
 
