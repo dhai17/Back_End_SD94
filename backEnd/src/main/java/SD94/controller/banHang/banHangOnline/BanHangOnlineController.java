@@ -43,7 +43,7 @@ public class BanHangOnlineController {
             Optional<DetailedShoppingCart> optionalcart = cartDetailsRepository.findById(id);
             if (optionalcart.isPresent()) {
                 DetailedShoppingCart cartDetails = optionalcart.get();
-                DetailedInvoice billDetails = new DetailedInvoice();
+                BillDetails billDetails = new BillDetails();
                 billDetails.setProductDetails(cartDetails.getProductDetails());
                 billDetails.setQuantity(cartDetails.getQuanTity());
                 billDetails.setUnitPrice(cartDetails.getUnitPrice());
@@ -121,8 +121,8 @@ public class BanHangOnlineController {
             bill.setStatus(status);
             billRepository.save(bill);
 
-            List<DetailedInvoice> listBillDetails = billDetailsRepository.findByIdBill(id_bill);
-            for (DetailedInvoice billDtails : listBillDetails) {
+            List<BillDetails> listBillDetails = billDetailsRepository.findByIDBill(id_bill);
+            for (BillDetails billDtails : listBillDetails) {
                 int soLuongDangCo = billDtails.getQuantity();
                 int soLuongDangCoSanPham = billDtails.getProductDetails().getQuantity();
                 int soLuongCapNhat = soLuongDangCoSanPham - soLuongDangCo;

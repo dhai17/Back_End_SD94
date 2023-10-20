@@ -1,13 +1,12 @@
 package SD94.service;
 
 
-import SD94.entity.DetailedInvoice;
+import SD94.entity.BillDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public interface DetailedInvoiceService {
-    List<DetailedInvoice> findAllDetailedInvoice();
-    List<DetailedInvoice> findByIDBill(Long id);
+    List<BillDetails> findByIDBill(Long id);
 }
