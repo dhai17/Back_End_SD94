@@ -23,10 +23,11 @@ public interface PurchaseBillRepository extends JpaRepository<Bill, Long> {
     @Query(value = "SELECT * FROM bill WHERE is_deleted = false and id_status = 5  ORDER BY id DESC", nativeQuery = true)
     List<Bill> findAllBill5();
 
-    //search
-    @Query(value = "SELECT * FROM bill  WHERE is_deleted = false and  id_status = 1 AND (code LIKE %?1% OR phone_number LIKE %?1% OR email LIKE %?1%)", nativeQuery = true)
-    List<Bill> findBillByAll1(String input);
 
+    @Query(value = "SELECT * FROM bill  WHERE is_deleted = false and  id_status = 1 " +
+            "AND (code LIKE %?1% OR phone_number LIKE %?1% OR email LIKE %?1%)", nativeQuery = true)
+    List<Bill> findBillByAll1(String input);
+    //search
     @Query(value = "SELECT * FROM bill WHERE is_deleted = false and id_status = 1 AND DATE(created_date) = ?", nativeQuery = true)
     List<Bill> findBillByDate1(LocalDate ngayTao);
 
