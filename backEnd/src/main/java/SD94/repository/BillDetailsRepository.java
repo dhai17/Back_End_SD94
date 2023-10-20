@@ -10,7 +10,8 @@ import java.util.List;
 
 @Repository
 public interface BillDetailsRepository extends JpaRepository<BillDetails, Long> {
-    @Query(value = "select * from detailed_invoice " +
-            "where id_bill = ? and is_deleted = false", nativeQuery = true)
+    @Query(value = "SELECT * FROM detailed_invoice WHERE is_deleted = false  ORDER BY id DESC", nativeQuery = true)
+    List<BillDetails> findAllDetailedInvoice();
+    @Query(value = "select * from detailed_invoice where id_bill = ? and is_deleted = false", nativeQuery = true)
     List<BillDetails> findByIDBill(Long id);
 }

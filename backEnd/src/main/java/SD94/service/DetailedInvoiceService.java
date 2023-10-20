@@ -8,5 +8,6 @@ import java.util.List;
 
 @Service
 public interface DetailedInvoiceService {
+    List<BillDetails> findAllDetailedInvoice();
     List<BillDetails> findByIDBill(Long id);
 }
