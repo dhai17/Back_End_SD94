@@ -14,7 +14,7 @@ public interface ProductSizeRepository extends JpaRepository<ProductSize, Long> 
     @Query(value = "SELECT * FROM product_size WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
     List<ProductSize> findAll();
 
-    @Query(value = "select * from product_size where shoe_size = ? and is_deleted = false", nativeQuery = true)
+    @Query(value = "select * from product_size where id = ? and is_deleted = false", nativeQuery = true)
     ProductSize findByID(Long id);
 
     @Query(value = "SELECT * FROM product_size WHERE is_deleted = false AND (name LIKE %?1% OR maximumvalue LIKE %?1% OR percent_discount LIKE %?1%)", nativeQuery = true)

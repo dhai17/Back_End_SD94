@@ -26,6 +26,6 @@ public interface ProductColorRepository extends JpaRepository<ProductColor, Long
     @Query(value = "select * from product_color where name = ?", nativeQuery = true)
     Optional<ProductColor> findByName(String name);
 
-    @Query(value = "SELECT pc.color AS color_name FROM product_details pd JOIN product_color pc ON pd.id_color = pc.id WHERE pd.id_product = ? GROUP BY pd.id_color;", nativeQuery = true)
+    @Query(value = "SELECT pc.code AS color_name FROM product_details pd JOIN product_color pc ON pd.id_color = pc.id WHERE pd.id_product = ? GROUP BY pd.id_color;", nativeQuery = true)
     List<String> getColor(long id);
 }

@@ -15,7 +15,7 @@ public interface ProductColorService {
 
     ResponseEntity<List<ProductColor>> deleteProductColor(Long id);
 
-    ResponseEntity<ProductColor> saveCreate(ProductColor productColorCreate);
+    ResponseEntity<ProductColor> saveCreate(ProductColor productColor);
 
     List<ProductColor> searchAllProductColor(String search);
 

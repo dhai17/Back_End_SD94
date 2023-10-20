@@ -9,6 +9,8 @@ public class ProductColorDTO {
 
     private Long id;
 
+    private String code;
+
     private String color;
 
     private Date createdDate;

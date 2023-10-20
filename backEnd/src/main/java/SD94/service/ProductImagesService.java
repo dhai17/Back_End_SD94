@@ -23,4 +23,6 @@ public interface ProductImagesService {
 
     ProductImages saveOrUpdate(ProductImages images);
 
+    ProductImages findByMaSanPham(Long maSanPham);
+
 }

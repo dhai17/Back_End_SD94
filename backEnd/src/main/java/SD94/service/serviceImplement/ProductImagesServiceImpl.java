@@ -5,6 +5,8 @@ import SD94.entity.ProductImages;
 import SD94.repository.ProductImagesRepository;
 import SD94.service.ProductImagesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -117,5 +119,17 @@ public class ProductImagesServiceImpl implements ProductImagesService {
     public ProductImages saveOrUpdate(ProductImages images) {
 //        images.setImg(0);
         return repository.save(images);
+    }
+
+    @Override
+    public ProductImages findByMaSanPham(Long maSanPham) {
+        ProductImages banPhim = new ProductImages();
+        banPhim.setId(maSanPham);
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withMatcher("id", ExampleMatcher.GenericPropertyMatchers.exact());
+
+        Example<ProductImages> example = Example.of(banPhim, matcher);
+        return repository.findOne(example).orElse(null);
     }
 }
