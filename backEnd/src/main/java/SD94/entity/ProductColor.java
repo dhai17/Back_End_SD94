@@ -20,6 +20,9 @@ import java.io.Serializable;
 @Table(name = "productColor")
 public class ProductColor extends Base implements Serializable {
 
+    @Column(name = "code", columnDefinition = "nvarchar(256) not null unique")
+    private String code;
+
     @Column(name = "color", columnDefinition = "nvarchar(256) null")
     private String color;
 

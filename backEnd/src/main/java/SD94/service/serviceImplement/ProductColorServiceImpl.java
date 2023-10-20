@@ -41,6 +41,7 @@ public class ProductColorServiceImpl implements ProductColorService {
             Optional<ProductColor> optionalProductColor = repository.findById(productColorUpdate.getId());
             if (optionalProductColor.isPresent()){
                 ProductColor color = optionalProductColor.get();
+                color.setCode(productColorUpdate.getCode());
                 color.setColor(productColorUpdate.getColor());
                 repository.save(color);
                 return ResponseEntity.ok(color);
@@ -72,11 +73,11 @@ public class ProductColorServiceImpl implements ProductColorService {
     }
 
     @Override
-    public ResponseEntity<ProductColor> saveCreate(ProductColor productColorCreate) {
+    public ResponseEntity<ProductColor> saveCreate(ProductColor productColor) {
         String errorMessage;
         Message errorResponse;
 
-        if (productColorCreate.getColor() == null) {
+        if (productColor.getColor() == null) {
             errorMessage = "Nhập đầy đủ thông tin";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
@@ -84,7 +85,8 @@ public class ProductColorServiceImpl implements ProductColorService {
 
         try {
             ProductColor color = new ProductColor();
-            color.setColor(productColorCreate.getColor());
+            color.setColor(productColor.getColor());
+            color.setCode(productColor.getCode());
             repository.save(color);
             return ResponseEntity.ok(color);
         } catch (Exception e){

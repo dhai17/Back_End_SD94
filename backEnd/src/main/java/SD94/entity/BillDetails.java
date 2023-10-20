@@ -19,7 +19,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "detailedInvoice")
-public class DetailedInvoice extends Base implements Serializable {
+public class BillDetails extends Base implements Serializable {
 
     @Column(name = "quantity", columnDefinition = "int null")
     private int quantity;

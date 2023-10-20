@@ -1,6 +1,8 @@
 package SD94.repository;
 
+import SD94.entity.ProductColor;
 import SD94.entity.ProductDetails;
+import SD94.entity.ProductSize;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -31,4 +33,13 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
 
     @Query(value = "select * from product_details where id_product = ? and id_color = ? and id_size = ?", nativeQuery = true)
     ProductDetails findByColorAndSize(long id_product, long id_color, long id_size);
+
+    @Query(value = "SELECT pc.color AS color_name, ps.shoe_size AS size_name\n" +
+            "FROM product_details pd\n" +
+            "         JOIN product_color pc ON pd.id_color = pc.id\n" +
+            "         JOIN product_size ps ON pd.id_size = ps.id\n" +
+            "WHERE pd.id_product = ?\n" +
+            "GROUP BY pc.color, ps.shoe_size;", nativeQuery = true)
+    List<String> getProduct(long id_product);
+
 }

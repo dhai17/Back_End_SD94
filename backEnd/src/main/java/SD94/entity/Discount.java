@@ -20,6 +20,7 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "discount")
 public class Discount extends Base implements Serializable {
+
     @Column(name = "name", columnDefinition = "nvarchar(256) not null unique")
     private String name;
 
