@@ -6,12 +6,11 @@ import SD94.entity.ProductDetails;
 import SD94.repository.CartDetailsRepository;
 import SD94.repository.CartRepository;
 import SD94.repository.ProductDetailsRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -31,7 +30,7 @@ public class CartController {
     CartDetailsRepository cartDetailsRepository;
 
     @RequestMapping("/list")
-    public List<DetailedShoppingCart> listCart(@RequestParam("customer_id") long customer_id){
+    public List<DetailedShoppingCart> listCart(@RequestParam("customer_id") Long customer_id) {
         Cart cart = cartRepository.findbyCustomerID(customer_id);
         long idCart = cart.getId();
         List<DetailedShoppingCart> cartList = cartDetailsRepository.findByCartID(idCart);
@@ -41,7 +40,7 @@ public class CartController {
     @PostMapping("/add")
     public String addToCart(@RequestParam("product_details_id") long product_details_id,
                             @RequestParam("customer_id") long customer_id,
-                            @RequestParam("quantity") Integer quantity){
+                            @RequestParam("quantity") Integer quantity) {
         Cart cart = cartRepository.findbyCustomerID(customer_id);
         ProductDetails productDetails = productDetailsRepository.findByID(product_details_id);
         Float priceFloat = productDetails.getProduct().getPrice();
@@ -60,12 +59,15 @@ public class CartController {
     }
 
     @PostMapping("/delete/cartDetails")
-    public List<DetailedShoppingCart> deletedCartDetails(@RequestParam("id_cart_details") long id_cart_details,
-                                                         @RequestParam("id_cart") long id_cart){
+    public List<DetailedShoppingCart> deletedCartDetails(@RequestBody DetailedShoppingCart request) {
+        Long id_cart_details = request.getId();
+//        int total = request.getUnitPrice();
 
         Optional<DetailedShoppingCart> shoppingCart = cartDetailsRepository.findById(id_cart_details);
-        if(shoppingCart.isPresent()){
+        long id_cart = 0;
+        if (shoppingCart.isPresent()) {
             DetailedShoppingCart cartDetials = shoppingCart.get();
+            id_cart = cartDetials.getCart().getId();
             cartDetials.setDeleted(true);
             cartDetailsRepository.save(cartDetials);
         }
@@ -75,28 +77,34 @@ public class CartController {
     }
 
     @PostMapping("/update/quantity/product")
-    public ResponseEntity<String> updateSoLuong(@RequestParam("quantity") int quantity,
-                                                      @RequestParam("id_cart_details") long id_cart_details) {
+    public List<DetailedShoppingCart> updateSoLuong(@RequestBody DetailedShoppingCart request) {
+        Long id_cart_details = request.getId();
+        int quantity = request.getQuanTity();
         Optional<DetailedShoppingCart> shoppingCart = cartDetailsRepository.findById(id_cart_details);
-
         if (shoppingCart.isPresent()) {
             DetailedShoppingCart cartDetails = shoppingCart.get();
-            int soLuongSanPhamHienCo = cartDetails.getProductDetails().getQuantity();
-            Float priceFloat = cartDetails.getProductDetails().getProduct().getPrice();
-            int price = Integer.valueOf(String.valueOf(priceFloat));
-            Integer total = price * quantity;
-            BigDecimal totalcart = BigDecimal.valueOf(total);
+//            int soLuongSanPhamHienCo = cartDetails.getProductDetails().getQuantity();
+//            Float priceFloat = cartDetails.getProductDetails().getProduct().getPrice();
+//            int price = Integer.valueOf(String.valueOf(priceFloat));
+//            Integer total = price * quantity;
+//            BigDecimal totalcart = BigDecimal.valueOf(total);
 
-            if (quantity > soLuongSanPhamHienCo) {
-                return ResponseEntity.badRequest().body(Collections.singletonList("Số lượng nhập vào lớn hơn số lượng hiện có").toString());
-            }else {
-                cartDetails.setQuanTity(quantity);
-                cartDetails.setIntoMoney(totalcart);
-                cartDetailsRepository.save(cartDetails);
-            }
+//            if (quantity > soLuongSanPhamHienCo) {
+//                return (List<DetailedShoppingCart>) ResponseEntity.badRequest().body(Collections.singletonList("Số lượng nhập vào lớn hơn số lượng hiện có").toString());
+//            } else {
+//                cartDetails.setQuanTity(quantity);
+//                cartDetails.setIntoMoney(totalcart);
+//                cartDetailsRepository.save(cartDetails);
+//            }
+            cartDetails.setQuanTity(quantity);
+            cartDetails.setIntoMoney(BigDecimal.valueOf(2502));
+            cartDetailsRepository.save(cartDetails);
         }
 
-        return ResponseEntity.ok().body("done");
+        long idCart = shoppingCart.get().getCart().getId();
+        List<DetailedShoppingCart> cartList = cartDetailsRepository.findByCartID(idCart);
+
+        return cartList;
     }
 
 }
