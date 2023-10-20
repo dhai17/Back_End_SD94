@@ -88,4 +88,16 @@ public class PurchaseBillController {
         purchaseBillService.updateStatusAll3();
         return ResponseEntity.ok().build();
     }
+
+    @RequestMapping("/api/bill/pending1/search={search}")
+    public List<Bill> searchAllBill1(@PathVariable("search") String search) {
+        System.out.println(search);
+        return purchaseBillService.searchAllBill1(search);
+
+    }
+
+    @RequestMapping("/api/bill/pending1/searchDate={searchDate}")
+    public List<Bill> searchDateBill1(@PathVariable("searchDate") String searchDate) {
+        return purchaseBillService.searchDateBill1(searchDate);
+    }
 }

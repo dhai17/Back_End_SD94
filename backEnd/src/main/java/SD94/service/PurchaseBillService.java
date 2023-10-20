@@ -22,6 +22,9 @@ public interface PurchaseBillService {
     ResponseEntity<Map<String, Boolean>> updateStatus3(String id_bill);
     ResponseEntity<Map<String, Boolean>> updateStatus4(String id_bill);
     ResponseEntity<Map<String, Boolean>> updateStatus5(String id_bill);
+    List<Bill> searchAllBill1(String search);
+
+    List<Bill> searchDateBill1(String searchDate);
 
     ResponseEntity<Map<String, Boolean>> updateStatusAll2();
     ResponseEntity<Map<String, Boolean>> updateStatusAll3();

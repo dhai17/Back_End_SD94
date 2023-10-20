@@ -2,6 +2,7 @@ package SD94.service.serviceImplement;
 
 
 import SD94.entity.Bill;
+import SD94.entity.Discount;
 import SD94.repository.PurchaseBillRepository;
 import SD94.service.PurchaseBillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -81,6 +83,19 @@ public class PurchaseBillServiceImpl implements PurchaseBillService {
         Long id = Long.valueOf(id_bill);
         purchaseBillRepository.updateStatus(5L, id);
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public List<Bill> searchAllBill1(String search) {
+        List<Bill> billList = purchaseBillRepository.findBillByAll1(search);
+        return billList;
+    }
+
+    @Override
+    public List<Bill> searchDateBill1(String searchDate) {
+        LocalDate search = LocalDate.parse(searchDate);
+        List<Bill> billList = purchaseBillRepository.findBillByDate1(search);
+        return billList;
     }
 
     @Transactional
