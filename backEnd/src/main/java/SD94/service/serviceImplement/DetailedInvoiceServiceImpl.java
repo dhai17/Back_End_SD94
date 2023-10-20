@@ -2,8 +2,9 @@ package SD94.service.serviceImplement;
 
 
 
-import SD94.entity.DetailedInvoice;
-import SD94.repository.DetailedInvoiceRepository;
+import SD94.entity.BillDetails;
+
+import SD94.repository.BillDetailsRepository;
 import SD94.service.DetailedInvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,17 +15,17 @@ import java.util.List;
 public class DetailedInvoiceServiceImpl implements DetailedInvoiceService {
 
     @Autowired
-    DetailedInvoiceRepository detailedInvoiceRepository;
+    BillDetailsRepository billDetailsRepository;
 
     @Override
-    public List<DetailedInvoice> findAllDetailedInvoice() {
-        List<DetailedInvoice> billDetail = detailedInvoiceRepository.findAllDetailedInvoice();
+    public List<BillDetails> findAllDetailedInvoice() {
+        List<BillDetails> billDetail = billDetailsRepository.findAllDetailedInvoice();
         return billDetail;
     }
 
     @Override
-    public List<DetailedInvoice> findByIDBill(Long id) {
-        List<DetailedInvoice> billDetail = detailedInvoiceRepository.findByIDBill(id);
+    public List<BillDetails> findByIDBill(Long id) {
+        List<BillDetails> billDetail = billDetailsRepository.findByIDBill(id);
         return billDetail;
     }
 
