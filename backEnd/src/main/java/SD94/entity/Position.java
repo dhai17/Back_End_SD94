@@ -21,7 +21,8 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "position")
 public class Position extends Base implements Serializable {
-    @Column(name="name", columnDefinition = "nvarchar(256) not null unique")
+
+    @Column(name = "name", columnDefinition = "nvarchar(256) not null unique")
     private String name;
 
     @Column(name = "roles", columnDefinition = "int null")
