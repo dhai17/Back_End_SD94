@@ -14,10 +14,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query(value = "select * from customer where is_deleted = false ORDER BY id desc", nativeQuery = true)
     List<Customer> findAllCustomer();
 
+    @Query(value = "select * from customer where id = ? and is_deleted = false", nativeQuery = true)
+    Customer findByID(Long id);
+
     @Query(value = "select * from customer where name = ?", nativeQuery = true)
     Optional<Customer> findByName(String name);
 
-    @Query(value = "select * from customer where is_deleted = false and (name LIKE %?1% OR phoneNumber LIKE %?1% OR email LIKE %?1%)", nativeQuery = true)
+    @Query(value = "select * from customer where name = ?1 OR phone_number = ?1 OR email = ?1 OR add_ress = ?1", nativeQuery = true)
     List<Customer> findCustomerAll(String input);
 
     @Query(value = "select * from customer where is_deleted = false and date(date_birth) = ?", nativeQuery = true)

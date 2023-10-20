@@ -21,10 +21,11 @@ public class DetailedShoppingCart extends Base implements Serializable {
     @JoinColumn(name = "Cart_id")
     private Cart cart;
 
-//    @ManyToOne
-//    @JoinColumn(name = "")
+    @ManyToOne
+    @JoinColumn(name = "ProductDetails_id")
+    private ProductDetails productDetails;
 
-    @Column(name = "quantity", columnDefinition = "int not null")
+    @Column(name = "quantity", columnDefinition = "int null")
     private int quanTity;
 
     @Column(name = "unitPrice", columnDefinition = "int ")

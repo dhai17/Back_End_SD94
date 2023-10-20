@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //package SD94.convert;
 //
 //import SD94.dto.StatusDTO;
@@ -7,6 +8,17 @@
 //@Component
 //public class StatusConvert {
 //
+=======
+package SD94.convert;
+
+//import SD94.dto.StatusDTO;
+import SD94.entity.Status;
+import org.springframework.stereotype.Component;
+
+@Component
+public class StatusConvert {
+
+>>>>>>> 6ed77fdda7614f84f977ce0476feb1d25dc64fa4
 //    public StatusDTO toDto(Status entity) {
 //        StatusDTO dto = new StatusDTO();
 //        dto.setId(entity.getId());
@@ -34,5 +46,10 @@
 //        entity.setCancelOrder(dto.getCancelOrder());
 //        return entity;
 //    }
+<<<<<<< HEAD
 //
 //}
+=======
+
+}
+>>>>>>> 6ed77fdda7614f84f977ce0476feb1d25dc64fa4
