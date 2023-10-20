@@ -9,7 +9,6 @@ import java.util.List;
 @Service
 public interface CustomerService {
     List<Customer> findAllCustomer();
-    
     ResponseEntity<Customer> createCustomer(Customer customerCreate);
     ResponseEntity<Customer> editCustomer(Customer customerEdit);
     ResponseEntity<List<Customer>> deleteCustomer(Long id);
