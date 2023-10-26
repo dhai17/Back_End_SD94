@@ -1,8 +1,10 @@
 package SD94.service.serviceImplement;
 
 import SD94.controller.Message.Message;
-import SD94.entity.Customer;
 import SD94.entity.Staff;
+import SD94.entity.security.UserRole;
+import SD94.helper.UserFoundException;
+import SD94.repository.RoleRepository;
 import SD94.repository.StaffRepository;
 import SD94.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -193,6 +196,37 @@ public class StaffServiceImpl implements StaffService {
         List<Staff> staffList = staffRepository.findStaffDate(searchdate);
         return staffList;
 
+    }
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+
+    @Override
+    public Staff createStaffV1(Staff user, Set<UserRole> userRoles) throws Exception {
+        Staff local = staffRepository.findByEmail(user.getEmail());
+        if (local != null) {
+            System.out.println("User is already there");
+            throw new UserFoundException();
+        } else {
+            for (UserRole ur : userRoles) {
+                roleRepository.save(ur.getRole());
+            }
+            user.getUserRoles().addAll(userRoles);
+            local = this.staffRepository.save(user);
+        }
+        return local;
+    }
+
+    @Override
+    public Staff getStaff(String email) {
+        return staffRepository.findByEmail(email);
+
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        staffRepository.deleteById(userId);
     }
 }
 
