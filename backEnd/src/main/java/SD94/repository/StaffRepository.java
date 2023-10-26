@@ -29,4 +29,7 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
     @Query(value = "select * from staff where is_deleted = false  and date(dateOfBrirth)=?", nativeQuery = true)
     List<Staff> findStaffDate(LocalDate dateOfBirth);
 
+//    Staff findByUsername(String username);
+    Staff findByEmail(String username);
+
 }
