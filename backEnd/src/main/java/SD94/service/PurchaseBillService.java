@@ -26,6 +26,22 @@ public interface PurchaseBillService {
 
     List<Bill> searchDateBill1(String searchDate);
 
+    List<Bill> searchAllBill2(String search);
+
+    List<Bill> searchDateBill2(String searchDate);
+
+    List<Bill> searchAllBill3(String search);
+
+    List<Bill> searchDateBill3(String searchDate);
+
+    List<Bill> searchAllBill4(String search);
+
+    List<Bill> searchDateBill4(String searchDate);
+
+    List<Bill> searchAllBill5(String search);
+
+    List<Bill> searchDateBill5(String searchDate);
+
     ResponseEntity<Map<String, Boolean>> updateStatusAll2();
     ResponseEntity<Map<String, Boolean>> updateStatusAll3();
 

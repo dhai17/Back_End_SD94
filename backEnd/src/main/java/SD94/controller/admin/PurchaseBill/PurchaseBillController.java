@@ -100,4 +100,49 @@ public class PurchaseBillController {
     public List<Bill> searchDateBill1(@PathVariable("searchDate") String searchDate) {
         return purchaseBillService.searchDateBill1(searchDate);
     }
+    @RequestMapping("/api/bill/pending2/search={search}")
+    public List<Bill> searchAllBill2(@PathVariable("search") String search) {
+        System.out.println(search);
+        return purchaseBillService.searchAllBill2(search);
+
+    }
+
+    @RequestMapping("/api/bill/pending2/searchDate={searchDate}")
+    public List<Bill> searchDateBill2(@PathVariable("searchDate") String searchDate) {
+        return purchaseBillService.searchDateBill2(searchDate);
+    }
+    @RequestMapping("/api/bill/pending3/search={search}")
+    public List<Bill> searchAllBill3(@PathVariable("search") String search) {
+        System.out.println(search);
+        return purchaseBillService.searchAllBill3(search);
+
+    }
+
+    @RequestMapping("/api/bill/pending3/searchDate={searchDate}")
+    public List<Bill> searchDateBill3(@PathVariable("searchDate") String searchDate) {
+        return purchaseBillService.searchDateBill3(searchDate);
+    }
+    @RequestMapping("/api/bill/pending4/search={search}")
+    public List<Bill> searchAllBill4(@PathVariable("search") String search) {
+        System.out.println(search);
+        return purchaseBillService.searchAllBill4(search);
+
+    }
+
+    @RequestMapping("/api/bill/pending4/searchDate={searchDate}")
+    public List<Bill> searchDateBill4(@PathVariable("searchDate") String searchDate) {
+        return purchaseBillService.searchDateBill4(searchDate);
+    }
+
+    @RequestMapping("/api/bill/pending5/search={search}")
+    public List<Bill> searchAllBill5(@PathVariable("search") String search) {
+        System.out.println(search);
+        return purchaseBillService.searchAllBill5(search);
+
+    }
+
+    @RequestMapping("/api/bill/pending5/searchDate={searchDate}")
+    public List<Bill> searchDateBill5(@PathVariable("searchDate") String searchDate) {
+        return purchaseBillService.searchDateBill5(searchDate);
+    }
 }
