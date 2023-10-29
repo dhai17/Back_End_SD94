@@ -30,13 +30,13 @@ public class SD94Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println("starting code");
+//        System.out.println("starting code");
 //        Staff staff = new Staff();
-//        staff.setAddress("Duc");
+//        staff.setAddress("Ducnv-123");
 //        staff.setGender(true);
 //        staff.setPassword(this.bCryptPasswordEncoder.encode("123123"));
-//        staff.setEmail("ducnvph14435@gmail.com");
-//        staff.setName("ĐA2qwa");
+//        staff.setEmail("admin@fpt.com");
+//        staff.setName("Duc Nguyen");
 //
 //        Role role1 = new Role();
 //        role1.setRoleId(44L);
