@@ -27,7 +27,6 @@ public interface PurchaseBillRepository extends JpaRepository<Bill, Long> {
     @Query(value = "SELECT * FROM bill  WHERE is_deleted = false and  id_status = 1 " +
             "AND (code LIKE %?1% OR phone_number LIKE %?1% OR email LIKE %?1%)", nativeQuery = true)
     List<Bill> findBillByAll1(String input);
-    //search
     @Query(value = "SELECT * FROM bill WHERE is_deleted = false and id_status = 1 AND DATE(created_date) = ?", nativeQuery = true)
     List<Bill> findBillByDate1(LocalDate ngayTao);
 
@@ -37,5 +36,32 @@ public interface PurchaseBillRepository extends JpaRepository<Bill, Long> {
     @Modifying
     @Query(value = "update bill set id_status = ? where id = ?;", nativeQuery = true)
     void updateStatus(long id_status, long id_bill);
+
+    @Query(value = "SELECT * FROM bill  WHERE is_deleted = false and  id_status = 2 " +
+            "AND (code LIKE %?1% OR phone_number LIKE %?1% OR email LIKE %?1%)", nativeQuery = true)
+    List<Bill> findBillByAll2(String input);
+    //search
+    @Query(value = "SELECT * FROM bill WHERE is_deleted = false and id_status = 2 AND DATE(created_date) = ?", nativeQuery = true)
+    List<Bill> findBillByDate2(LocalDate ngayTao);
+
+    @Query(value = "SELECT * FROM bill  WHERE is_deleted = false and  id_status = 3 " +
+            "AND (code LIKE %?1% OR phone_number LIKE %?1% OR email LIKE %?1%)", nativeQuery = true)
+    List<Bill> findBillByAll3(String input);
+    //search
+    @Query(value = "SELECT * FROM bill WHERE is_deleted = false and id_status = 3 AND DATE(created_date) = ?", nativeQuery = true)
+    List<Bill> findBillByDate3(LocalDate ngayTao);
+    @Query(value = "SELECT * FROM bill  WHERE is_deleted = false and  id_status = 4 " +
+            "AND (code LIKE %?1% OR phone_number LIKE %?1% OR email LIKE %?1%)", nativeQuery = true)
+    List<Bill> findBillByAll4(String input);
+    //search
+    @Query(value = "SELECT * FROM bill WHERE is_deleted = false and id_status = 4 AND DATE(created_date) = ?", nativeQuery = true)
+    List<Bill> findBillByDate4(LocalDate ngayTao);
+
+    @Query(value = "SELECT * FROM bill  WHERE is_deleted = false and  id_status = 5 " +
+            "AND (code LIKE %?1% OR phone_number LIKE %?1% OR email LIKE %?1%)", nativeQuery = true)
+    List<Bill> findBillByAll5(String input);
+    //search
+    @Query(value = "SELECT * FROM bill WHERE is_deleted = false and id_status = 5 AND DATE(created_date) = ?", nativeQuery = true)
+    List<Bill> findBillByDate5(LocalDate ngayTao);
 
 }

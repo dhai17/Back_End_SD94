@@ -98,6 +98,58 @@ public class PurchaseBillServiceImpl implements PurchaseBillService {
         return billList;
     }
 
+    @Override
+    public List<Bill> searchAllBill2(String search) {
+        List<Bill> billList = purchaseBillRepository.findBillByAll2(search);
+        return billList;
+    }
+
+    @Override
+    public List<Bill> searchDateBill2(String searchDate) {
+        LocalDate search = LocalDate.parse(searchDate);
+        List<Bill> billList = purchaseBillRepository.findBillByDate2(search);
+        return billList;
+    }
+
+    @Override
+    public List<Bill> searchAllBill3(String search) {
+        List<Bill> billList = purchaseBillRepository.findBillByAll3(search);
+        return billList;
+    }
+
+    @Override
+    public List<Bill> searchDateBill3(String searchDate) {
+        LocalDate search = LocalDate.parse(searchDate);
+        List<Bill> billList = purchaseBillRepository.findBillByDate3(search);
+        return billList;
+    }
+
+    @Override
+    public List<Bill> searchAllBill4(String search) {
+        List<Bill> billList = purchaseBillRepository.findBillByAll4(search);
+        return billList;
+    }
+
+    @Override
+    public List<Bill> searchDateBill4(String searchDate) {
+        LocalDate search = LocalDate.parse(searchDate);
+        List<Bill> billList = purchaseBillRepository.findBillByDate4(search);
+        return billList;
+    }
+
+    @Override
+    public List<Bill> searchAllBill5(String search) {
+        List<Bill> billList = purchaseBillRepository.findBillByAll5(search);
+        return billList;
+    }
+
+    @Override
+    public List<Bill> searchDateBill5(String searchDate) {
+        LocalDate search = LocalDate.parse(searchDate);
+        List<Bill> billList = purchaseBillRepository.findBillByDate5(search);
+        return billList;
+    }
+
     @Transactional
     @Override
     public ResponseEntity<Map<String, Boolean>> updateStatusAll2() {
