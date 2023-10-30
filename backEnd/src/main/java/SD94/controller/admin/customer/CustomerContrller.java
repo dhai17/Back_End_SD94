@@ -2,11 +2,15 @@ package SD94.controller.admin.customer;
 
 import SD94.entity.AddRess;
 import SD94.entity.Customer;
+import SD94.entity.Staff;
 import SD94.repository.AddressRepository;
 import SD94.repository.CustomerRepository;
+import SD94.repository.StaffRepository;
 import SD94.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +29,16 @@ public class CustomerContrller {
     @Autowired
     AddressRepository addressRepository;
 
+    @Autowired
+    StaffRepository staffRepository;
+
     @GetMapping("/api/customer/list")
     public List<Customer> listCustomer(){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String username = authentication .getName();
+//        System.out.println(username);
+//        Staff staff = staffRepository.findByEmail(username);
+//        System.out.println(staff + "----------------------------------");
         return customerService.findAllCustomer();
     }
 
