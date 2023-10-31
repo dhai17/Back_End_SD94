@@ -1,13 +1,13 @@
 package SD94.convert;
 
 import SD94.dto.ProductSizeDTO;
-import SD94.entity.ProductSize;
+import SD94.entity.product.Size;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductSizeConvert {
 
-    public ProductSizeDTO toDto(ProductSize entity) {
+    public ProductSizeDTO toDto(Size entity) {
         ProductSizeDTO dto = new ProductSizeDTO();
         dto.setId(entity.getId());
         dto.setShoeSize(entity.getShoeSize());
@@ -19,8 +19,8 @@ public class ProductSizeConvert {
         return dto;
     }
 
-    public ProductSize toEntity(ProductSizeDTO dto) {
-        ProductSize entity = new ProductSize();
+    public Size toEntity(ProductSizeDTO dto) {
+        Size entity = new Size();
         entity.setId(dto.getId());
         entity.setShoeSize(dto.getShoeSize());
         entity.setCreatedDate(dto.getCreatedDate());

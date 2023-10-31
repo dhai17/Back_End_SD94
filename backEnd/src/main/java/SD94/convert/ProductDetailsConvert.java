@@ -1,7 +1,7 @@
 package SD94.convert;
 
 import SD94.dto.ProductDetailsDTO;
-import SD94.entity.ProductDetails;
+import SD94.entity.product.ProductDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,8 +17,8 @@ public class ProductDetailsConvert {
         dto.setLastModifiedDate(entity.getLastModifiedDate());
         dto.setLastModifiedBy(entity.getLastModifiedBy());
         dto.setProduct(entity.getProduct());
-        dto.setProductColor(entity.getProductColor());
-        dto.setProductSize(entity.getProductSize());
+        dto.setColor(entity.getColor());
+        dto.setSize(entity.getSize());
         return dto;
     }
 
@@ -32,8 +32,8 @@ public class ProductDetailsConvert {
         entity.setLastModifiedDate(dto.getLastModifiedDate());
         entity.setLastModifiedBy(dto.getLastModifiedBy());
         entity.setProduct(dto.getProduct());
-        entity.setProductColor(dto.getProductColor());
-        entity.setProductSize(dto.getProductSize());
+        entity.setColor(dto.getColor());
+        entity.setSize(dto.getSize());
         return entity;
     }
 

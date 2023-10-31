@@ -1,7 +1,6 @@
 package SD94.repository;
 
-import SD94.entity.Bill;
-import SD94.entity.Discount;
+import SD94.entity.bill.Bill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
 @Repository
 public interface PurchaseBillRepository extends JpaRepository<Bill, Long> {
     @Query(value = "SELECT * FROM bill WHERE is_deleted = false and id_status = 1  ORDER BY id DESC", nativeQuery = true)

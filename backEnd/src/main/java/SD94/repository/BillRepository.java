@@ -1,7 +1,7 @@
 
 package SD94.repository;
 
-import SD94.entity.Bill;
+import SD94.entity.bill.Bill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

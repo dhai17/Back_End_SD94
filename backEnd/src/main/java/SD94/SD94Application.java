@@ -1,18 +1,12 @@
 package SD94;
 
-import SD94.entity.Staff;
-import SD94.entity.security.Role;
-import SD94.entity.security.UserRole;
-import SD94.service.StaffService;
+import SD94.service.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @EnableWebMvc
 @SpringBootApplication

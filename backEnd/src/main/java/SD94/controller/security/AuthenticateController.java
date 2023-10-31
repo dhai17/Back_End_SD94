@@ -5,7 +5,7 @@ import SD94.entity.Staff;
 import SD94.helper.UserNotFoundException;
 import SD94.model.request.JwtRequest;
 import SD94.model.response.JwtResponse;
-import SD94.service.serviceImplement.StaffDetailsServiceImpl;
+import SD94.service.impl.StaffDetailsServiceImpl;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +14,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;

@@ -1,6 +1,6 @@
 package SD94.repository;
 
-import SD94.entity.AddRess;
+import SD94.entity.customer.AddRess;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

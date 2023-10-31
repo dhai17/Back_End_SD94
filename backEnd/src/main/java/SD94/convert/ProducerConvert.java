@@ -1,13 +1,13 @@
 package SD94.convert;
 
 import SD94.dto.ProducerDTO;
-import SD94.entity.Producer;
+import SD94.entity.product.Manufacturer;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProducerConvert {
 
-    public ProducerDTO toDto(Producer entity) {
+    public ProducerDTO toDto(Manufacturer entity) {
         ProducerDTO dto = new ProducerDTO();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
@@ -19,8 +19,8 @@ public class ProducerConvert {
         return dto;
     }
 
-    public Producer toEntity(ProducerDTO dto) {
-        Producer entity = new Producer();
+    public Manufacturer toEntity(ProducerDTO dto) {
+        Manufacturer entity = new Manufacturer();
         entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setAddress(dto.getAddress());

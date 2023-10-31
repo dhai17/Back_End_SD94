@@ -1,5 +1,5 @@
 package SD94.config;
-import SD94.service.serviceImplement.StaffDetailsServiceImpl;
+import SD94.service.impl.StaffDetailsServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +26,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String requestTokenHeader = request.getHeader("Authorization");
-        System.out.println("okokokko: " + requestTokenHeader);
         String username = null;
         String jwtToken = null;
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
@@ -36,7 +35,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 username = this.jwtUtil.extractUsername(jwtToken);
             } catch (ExpiredJwtException e) {
                 e.printStackTrace();
-                System.out.println("jwt token has expired");
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("error");

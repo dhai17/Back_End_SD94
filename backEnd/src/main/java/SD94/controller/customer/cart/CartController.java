@@ -1,18 +1,15 @@
 package SD94.controller.customer.cart;
 
-import SD94.entity.Cart;
-import SD94.entity.DetailedShoppingCart;
-import SD94.entity.ProductDetails;
+import SD94.entity.cart.Cart;
+import SD94.entity.cart.CartDetails;
+import SD94.entity.product.ProductDetails;
 import SD94.repository.CartDetailsRepository;
 import SD94.repository.CartRepository;
 import SD94.repository.ProductDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,10 +26,10 @@ public class CartController {
     CartDetailsRepository cartDetailsRepository;
 
     @RequestMapping("/list")
-    public List<DetailedShoppingCart> listCart(@RequestParam("customer_id") Long customer_id) {
+    public List<CartDetails> listCart(@RequestParam("customer_id") Long customer_id) {
         Cart cart = cartRepository.findbyCustomerID(customer_id);
         long idCart = cart.getId();
-        List<DetailedShoppingCart> cartList = cartDetailsRepository.findByCartID(idCart);
+        List<CartDetails> cartList = cartDetailsRepository.findByCartID(idCart);
         return cartList;
     }
 
@@ -47,7 +44,7 @@ public class CartController {
         Integer total = price * quantity;
         BigDecimal totalcart = BigDecimal.valueOf(total);
 
-        DetailedShoppingCart cartDetails = new DetailedShoppingCart();
+        CartDetails cartDetails = new CartDetails();
         cartDetails.setCart(cart);
         cartDetails.setDeleted(false);
         cartDetails.setQuanTity(quantity);
@@ -58,30 +55,30 @@ public class CartController {
     }
 
     @PostMapping("/delete/cartDetails")
-    public List<DetailedShoppingCart> deletedCartDetails(@RequestBody DetailedShoppingCart request) {
+    public List<CartDetails> deletedCartDetails(@RequestBody CartDetails request) {
         Long id_cart_details = request.getId();
 //        int total = request.getUnitPrice();
 
-        Optional<DetailedShoppingCart> shoppingCart = cartDetailsRepository.findById(id_cart_details);
+        Optional<CartDetails> shoppingCart = cartDetailsRepository.findById(id_cart_details);
         long id_cart = 0;
         if (shoppingCart.isPresent()) {
-            DetailedShoppingCart cartDetials = shoppingCart.get();
+            CartDetails cartDetials = shoppingCart.get();
             id_cart = cartDetials.getCart().getId();
             cartDetials.setDeleted(true);
             cartDetailsRepository.save(cartDetials);
         }
 
-        List<DetailedShoppingCart> cartList = cartDetailsRepository.findByCartID(id_cart);
+        List<CartDetails> cartList = cartDetailsRepository.findByCartID(id_cart);
         return cartList;
     }
 
     @PostMapping("/update/quantity/product")
-    public List<DetailedShoppingCart> updateSoLuong(@RequestBody DetailedShoppingCart request) {
+    public List<CartDetails> updateSoLuong(@RequestBody CartDetails request) {
         Long id_cart_details = request.getId();
         int quantity = request.getQuanTity();
-        Optional<DetailedShoppingCart> shoppingCart = cartDetailsRepository.findById(id_cart_details);
+        Optional<CartDetails> shoppingCart = cartDetailsRepository.findById(id_cart_details);
         if (shoppingCart.isPresent()) {
-            DetailedShoppingCart cartDetails = shoppingCart.get();
+            CartDetails cartDetails = shoppingCart.get();
 //            int soLuongSanPhamHienCo = cartDetails.getProductDetails().getQuantity();
 //            Float priceFloat = cartDetails.getProductDetails().getProduct().getPrice();
 //            int price = Integer.valueOf(String.valueOf(priceFloat));
@@ -101,7 +98,7 @@ public class CartController {
         }
 
         long idCart = shoppingCart.get().getCart().getId();
-        List<DetailedShoppingCart> cartList = cartDetailsRepository.findByCartID(idCart);
+        List<CartDetails> cartList = cartDetailsRepository.findByCartID(idCart);
 
         return cartList;
     }

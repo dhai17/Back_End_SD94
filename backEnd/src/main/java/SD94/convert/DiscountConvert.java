@@ -1,7 +1,7 @@
 package SD94.convert;
 
 import SD94.dto.DiscountDTO;
-import SD94.entity.Discount;
+import SD94.entity.discount.Discount;
 import org.springframework.stereotype.Component;
 
 @Component
