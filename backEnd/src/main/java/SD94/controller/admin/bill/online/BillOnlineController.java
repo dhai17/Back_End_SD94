@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin("*")
 public class BillOnlineController {
+
     @Autowired
     PurchaseBillService purchaseBillService;
     @GetMapping("/api/purchasebill/list1")
