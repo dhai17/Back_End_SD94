@@ -1,8 +1,8 @@
 package SD94.controller.admin.discount;
 
-import SD94.entity.Discount;
+import SD94.entity.discount.Discount;
 import SD94.repository.DiscountRepository;
-import SD94.service.DiscountService;
+import SD94.service.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

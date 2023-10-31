@@ -1,0 +1,72 @@
+package SD94.entity.bill;
+
+import SD94.entity.customer.Base;
+import SD94.entity.customer.Customer;
+import SD94.entity.discount.Discount;
+import SD94.entity.Staff;
+import lombok.AllArgsConstructor;
+import lombok.*;
+import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "bill")
+public class Bill extends Base implements Serializable {
+
+    @Column(name = "code", columnDefinition = "nvarchar(256) not null unique")
+    private String code;
+
+    @Column(name = "note", columnDefinition = "nvarchar(50) null")
+    private String note;
+
+    @Column(name = "name", columnDefinition = "nvarchar(256) null")
+    private String name;
+
+    @Column(name = "email", columnDefinition = "nvarchar(256) null")
+    private String email;
+
+    @Column(name = "phoneNumber", columnDefinition = "nvarchar(50) null")
+    private String phoneNumber;
+
+    @Column(name = "address", columnDefinition = "nvarchar(256) null")
+    private String address;
+
+    @Column(name = "shippingMoney", columnDefinition = "int null")
+    private int shippingMoney;
+
+    @Column(name = "reducedMoney", columnDefinition = "int null")
+    private int reducedMoney;
+
+    @Column(name = "totalOrderPrice", columnDefinition = "int null")
+    private int totalOrderPrice;
+
+    @Column(name = "totalInvoiceAmount", columnDefinition = "int null")
+    private int totalInvoiceAmount;
+
+    @Column(name = "invoiceType", columnDefinition = "int null")
+    private int invoiceType;
+
+    @ManyToOne
+    @JoinColumn(name = "idStatus", referencedColumnName = "id")
+    private StatusBill status;
+
+    @ManyToOne
+    @JoinColumn(name = "idCustomer", referencedColumnName = "id")
+    private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "idStaff", referencedColumnName = "id")
+    private Staff staff;
+
+    @ManyToOne
+    @JoinColumn(name = "idDiscount", referencedColumnName = "id")
+    private Discount discount;
+
+}

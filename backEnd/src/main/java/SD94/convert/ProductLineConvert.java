@@ -1,13 +1,13 @@
 package SD94.convert;
 
 import SD94.dto.ProductLineDTO;
-import SD94.entity.ProductLine;
+import SD94.entity.product.TypeProduct;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductLineConvert {
 
-    public ProductLineDTO toDto(ProductLine entity) {
+    public ProductLineDTO toDto(TypeProduct entity) {
         ProductLineDTO dto = new ProductLineDTO();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
@@ -19,8 +19,8 @@ public class ProductLineConvert {
         return dto;
     }
 
-    public ProductLine toEntity(ProductLineDTO dto) {
-        ProductLine entity = new ProductLine();
+    public TypeProduct toEntity(ProductLineDTO dto) {
+        TypeProduct entity = new TypeProduct();
         entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setCreatedDate(dto.getCreatedDate());

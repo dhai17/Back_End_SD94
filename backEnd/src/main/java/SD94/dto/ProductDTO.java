@@ -1,8 +1,8 @@
 package SD94.dto;
 
-import SD94.entity.Producer;
-import SD94.entity.ProductLine;
-import SD94.entity.ProductMaterial;
+import SD94.entity.product.Manufacturer;
+import SD94.entity.product.TypeProduct;
+import SD94.entity.product.Material;
 import lombok.Data;
 
 import java.util.Date;
@@ -28,10 +28,10 @@ public class ProductDTO {
 
     private String lastModifiedBy;
 
-    private ProductMaterial idProductMaterial;
+    private Material idMaterial;
 
-    private ProductLine idProductLine;
+    private TypeProduct idTypeProduct;
 
-    private Producer idProducer;
+    private Manufacturer idManufacturer;
 
 }

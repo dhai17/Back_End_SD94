@@ -1,13 +1,13 @@
 package SD94.convert;
 
 import SD94.dto.ProductColorDTO;
-import SD94.entity.ProductColor;
+import SD94.entity.product.Color;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductColorConvert {
 
-    public ProductColorDTO toDto(ProductColor entity) {
+    public ProductColorDTO toDto(Color entity) {
         ProductColorDTO dto = new ProductColorDTO();
         dto.setId(entity.getId());
         dto.setCode(entity.getCode());
@@ -19,8 +19,8 @@ public class ProductColorConvert {
         return dto;
     }
 
-    public ProductColor toEntity(ProductColorDTO dto) {
-        ProductColor entity = new ProductColor();
+    public Color toEntity(ProductColorDTO dto) {
+        Color entity = new Color();
         entity.setId(dto.getId());
         entity.setCode(dto.getCode());
         entity.setColor(dto.getColor());

@@ -1,8 +1,8 @@
 package SD94.controller.admin.product;
 
-import SD94.entity.ProductColor;
+import SD94.entity.product.Color;
 import SD94.repository.ProductColorRepository;
-import SD94.service.ProductColorService;
+import SD94.service.service.ProductColorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,29 +19,29 @@ public class ColorController {
     ProductColorService productColorService;
 
     @GetMapping("/color/list")
-    public ResponseEntity<List<ProductColor>> getColor() {
-        List<ProductColor> list = repository.findAll();
+    public ResponseEntity<List<Color>> getColor() {
+        List<Color> list = repository.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     @PostMapping("/color/saveCreate")
-    public ResponseEntity<ProductColor> saveCreate(@RequestBody ProductColor productColor) {
-        return productColorService.saveCreate(productColor);
+    public ResponseEntity<Color> saveCreate(@RequestBody Color color) {
+        return productColorService.saveCreate(color);
     }
 
     @PutMapping("/color/delete/{id}")
-    public ResponseEntity<List<ProductColor>> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<List<Color>> delete(@PathVariable("id") Long id) {
         return productColorService.deleteProductColor(id);
     }
 
-    @GetMapping("/color/edit/{id}")
-    public ProductColor edit(@PathVariable("id") Long id) {
+    @GetMapping("/color/edit/id={id}")
+    public Color edit(@PathVariable("id") Long id) {
         return repository.findByID(id);
     }
 
     @PutMapping("/color/saveUpdate")
-    public ResponseEntity<ProductColor> saveUpdate(@RequestBody ProductColor productColor) {
-        return productColorService.saveEdit(productColor);
+    public ResponseEntity<Color> saveUpdate(@RequestBody Color color) {
+        return productColorService.saveEdit(color);
     }
 
 }

@@ -1,8 +1,8 @@
 package SD94.dto;
 
-import SD94.entity.Product;
-import SD94.entity.ProductColor;
-import SD94.entity.ProductSize;
+import SD94.entity.product.Product;
+import SD94.entity.product.Color;
+import SD94.entity.product.Size;
 import lombok.Data;
 
 import java.util.Date;
@@ -26,8 +26,8 @@ public class ProductDetailsDTO {
 
     private Product product;
 
-    private ProductColor productColor;
+    private Color color;
 
-    private ProductSize productSize;
+    private Size size;
 
 }

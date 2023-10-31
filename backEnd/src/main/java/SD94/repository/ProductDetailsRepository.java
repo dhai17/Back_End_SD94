@@ -1,8 +1,6 @@
 package SD94.repository;
 
-import SD94.entity.ProductColor;
-import SD94.entity.ProductDetails;
-import SD94.entity.ProductSize;
+import SD94.entity.product.ProductDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

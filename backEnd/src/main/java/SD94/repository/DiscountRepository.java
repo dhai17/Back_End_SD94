@@ -1,8 +1,6 @@
 package SD94.repository;
 
-import SD94.entity.Discount;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import SD94.entity.discount.Discount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -1,5 +1,5 @@
 package SD94.config;
-import SD94.service.serviceImplement.StaffDetailsServiceImpl;
+import SD94.service.impl.StaffDetailsServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

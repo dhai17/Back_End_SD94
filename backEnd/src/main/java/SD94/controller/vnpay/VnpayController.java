@@ -1,7 +1,7 @@
 package SD94.controller.vnpay;
 
 import SD94.config.VnpayConflig;
-import SD94.service.VnpayService;
+import SD94.service.service.VnpayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

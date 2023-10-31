@@ -2,10 +2,9 @@ package SD94.controller.admin.staff;
 
 import SD94.entity.Staff;
 import SD94.repository.StaffRepository;
-import SD94.service.StaffService;
+import SD94.service.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;

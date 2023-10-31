@@ -1,6 +1,6 @@
 package SD94.repository;
 
-import SD94.entity.Cart;
+import SD94.entity.cart.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

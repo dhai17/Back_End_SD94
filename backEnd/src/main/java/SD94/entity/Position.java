@@ -1,5 +1,6 @@
 package SD94.entity;
 
+import SD94.entity.customer.Base;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,4 @@ public class Position extends Base implements Serializable {
 
     @Column(name = "roles", columnDefinition = "int null")
     private int roles;
-
-
 }

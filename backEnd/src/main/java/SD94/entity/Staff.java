@@ -1,6 +1,7 @@
 
 package SD94.entity;
 
+import SD94.entity.customer.Base;
 import SD94.entity.security.Authority;
 import SD94.entity.security.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -8,12 +9,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.*;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
