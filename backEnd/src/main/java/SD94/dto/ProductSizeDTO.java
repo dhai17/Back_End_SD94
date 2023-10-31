@@ -9,7 +9,7 @@ public class ProductSizeDTO {
 
     private long id;
 
-    private Integer shoeSize;
+    private String shoeSize;
 
     private Date createdDate;
 

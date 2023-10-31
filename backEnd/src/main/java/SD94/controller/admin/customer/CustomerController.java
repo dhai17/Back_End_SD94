@@ -1,14 +1,12 @@
 package SD94.controller.admin.customer;
 
-import SD94.entity.customer.AddRess;
-import SD94.entity.customer.Customer;
+import SD94.entity.khachHang.DiaChi;
+import SD94.entity.khachHang.KhachHang;
 import SD94.repository.AddressRepository;
 import SD94.repository.CustomerRepository;
-import SD94.service.service.CustomerService;
+import SD94.service.service.KhachHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +16,7 @@ import java.util.Optional;
 @CrossOrigin("*")
 public class CustomerController {
     @Autowired
-    CustomerService customerService;
+    KhachHangService khachHangService;
 
     @Autowired
     CustomerRepository customerRepository;
@@ -27,56 +25,56 @@ public class CustomerController {
     AddressRepository addressRepository;
 
     @GetMapping("/api/customer/list")
-    public List<Customer> listCustomer(){
+    public List<KhachHang> listCustomer(){
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        String username = authentication .getName();
 //        System.out.println(username);
 //        Staff staff = staffRepository.findByEmail(username);
 //        System.out.println(staff + "----------------------------------");
-        return customerService.findAllCustomer();
+        return khachHangService.findAllCustomer();
     }
 
     @PostMapping(value = "/api/customer/createCustomer")
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customerCreate){
-        return customerService.createCustomer(customerCreate);
+    public ResponseEntity<KhachHang> createCustomer(@RequestBody KhachHang khachHangCreate){
+        return khachHangService.createCustomer(khachHangCreate);
     }
 
     @PutMapping("/api/customer/deleteCustomer={id}")
-    public ResponseEntity<List<Customer>> deleteCustomer(@PathVariable("id") Long id){
-        return customerService.deleteCustomer(id);
+    public ResponseEntity<List<KhachHang>> deleteCustomer(@PathVariable("id") Long id){
+        return khachHangService.deleteCustomer(id);
     }
 
     @GetMapping("/api/customer/edit/customerID={id}")
-    public Customer customerEdit(@PathVariable("id") Long id){
+    public KhachHang customerEdit(@PathVariable("id") Long id){
         return customerRepository.findByID(id);
     }
 
     @PutMapping("/api/customer/saveUpdate")
-    public ResponseEntity<Customer> saveUpdate(@RequestBody Customer customerUpdate){
-        return customerService.editCustomer(customerUpdate);
+    public ResponseEntity<KhachHang> saveUpdate(@RequestBody KhachHang khachHangUpdate){
+        return khachHangService.editCustomer(khachHangUpdate);
     }
 
     @RequestMapping("/api/customer/search={search}")
-    public List<Customer> searchAllCustomer(@PathVariable("search") String search){
-        return customerService.searchAllCustomer(search);
+    public List<KhachHang> searchAllCustomer(@PathVariable("search") String search){
+        return khachHangService.searchAllCustomer(search);
     }
 
     @RequestMapping("/api/customer/searchDate={searchDate}")
-    public List<Customer> searchDateCustomer(@PathVariable("searchDate") String searchDate){
-        return customerService.searchDateCustomer(searchDate);
+    public List<KhachHang> searchDateCustomer(@PathVariable("searchDate") String searchDate){
+        return khachHangService.searchDateCustomer(searchDate);
     }
 
     @RequestMapping("/api/customer/add-address")
     public String  addAddress(@RequestParam("address") String address,
                               @RequestParam("id_customer") long id_customer){
-        Optional<Customer> optionalCustomer = customerRepository.findById(id_customer);
+        Optional<KhachHang> optionalCustomer = customerRepository.findById(id_customer);
         if(optionalCustomer.isPresent()){
-            Customer customer = optionalCustomer.get();
-            AddRess addRess = new AddRess();
-            addRess.setCustomer(customer);
-            addRess.setAddRess(address);
-            addRess.set_true(false);
-            addressRepository.save(addRess);
+            KhachHang khachHang = optionalCustomer.get();
+            DiaChi diaChi = new DiaChi();
+            diaChi.setKhachHang(khachHang);
+            diaChi.setDiaChi(address);
+            diaChi.setDiaChiMacDinh(false);
+            addressRepository.save(diaChi);
         }
         return "add address done";
     }
@@ -84,15 +82,15 @@ public class CustomerController {
     @PostMapping("/api/customer/address-true")
     public String setAddress(@RequestParam("id_address") long id_address,
                              @RequestParam("id_customer") long id_customer){
-        List<AddRess> addResses = addressRepository.findByCustomerID(id_customer);
-        for (AddRess addRess: addResses){
-            addRess.set_true(false);
-            addressRepository.save(addRess);
+        List<DiaChi> diaChis = addressRepository.findByCustomerID(id_customer);
+        for (DiaChi diaChi : diaChis){
+            diaChi.setDiaChiMacDinh(false);
+            addressRepository.save(diaChi);
         }
 
-        AddRess addRess = addressRepository.findbyCustomerAndID(id_customer, id_address);
-        addRess.set_true(true);
-        addressRepository.save(addRess);
+        DiaChi diaChi = addressRepository.findbyCustomerAndID(id_customer, id_address);
+        diaChi.setDiaChiMacDinh(true);
+        addressRepository.save(diaChi);
         return "true";
     }
 }

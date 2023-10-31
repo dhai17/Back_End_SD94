@@ -1,8 +1,8 @@
 package SD94.controller.admin.staff;
 
-import SD94.entity.Staff;
+import SD94.entity.nhanVien.NhanVien;
 import SD94.repository.StaffRepository;
-import SD94.service.service.StaffService;
+import SD94.service.service.NhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,24 +19,25 @@ import java.util.List;
 public class StaffController {
 
     @Autowired
-    StaffService staffService;
+    NhanVienService nhanVienService;
+
     @Autowired
     StaffRepository staffRepository;
 
 
     @RequestMapping("/api/staff/list")
-    public List<Staff> listStaff() {
-        return staffService.findAllStaff();
+    public List<NhanVien> listStaff() {
+        return nhanVienService.findAllStaff();
     }
 
     @PostMapping("/api/staff/createStaff")
-    public ResponseEntity<Staff> createStaff(@RequestBody Staff staffCreate) {
-        return staffService.createStaff(staffCreate);
+    public ResponseEntity<NhanVien> createStaff(@RequestBody NhanVien staffCreate) {
+        return nhanVienService.createStaff(staffCreate);
     }
 
     @PutMapping("/api/staff/deleteStaff={id}")
-    public ResponseEntity<List<Staff>> deleteStaff(@PathVariable("id") Long id) {
-        return staffService.deleteStaff(id);
+    public ResponseEntity<List<NhanVien>> deleteStaff(@PathVariable("id") Long id) {
+        return nhanVienService.deleteStaff(id);
     }
 
 //    @GetMapping("/api/staff/edit/staffID={id}")
@@ -47,23 +48,23 @@ public class StaffController {
 
     //Update
     @PutMapping("/api/staff/saveUpdate")
-    public ResponseEntity<Staff> saveUpdate(@RequestBody Staff staffEdit) {
-        return staffService.editStaff(staffEdit);
+    public ResponseEntity<NhanVien> saveUpdate(@RequestBody NhanVien staffEdit) {
+        return nhanVienService.editStaff(staffEdit);
     }
 
 
     @RequestMapping("/api/staff/search={search}")
-    public List<Staff> searchAllStaff(@PathVariable("search") String search) {
-        return staffService.searchAllStaff(search);
+    public List<NhanVien> searchAllStaff(@PathVariable("search") String search) {
+        return nhanVienService.searchAllStaff(search);
     }
 
     @RequestMapping("/api/staff/searchDate={searchDate}")
-    public List<Staff> searchDateStaff(@PathVariable("searchDate") String searchDate) {
-        return staffService.searchDateStaff(searchDate);
+    public List<NhanVien> searchDateStaff(@PathVariable("searchDate") String searchDate) {
+        return nhanVienService.searchDateStaff(searchDate);
     }
 
     @RequestMapping("/api/staff/edit/staffID={id}")
-    public Staff editStaff (@PathVariable("id") Long id){
+    public NhanVien editStaff (@PathVariable("id") Long id){
         return staffRepository.findByID(id);
     }
 

@@ -1,7 +1,7 @@
 package SD94.controller.admin.bill.online;
 
-import SD94.entity.bill.Bill;
-import SD94.service.service.PurchaseBillService;
+import SD94.entity.hoaDon.HoaDon;
+import SD94.service.service.HoaDonDatHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,29 +14,29 @@ import java.util.Map;
 public class BillOnlineController {
 
     @Autowired
-    PurchaseBillService purchaseBillService;
+    HoaDonDatHangService purchaseBillService;
     @GetMapping("/api/purchasebill/list1")
-    public List<Bill> listBill1() {
+    public List<HoaDon> listBill1() {
         return purchaseBillService.findAllBill1();
     }
 
     @GetMapping("/api/purchasebill/list2")
-    public List<Bill> listBill2() {
+    public List<HoaDon> listBill2() {
         return purchaseBillService.findAllBill2();
     }
 
     @GetMapping("/api/purchasebill/list3")
-    public List<Bill> listBill3() {
+    public List<HoaDon> listBill3() {
         return purchaseBillService.findAllBill3();
     }
 
     @GetMapping("/api/purchasebill/list4")
-    public List<Bill> listBill4() {
+    public List<HoaDon> listBill4() {
         return purchaseBillService.findAllBill4();
     }
 
     @GetMapping("/api/purchasebill/list5")
-    public List<Bill> listBill5() {
+    public List<HoaDon> listBill5() {
         return purchaseBillService.findAllBill5();
     }
 
@@ -89,59 +89,59 @@ public class BillOnlineController {
     }
 
     @RequestMapping("/api/bill/pending1/search={search}")
-    public List<Bill> searchAllBill1(@PathVariable("search") String search) {
+    public List<HoaDon> searchAllBill1(@PathVariable("search") String search) {
         System.out.println(search);
         return purchaseBillService.searchAllBill1(search);
 
     }
 
     @RequestMapping("/api/bill/pending1/searchDate={searchDate}")
-    public List<Bill> searchDateBill1(@PathVariable("searchDate") String searchDate) {
+    public List<HoaDon> searchDateBill1(@PathVariable("searchDate") String searchDate) {
         return purchaseBillService.searchDateBill1(searchDate);
     }
     @RequestMapping("/api/bill/pending2/search={search}")
-    public List<Bill> searchAllBill2(@PathVariable("search") String search) {
+    public List<HoaDon> searchAllBill2(@PathVariable("search") String search) {
         System.out.println(search);
         return purchaseBillService.searchAllBill2(search);
 
     }
 
     @RequestMapping("/api/bill/pending2/searchDate={searchDate}")
-    public List<Bill> searchDateBill2(@PathVariable("searchDate") String searchDate) {
+    public List<HoaDon> searchDateBill2(@PathVariable("searchDate") String searchDate) {
         return purchaseBillService.searchDateBill2(searchDate);
     }
     @RequestMapping("/api/bill/pending3/search={search}")
-    public List<Bill> searchAllBill3(@PathVariable("search") String search) {
+    public List<HoaDon> searchAllBill3(@PathVariable("search") String search) {
         System.out.println(search);
         return purchaseBillService.searchAllBill3(search);
 
     }
 
     @RequestMapping("/api/bill/pending3/searchDate={searchDate}")
-    public List<Bill> searchDateBill3(@PathVariable("searchDate") String searchDate) {
+    public List<HoaDon> searchDateBill3(@PathVariable("searchDate") String searchDate) {
         return purchaseBillService.searchDateBill3(searchDate);
     }
     @RequestMapping("/api/bill/pending4/search={search}")
-    public List<Bill> searchAllBill4(@PathVariable("search") String search) {
+    public List<HoaDon> searchAllBill4(@PathVariable("search") String search) {
         System.out.println(search);
         return purchaseBillService.searchAllBill4(search);
 
     }
 
     @RequestMapping("/api/bill/pending4/searchDate={searchDate}")
-    public List<Bill> searchDateBill4(@PathVariable("searchDate") String searchDate) {
+    public List<HoaDon> searchDateBill4(@PathVariable("searchDate") String searchDate) {
         return purchaseBillService.searchDateBill4(searchDate);
     }
 
     @RequestMapping("/api/bill/pending5/search={search}")
-    public List<Bill> searchAllBill5(@PathVariable("search") String search) {
+    public List<HoaDon> searchAllBill5(@PathVariable("search") String search) {
         System.out.println(search);
         return purchaseBillService.searchAllBill5(search);
 
     }
 
     @RequestMapping("/api/bill/pending5/searchDate={searchDate}")
-    public List<Bill> searchDateBill5(@PathVariable("searchDate") String searchDate) {
+    public List<HoaDon> searchDateBill5(@PathVariable("searchDate") String searchDate) {
         return purchaseBillService.searchDateBill5(searchDate);
     }
 }

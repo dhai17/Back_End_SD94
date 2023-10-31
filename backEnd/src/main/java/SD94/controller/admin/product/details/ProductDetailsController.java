@@ -1,13 +1,13 @@
 package SD94.controller.admin.product.details;
 
 import SD94.dto.DetailsDTO;
-import SD94.entity.product.ProductDetails;
-import SD94.entity.product.Size;
+import SD94.entity.sanPham.KichCo;
+import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.ProductColorRepository;
 import SD94.repository.ProductDetailsRepository;
-import SD94.repository.ProductSizeRepository;
-import SD94.service.service.ProductDetailsService;
-import SD94.service.service.ProductService;
+import SD94.repository.sanPham.KichCoRepository;
+import SD94.service.service.SanPhamChiTietService;
+import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,41 +29,41 @@ public class ProductDetailsController {
     ProductDetailsRepository productDetailsRepository;
 
     @Autowired
-    ProductDetailsService productDetailsService;
+    SanPhamChiTietService sanPhamChiTietService;
 
     @Autowired
-    ProductService productService;
+    SanPhamService sanPhamService;
 
     @Autowired
     ProductColorRepository productColorRepository;
 
     @Autowired
-    ProductSizeRepository productSizeRepository;
+    KichCoRepository productSizeRepository;
 
     //Hien thi
     @GetMapping("list")
-    public ResponseEntity<List<ProductDetails>> getColor() {
-        List<ProductDetails> list = productDetailsRepository.findAll();
+    public ResponseEntity<List<SanPhamChiTiet>> getColor() {
+        List<SanPhamChiTiet> list = productDetailsRepository.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     //Hien thi theo id
     @GetMapping("edit/prodtuctDetailsID={id}")
-    public ProductDetails editProductDetails(@PathVariable("id") Long id){
+    public SanPhamChiTiet editProductDetails(@PathVariable("id") Long id){
         return productDetailsRepository.findByID(id);
     }
 
     //Sửa và lưu
     @PutMapping("saveUpdate")
-    public ResponseEntity<ProductDetails> saveUpdate(@RequestBody ProductDetails productDetails){
-        return productDetailsService.saveEdit(productDetails);
+    public ResponseEntity<SanPhamChiTiet> saveUpdate(@RequestBody SanPhamChiTiet sanPhamChiTiet){
+        return sanPhamChiTietService.saveEdit(sanPhamChiTiet);
     }
 
     //Xóa
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<List<ProductDetails>> deleteProductDetails(@PathVariable("id") Long id){
+    public ResponseEntity<List<SanPhamChiTiet>> deleteProductDetails(@PathVariable("id") Long id){
 //        System.out.println(id);
-        return productDetailsService.deleteProductDetails(id);
+        return sanPhamChiTietService.deleteProductDetails(id);
     }
 
     //Thêm sp
@@ -81,26 +81,26 @@ public class ProductDetailsController {
 //    }
 
     @PostMapping("saveCreate")
-    public ResponseEntity<ProductDetails> saveCreate(@RequestBody DetailsDTO detailsDTO){
+    public ResponseEntity<SanPhamChiTiet> saveCreate(@RequestBody DetailsDTO detailsDTO){
 //        System.out.println(detailsDTO);
-        Size size = productSizeRepository.findByID(detailsDTO.getIdSize());
+        KichCo size = productSizeRepository.findByID(detailsDTO.getIdSize());
 //        System.out.println(productSize);
-        ProductDetails productDetails = new ProductDetails();
-        productDetails.setSize(size);
-        productDetails.setQuantity(detailsDTO.getQuantity());
-        productDetailsRepository.save(productDetails);
+        SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
+        sanPhamChiTiet.setKichCo(size);
+        sanPhamChiTiet.setSoLuong(detailsDTO.getQuantity());
+        productDetailsRepository.save(sanPhamChiTiet);
         return null;
     }
 
     //Tìm kiếm
     @RequestMapping("search={search}")
-    public List<ProductDetails> searchAll(@PathVariable("search") String search){
-        return productDetailsService.searchAllProductDetails(search);
+    public List<SanPhamChiTiet> searchAll(@PathVariable("search") String search){
+        return sanPhamChiTietService.searchAllProductDetails(search);
     }
 
     @RequestMapping("searchDate={searchDate}")
-    public List<ProductDetails> searchDate(@PathVariable("searchDate") String search){
-        return productDetailsService.searchDateProductDetails(search);
+    public List<SanPhamChiTiet> searchDate(@PathVariable("searchDate") String search){
+        return sanPhamChiTietService.searchDateProductDetails(search);
     }
 
 }

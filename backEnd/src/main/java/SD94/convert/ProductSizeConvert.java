@@ -1,16 +1,16 @@
 package SD94.convert;
 
 import SD94.dto.ProductSizeDTO;
-import SD94.entity.product.Size;
+import SD94.entity.sanPham.KichCo;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductSizeConvert {
 
-    public ProductSizeDTO toDto(Size entity) {
+    public ProductSizeDTO toDto(KichCo entity) {
         ProductSizeDTO dto = new ProductSizeDTO();
         dto.setId(entity.getId());
-        dto.setShoeSize(entity.getShoeSize());
+        dto.setShoeSize(entity.getKichCo());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setCreatedby(entity.getCreatedby());
         dto.setLastModifiedDate(entity.getLastModifiedDate());
@@ -19,10 +19,10 @@ public class ProductSizeConvert {
         return dto;
     }
 
-    public Size toEntity(ProductSizeDTO dto) {
-        Size entity = new Size();
+    public KichCo toEntity(ProductSizeDTO dto) {
+        KichCo entity = new KichCo();
         entity.setId(dto.getId());
-        entity.setShoeSize(dto.getShoeSize());
+        entity.setKichCo(dto.getShoeSize());
         entity.setCreatedDate(dto.getCreatedDate());
         entity.setCreatedby(dto.getCreatedby());
         entity.setLastModifiedDate(dto.getLastModifiedDate());

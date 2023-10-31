@@ -1,10 +1,11 @@
 package SD94.controller.admin.banHang.taiQuay;
 
-import SD94.entity.bill.Bill;
-import SD94.entity.bill.BillDetails;
-import SD94.entity.bill.StatusBill;
-import SD94.entity.product.ProductDetails;
+import SD94.entity.hoaDon.HoaDon;
+import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.hoaDon.TrangThai;
+import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.*;
+import SD94.repository.sanPham.KichCoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ public class InStoreController {
     ProductColorRepository productColorRepository;
 
     @Autowired
-    ProductSizeRepository productSizeRepository;
+    KichCoRepository productSizeRepository;
 
     @Autowired
     ProductDetailsRepository productDetailsRepository;
@@ -36,7 +37,7 @@ public class InStoreController {
     @RequestMapping("/api/getSize")
     public ResponseEntity<List<String>> getSize(@RequestParam("product_id") String id) {
         Long id_product = Long.valueOf(id);
-        List<String> productSizes = productSizeRepository.getSize(id_product);
+        List<String> productSizes = productSizeRepository.getKichCo(id_product);
         return ResponseEntity.ok().body(productSizes);
     }
 
@@ -57,23 +58,23 @@ public class InStoreController {
 
     @RequestMapping("/new-bill")
     public String newBill(){
-        Bill bill = new Bill();
-        bill.setCode("HD034");
-        bill.setCreatedby("hduong");
-        bill.setCreatedDate(new Date());
-        billRepository.save(bill);
+        HoaDon hoaDon = new HoaDon();
+        hoaDon.setMaHoaDon("HD034");
+        hoaDon.setCreatedby("hduong");
+        hoaDon.setCreatedDate(new Date());
+        billRepository.save(hoaDon);
         return "create bill done";
     }
 
     @RequestMapping("/cancel")
     public String huyDon(@RequestParam("id_bill") long id_bill) {
-        Optional<Bill> optionalBill = billRepository.findById(1L);
+        Optional<HoaDon> optionalBill = billRepository.findById(1L);
         if (optionalBill.isPresent()) {
-            Bill bill = optionalBill.get();
-            StatusBill statusBill = new StatusBill();
-            statusBill.setId(8L);
-            bill.setStatus(statusBill);
-            billRepository.save(bill);
+            HoaDon hoaDon = optionalBill.get();
+            TrangThai trangThai = new TrangThai();
+            trangThai.setId(8L);
+            hoaDon.setTrangThai(trangThai);
+            billRepository.save(hoaDon);
         }
 
         return "Payment bill done";
@@ -83,16 +84,16 @@ public class InStoreController {
     public String productDetails(@RequestParam("id_product") long id_product,
                                  @RequestParam("id_color") long id_color,
                                  @RequestParam("id_size") long id_size) {
-        ProductDetails productDetails = productDetailsRepository.findByColorAndSize(id_product, id_color, id_size);
-        Optional<Bill> optionalBill = billRepository.findById(1L);
+        SanPhamChiTiet sanPhamChiTiet = productDetailsRepository.findByColorAndSize(id_product, id_color, id_size);
+        Optional<HoaDon> optionalBill = billRepository.findById(1L);
         if (optionalBill.isPresent()) {
-            Bill bill = optionalBill.get();
-            BillDetails bill_details = new BillDetails();
-            bill_details.setQuantity(2);
-            bill_details.setUnitPrice(100);
-            bill_details.setTotalPayment(200);
-            bill_details.setBill(bill);
-            bill_details.setProductDetails(productDetails);
+            HoaDon hoaDon = optionalBill.get();
+            HoaDonChiTiet bill_details = new HoaDonChiTiet();
+            bill_details.setSoLuong(2);
+            bill_details.setDonGia(100);
+            bill_details.setThanhTien(200);
+            bill_details.setHoaDon(hoaDon);
+            bill_details.setSanPhamChiTiet(sanPhamChiTiet);
             billDetailsRepository.save(bill_details);
         }
         return "save product to bill done";
@@ -100,13 +101,13 @@ public class InStoreController {
 
     @RequestMapping("/payment")
     public String thanhtoanHoaDonTaiQuay(@RequestParam("id_bill") long id_bill) {
-        Optional<Bill> optionalBill = billRepository.findById(id_bill);
+        Optional<HoaDon> optionalBill = billRepository.findById(id_bill);
         if (optionalBill.isPresent()) {
-            Bill bill = optionalBill.get();
-            StatusBill statusBill = new StatusBill();
-            statusBill.setId(7L);
-            bill.setStatus(statusBill);
-            billRepository.save(bill);
+            HoaDon hoaDon = optionalBill.get();
+            TrangThai trangThai = new TrangThai();
+            trangThai.setId(7L);
+            hoaDon.setTrangThai(trangThai);
+            billRepository.save(hoaDon);
         }
 
         return "Payment bill done";
@@ -115,26 +116,26 @@ public class InStoreController {
     @PostMapping("/xoa-san-pham")
     public String xoaSanPham(@RequestParam("id_bill") long id_bill,
                              @RequestParam("id_bill_details") long id_bill_details){
-        Optional<BillDetails> detailedInvoice = billDetailsRepository.findById(id_bill_details);
-        Optional<Bill> optionalBill = billRepository.findById(id_bill);
+        Optional<HoaDonChiTiet> detailedInvoice = billDetailsRepository.findById(id_bill_details);
+        Optional<HoaDon> optionalBill = billRepository.findById(id_bill);
         if(detailedInvoice.isPresent() && optionalBill.isPresent()){
-            BillDetails details = detailedInvoice.get();
-            Bill bill = optionalBill.get();
+            HoaDonChiTiet details = detailedInvoice.get();
+            HoaDon hoaDon = optionalBill.get();
 
             details.setDeleted(true);
             billDetailsRepository.save(details);
 
-            int tongTien = details.getTotalPayment();
-            int tongTienBill = bill.getTotalOrderPrice();
+            int tongTien = details.getThanhTien();
+            int tongTienBill = hoaDon.getTongTienHoaDon();
             int capNhatTongTien = tongTienBill - tongTien;
-            bill.setTotalOrderPrice(capNhatTongTien);
+            hoaDon.setTongTienHoaDon(capNhatTongTien);
 
-            long id_product_details = details.getProductDetails().getId();
-            ProductDetails productDetails = productDetailsRepository.findByID(id_product_details);
-            int soLuong = details.getQuantity();
-            int soLuongBanDau = productDetails.getQuantity();
-            productDetails.setQuantity(soLuongBanDau + soLuong);
-            productDetailsRepository.save(productDetails);
+            long id_product_details = details.getSanPhamChiTiet().getId();
+            SanPhamChiTiet sanPhamChiTiet = productDetailsRepository.findByID(id_product_details);
+            int soLuong = details.getSoLuong();
+            int soLuongBanDau = sanPhamChiTiet.getSoLuong();
+            sanPhamChiTiet.setSoLuong(soLuongBanDau + soLuong);
+            productDetailsRepository.save(sanPhamChiTiet);
         }
         return "deleted san pham thanh cong";
     }

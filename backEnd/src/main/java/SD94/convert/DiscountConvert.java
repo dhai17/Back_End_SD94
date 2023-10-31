@@ -1,21 +1,21 @@
 package SD94.convert;
 
 import SD94.dto.DiscountDTO;
-import SD94.entity.discount.Discount;
+import SD94.entity.khuyenMai.KhuyenMai;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DiscountConvert {
 
-    public DiscountDTO toDto(Discount entity) {
+    public DiscountDTO toDto(KhuyenMai entity) {
         DiscountDTO dto = new DiscountDTO();
         dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setStartedDate(entity.getStartedDate());
-        dto.setEndDate(entity.getEndDate());
-        dto.setPercentDiscount(entity.getPercentDiscount());
-        dto.setMaximumvalue(entity.getMaximumvalue());
-        dto.setStatus(entity.getStatus());
+        dto.setName(entity.getTenKhuyenMai());
+        dto.setStartedDate(entity.getNgayBatDau());
+        dto.setEndDate(entity.getNgayKetThuc());
+        dto.setPercentDiscount(entity.getPhanTramGiam());
+        dto.setMaximumvalue(entity.getTienGiamToiDa());
+        dto.setStatus(entity.getTrangThai());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setCreatedby(entity.getCreatedby());
         dto.setLastModifiedDate(entity.getLastModifiedDate());
@@ -24,15 +24,15 @@ public class DiscountConvert {
         return dto;
     }
 
-    public Discount toEntity(DiscountDTO dto) {
-        Discount entity = new Discount();
+    public KhuyenMai toEntity(DiscountDTO dto) {
+        KhuyenMai entity = new KhuyenMai();
         entity.setId(dto.getId());
-        entity.setName(dto.getName());
-        entity.setStartedDate(dto.getStartedDate());
-        entity.setEndDate(dto.getEndDate());
-        entity.setPercentDiscount(dto.getPercentDiscount());
-        entity.setMaximumvalue(dto.getMaximumvalue());
-        entity.setStatus(dto.getStatus());
+        entity.setTenKhuyenMai(dto.getName());
+        entity.setNgayBatDau(dto.getStartedDate());
+        entity.setNgayKetThuc(dto.getEndDate());
+        entity.setPhanTramGiam(dto.getPercentDiscount());
+        entity.setTienGiamToiDa(dto.getMaximumvalue());
+        entity.setTrangThai(dto.getStatus());
         entity.setCreatedDate(dto.getCreatedDate());
         entity.setCreatedby(dto.getCreatedby());
         entity.setLastModifiedDate(dto.getLastModifiedDate());

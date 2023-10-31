@@ -1,8 +1,8 @@
 package SD94.dto;
 
-import SD94.entity.product.Product;
-import SD94.entity.product.Color;
-import SD94.entity.product.Size;
+import SD94.entity.sanPham.KichCo;
+import SD94.entity.sanPham.SanPham;
+import SD94.entity.sanPham.MauSac;
 import lombok.Data;
 
 import java.util.Date;
@@ -24,10 +24,10 @@ public class ProductDetailsDTO {
 
     private String lastModifiedBy;
 
-    private Product product;
+    private SanPham sanPham;
 
-    private Color color;
+    private MauSac mauSac;
 
-    private Size size;
+    private KichCo size;
 
 }

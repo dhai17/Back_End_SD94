@@ -1,5 +1,5 @@
 package SD94.entity.security;
-import SD94.entity.Staff;
+import SD94.entity.nhanVien.NhanVien;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,7 +14,7 @@ public class UserRole {
     private Long userRoleId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private Staff staff;
+    private NhanVien staff;
 
     @ManyToOne
     private Role role;

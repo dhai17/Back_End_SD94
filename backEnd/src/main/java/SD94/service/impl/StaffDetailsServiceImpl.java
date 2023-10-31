@@ -1,5 +1,5 @@
 package SD94.service.impl;
-import SD94.entity.Staff;
+import SD94.entity.nhanVien.NhanVien;
 import SD94.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +14,7 @@ public class StaffDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Staff user = this.staffRepository.findByEmail(username);
+        NhanVien user = this.staffRepository.findByEmail(username);
         System.out.println("user-----" +user);
         if (user == null) {
             System.out.println("User not found");

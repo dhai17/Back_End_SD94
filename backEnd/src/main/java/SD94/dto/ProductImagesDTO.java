@@ -1,7 +1,7 @@
 package SD94.dto;
 
-import SD94.entity.product.Color;
-import SD94.entity.product.ProductDetails;
+import SD94.entity.sanPham.MauSac;
+import SD94.entity.sanPham.SanPhamChiTiet;
 import lombok.Data;
 
 @Data
@@ -13,8 +13,8 @@ public class ProductImagesDTO {
 
     private String name;
 
-    private Color color;
+    private MauSac mauSac;
 
-    private ProductDetails productDetails;
+    private SanPhamChiTiet sanPhamChiTiet;
 
 }

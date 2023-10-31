@@ -1,11 +1,11 @@
 package SD94.controller.admin.banHang.banHangOnline;
 
-import SD94.entity.bill.Bill;
-import SD94.entity.bill.BillDetails;
-import SD94.entity.bill.StatusBill;
-import SD94.entity.cart.CartDetails;
-import SD94.entity.discount.Discount;
-import SD94.entity.product.ProductDetails;
+import SD94.entity.hoaDon.HoaDon;
+import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.hoaDon.TrangThai;
+import SD94.entity.gioHang.GioHangChiTiet;
+import SD94.entity.khuyenMai.KhuyenMai;
+import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,36 +39,36 @@ public class BanHangOnlineController {
     @PostMapping("/datHang")
     public ResponseEntity<Long> checkout(@RequestParam("id_cart_details") long[] id_cart_details,
                                          @RequestParam("total") int total) {
-        Bill bill = new Bill();
-        bill.setCreatedDate(new Date());
-        bill.setCreatedby("abc");
-        billRepository.save(bill);
+        HoaDon hoaDon = new HoaDon();
+        hoaDon.setCreatedDate(new Date());
+        hoaDon.setCreatedby("abc");
+        billRepository.save(hoaDon);
 
         for (long id : id_cart_details) {
-            Optional<CartDetails> optionalcart = cartDetailsRepository.findById(id);
+            Optional<GioHangChiTiet> optionalcart = cartDetailsRepository.findById(id);
             if (optionalcart.isPresent()) {
-                CartDetails cartDetails = optionalcart.get();
-                BillDetails billDetails = new BillDetails();
-                billDetails.setProductDetails(cartDetails.getProductDetails());
-                billDetails.setQuantity(cartDetails.getQuanTity());
-                billDetails.setUnitPrice(cartDetails.getUnitPrice());
-                billDetails.setTotalPayment(total);
-                billDetails.setBill(bill);
-                billDetailsRepository.save(billDetails);
+                GioHangChiTiet gioHangChiTiet = optionalcart.get();
+                HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+                hoaDonChiTiet.setSanPhamChiTiet(gioHangChiTiet.getSanPhamChiTiet());
+                hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
+                hoaDonChiTiet.setDonGia(gioHangChiTiet.getDonGia());
+                hoaDonChiTiet.setThanhTien(total);
+                hoaDonChiTiet.setHoaDon(hoaDon);
+                billDetailsRepository.save(hoaDonChiTiet);
             }
         }
 
-        idBill = bill.getId();
+        idBill = hoaDon.getId();
         return ResponseEntity.ok(idBill);
     }
 
     @GetMapping("/check-out")
-    public ResponseEntity<Bill> getBill() {
+    public ResponseEntity<HoaDon> getBill() {
         if (idBill != null) {
-            Optional<Bill> optionalBill = billRepository.findById(idBill);
+            Optional<HoaDon> optionalBill = billRepository.findById(idBill);
             if (optionalBill.isPresent()) {
-                Bill bill = optionalBill.get();
-                return ResponseEntity.ok(bill);
+                HoaDon hoaDon = optionalBill.get();
+                return ResponseEntity.ok(hoaDon);
             }
         }
         return ResponseEntity.notFound().build();
@@ -78,25 +78,25 @@ public class BanHangOnlineController {
     public ResponseEntity<String> addDiscount(@RequestParam("id_bill") long id_bill,
                               @RequestParam("id_discount") long id_discount,
                               @RequestParam("total") int total) {
-        Discount discount = discountRepository.findByID(id_discount);
-        Optional<Bill> optionalBill = billRepository.findById(id_bill);
+        KhuyenMai khuyenMai = discountRepository.findByID(id_discount);
+        Optional<HoaDon> optionalBill = billRepository.findById(id_bill);
         if (optionalBill.isPresent()){
-            Bill bill = optionalBill.get();
-            int phanTramGiam = discount.getPercentDiscount();
-            int tienGiamToiDa = discount.getMaximumvalue();
+            HoaDon hoaDon = optionalBill.get();
+            int phanTramGiam = khuyenMai.getPhanTramGiam();
+            int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
             int tongTienBill = total;
 
             int tongTienSauGiam = (tongTienBill * phanTramGiam)/100;
             if(tongTienSauGiam > tienGiamToiDa){
                 tongTienSauGiam = tongTienBill - tienGiamToiDa;
-                bill.setTotalInvoiceAmount(tongTienSauGiam);
-                bill.setDiscount(discount);
-                billRepository.save(bill);
+                hoaDon.setTongTienHoaDon(tongTienSauGiam);
+                hoaDon.setKhuyenMai(khuyenMai);
+                billRepository.save(hoaDon);
                 return ResponseEntity.badRequest().body(Collections.singletonList("Tien giam lon hon tien giam toi da").toString());
             }else {
-                bill.setTotalInvoiceAmount(tongTienSauGiam);
-                bill.setDiscount(discount);
-                billRepository.save(bill);
+                hoaDon.setTongTienHoaDon(tongTienSauGiam);
+                hoaDon.setKhuyenMai(khuyenMai);
+                billRepository.save(hoaDon);
             }
         }
 
@@ -112,31 +112,31 @@ public class BanHangOnlineController {
                            @RequestParam("SoDienThoaiNguoiNhan") String SoDienThoaiNguoiNhan,
                            @RequestParam("emailNguoiNhan") String emailNguoiNhan,
                            @RequestParam("ghiChu") String ghiChu) {
-        Optional<Bill> optionalBill = billRepository.findById(id_bill);
+        Optional<HoaDon> optionalBill = billRepository.findById(id_bill);
         if (optionalBill.isPresent()) {
-            StatusBill status = new StatusBill();
+            TrangThai status = new TrangThai();
             status.setId(1L);
-            Bill bill = optionalBill.get();
-            bill.setAddress(diaChiGiaohang);
-            bill.setEmail(emailNguoiNhan);
-            bill.setNote(ghiChu);
-            bill.setPhoneNumber(SoDienThoaiNguoiNhan);
-            bill.setShippingMoney(money_ship);
-            bill.setTotalInvoiceAmount(total);
-            bill.setStatus(status);
-            billRepository.save(bill);
+            HoaDon hoaDon = optionalBill.get();
+            hoaDon.setDiaChiGiaoHang(diaChiGiaohang);
+            hoaDon.setEmailNguoiNhan(emailNguoiNhan);
+            hoaDon.setGhiChu(ghiChu);
+            hoaDon.setSDTNguoiNhan(SoDienThoaiNguoiNhan);
+            hoaDon.setTienShip(money_ship);
+            hoaDon.setTongTienHoaDon(total);
+            hoaDon.setTrangThai(status);
+            billRepository.save(hoaDon);
 
-            List<BillDetails> listBillDetails = billDetailsRepository.findByIDBill(id_bill);
-            for (BillDetails billDtails : listBillDetails) {
-                int soLuongDangCo = billDtails.getQuantity();
-                int soLuongDangCoSanPham = billDtails.getProductDetails().getQuantity();
+            List<HoaDonChiTiet> listBillDetails = billDetailsRepository.findByIDBill(id_bill);
+            for (HoaDonChiTiet billDtails : listBillDetails) {
+                int soLuongDangCo = billDtails.getSoLuong();
+                int soLuongDangCoSanPham = billDtails.getSanPhamChiTiet().getSoLuong();
                 int soLuongCapNhat = soLuongDangCoSanPham - soLuongDangCo;
-                long idProductDetails = billDtails.getProductDetails().getId();
-                ProductDetails productDetails = productDetailsRepository.findByID(idProductDetails);
-                productDetails.setQuantity(soLuongCapNhat);
-                productDetailsRepository.save(productDetails);
+                long idProductDetails = billDtails.getSanPhamChiTiet().getId();
+                SanPhamChiTiet sanPhamChiTiet = productDetailsRepository.findByID(idProductDetails);
+                sanPhamChiTiet.setSoLuong(soLuongCapNhat);
+                productDetailsRepository.save(sanPhamChiTiet);
 
-                CartDetails cart = cartDetailsRepository.findByProductDetailsID(idProductDetails);
+                GioHangChiTiet cart = cartDetailsRepository.findByProductDetailsID(idProductDetails);
                 cart.setDeleted(true);
                 cartDetailsRepository.save(cart);
             }

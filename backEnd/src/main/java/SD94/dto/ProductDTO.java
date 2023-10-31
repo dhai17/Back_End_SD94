@@ -1,8 +1,8 @@
 package SD94.dto;
 
-import SD94.entity.product.Manufacturer;
-import SD94.entity.product.TypeProduct;
-import SD94.entity.product.Material;
+import SD94.entity.sanPham.NhaSanXuat;
+import SD94.entity.sanPham.LoaiSanPham;
+import SD94.entity.sanPham.ChatLieu;
 import lombok.Data;
 
 import java.util.Date;
@@ -28,10 +28,10 @@ public class ProductDTO {
 
     private String lastModifiedBy;
 
-    private Material idMaterial;
+    private ChatLieu idChatLieu;
 
-    private TypeProduct idTypeProduct;
+    private LoaiSanPham idLoaiSanPham;
 
-    private Manufacturer idManufacturer;
+    private NhaSanXuat idNhaSanXuat;
 
 }

@@ -1,17 +1,17 @@
 package SD94.convert;
 
 import SD94.dto.ProductColorDTO;
-import SD94.entity.product.Color;
+import SD94.entity.sanPham.MauSac;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductColorConvert {
 
-    public ProductColorDTO toDto(Color entity) {
+    public ProductColorDTO toDto(MauSac entity) {
         ProductColorDTO dto = new ProductColorDTO();
         dto.setId(entity.getId());
-        dto.setCode(entity.getCode());
-        dto.setColor(entity.getColor());
+        dto.setCode(entity.getMaMauSac());
+        dto.setColor(entity.getTenMauSac());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setCreatedby(entity.getCreatedby());
         dto.setLastModifiedDate(entity.getLastModifiedDate());
@@ -19,11 +19,11 @@ public class ProductColorConvert {
         return dto;
     }
 
-    public Color toEntity(ProductColorDTO dto) {
-        Color entity = new Color();
+    public MauSac toEntity(ProductColorDTO dto) {
+        MauSac entity = new MauSac();
         entity.setId(dto.getId());
-        entity.setCode(dto.getCode());
-        entity.setColor(dto.getColor());
+        entity.setMaMauSac(dto.getCode());
+        entity.setTenMauSac(dto.getColor());
         entity.setCreatedDate(dto.getCreatedDate());
         entity.setCreatedby(dto.getCreatedby());
         entity.setLastModifiedDate(dto.getLastModifiedDate());

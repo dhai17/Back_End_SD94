@@ -1,39 +1,39 @@
 package SD94.convert;
 
 import SD94.dto.ProductDetailsDTO;
-import SD94.entity.product.ProductDetails;
+import SD94.entity.sanPham.SanPhamChiTiet;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductDetailsConvert {
 
-    public ProductDetailsDTO toDto(ProductDetails entity) {
+    public ProductDetailsDTO toDto(SanPhamChiTiet entity) {
         ProductDetailsDTO dto = new ProductDetailsDTO();
         dto.setId(entity.getId());
-        dto.setQuantity(entity.getQuantity());
-        dto.setStatus(entity.getStatus());
+        dto.setQuantity(entity.getSoLuong());
+        dto.setStatus(entity.getTrangThai());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setCreatedby(entity.getCreatedby());
         dto.setLastModifiedDate(entity.getLastModifiedDate());
         dto.setLastModifiedBy(entity.getLastModifiedBy());
-        dto.setProduct(entity.getProduct());
-        dto.setColor(entity.getColor());
-        dto.setSize(entity.getSize());
+        dto.setSanPham(entity.getSanPham());
+        dto.setMauSac(entity.getMauSac());
+        dto.setSize(entity.getKichCo());
         return dto;
     }
 
-    public ProductDetails toEntity(ProductDetailsDTO dto) {
-        ProductDetails entity = new ProductDetails();
+    public SanPhamChiTiet toEntity(ProductDetailsDTO dto) {
+        SanPhamChiTiet entity = new SanPhamChiTiet();
         entity.setId(dto.getId());
-        entity.setQuantity(dto.getQuantity());
-        entity.setStatus(dto.getStatus());
+        entity.setSoLuong(dto.getQuantity());
+        entity.setTrangThai(dto.getStatus());
         entity.setCreatedDate(dto.getCreatedDate());
         entity.setCreatedby(dto.getCreatedby());
         entity.setLastModifiedDate(dto.getLastModifiedDate());
         entity.setLastModifiedBy(dto.getLastModifiedBy());
-        entity.setProduct(dto.getProduct());
-        entity.setColor(dto.getColor());
-        entity.setSize(dto.getSize());
+        entity.setSanPham(dto.getSanPham());
+        entity.setMauSac(dto.getMauSac());
+        entity.setKichCo(dto.getSize());
         return entity;
     }
 

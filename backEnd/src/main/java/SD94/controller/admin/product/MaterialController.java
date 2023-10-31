@@ -1,8 +1,8 @@
 package SD94.controller.admin.product;
 
-import SD94.entity.product.Material;
+import SD94.entity.sanPham.ChatLieu;
 import SD94.repository.ProductMaterialRepository;
-import SD94.service.service.ProductMaterialService;
+import SD94.service.service.ChatLieuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,32 +18,32 @@ public class MaterialController {
     ProductMaterialRepository repository;
 
     @Autowired
-    ProductMaterialService productMaterialService;
+    ChatLieuService productMaterialService;
 
     @GetMapping("/material/list")
-    public ResponseEntity<List<Material>> getMaterial() {
-        List<Material> list = repository.findAll();
+    public ResponseEntity<List<ChatLieu>> getMaterial() {
+        List<ChatLieu> list = repository.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     @PostMapping("/material/saveCreate")
-    public ResponseEntity<Material> saveCreate(@RequestBody Material material) {
-        return productMaterialService.saveCreate(material);
+    public ResponseEntity<ChatLieu> saveCreate(@RequestBody ChatLieu chatLieu) {
+        return productMaterialService.saveCreate(chatLieu);
     }
 
     @PutMapping("/material/delete/{id}")
-    public ResponseEntity<List<Material>> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<List<ChatLieu>> delete(@PathVariable("id") Long id) {
         return productMaterialService.deleteProductMaterial(id);
     }
 
     @GetMapping("/material/edit={id}")
-    public Material edit(@PathVariable("id") Long id) {
+    public ChatLieu edit(@PathVariable("id") Long id) {
         return repository.findByID(id);
     }
 
     @PutMapping("/material/saveUpdate")
-    public ResponseEntity<Material> saveUpdate(@RequestBody Material material) {
-        return productMaterialService.saveEdit(material);
+    public ResponseEntity<ChatLieu> saveUpdate(@RequestBody ChatLieu chatLieu) {
+        return productMaterialService.saveEdit(chatLieu);
     }
 
 }

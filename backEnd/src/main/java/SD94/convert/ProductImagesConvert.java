@@ -1,29 +1,29 @@
 package SD94.convert;
 
 import SD94.dto.ProductImagesDTO;
-import SD94.entity.product.Image;
+import SD94.entity.sanPham.HinhAnh;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductImagesConvert {
 
-    public ProductImagesDTO toDto(Image entity) {
+    public ProductImagesDTO toDto(HinhAnh entity) {
         ProductImagesDTO dto = new ProductImagesDTO();
         dto.setId(entity.getId());
-        dto.setName(entity.getName());
+        dto.setName(entity.getTenAnh());
 //        dto.setImg(entity.getImg());
-        dto.setProductDetails(entity.getProductDetails());
-        dto.setColor(entity.getColor());
+        dto.setSanPhamChiTiet(entity.getSanPhamChiTiet());
+        dto.setMauSac(entity.getMauSac());
         return dto;
     }
 
-    public Image toEntity(ProductImagesDTO dto) {
-        Image entity = new Image();
+    public HinhAnh toEntity(ProductImagesDTO dto) {
+        HinhAnh entity = new HinhAnh();
         entity.setId(dto.getId());
-        entity.setName(dto.getName());
+        entity.setTenAnh(dto.getName());
 //        entity.setImg(dto.getImg());
-        entity.setProductDetails(dto.getProductDetails());
-        entity.setColor(dto.getColor());
+        entity.setSanPhamChiTiet(dto.getSanPhamChiTiet());
+        entity.setMauSac(dto.getMauSac());
         return entity;
     }
 }

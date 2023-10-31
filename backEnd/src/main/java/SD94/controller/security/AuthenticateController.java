@@ -1,7 +1,7 @@
 package SD94.controller.security;
 
 import SD94.config.JwtUtils;
-import SD94.entity.Staff;
+import SD94.entity.nhanVien.NhanVien;
 import SD94.helper.UserNotFoundException;
 import SD94.model.request.JwtRequest;
 import SD94.model.response.JwtResponse;
@@ -61,7 +61,7 @@ public class AuthenticateController {
 
     // return the details of current user
     @GetMapping("/current-user")
-    public Staff getCurrentUser(Principal principal) {
-        return (Staff) this.staffDetailsService.loadUserByUsername(principal.getName());
+    public NhanVien getCurrentUser(Principal principal) {
+        return (NhanVien) this.staffDetailsService.loadUserByUsername(principal.getName());
     }
 }

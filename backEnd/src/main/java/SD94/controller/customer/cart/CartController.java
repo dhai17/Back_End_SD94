@@ -1,8 +1,8 @@
 package SD94.controller.customer.cart;
 
-import SD94.entity.cart.Cart;
-import SD94.entity.cart.CartDetails;
-import SD94.entity.product.ProductDetails;
+import SD94.entity.gioHang.GioHang;
+import SD94.entity.gioHang.GioHangChiTiet;
+import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.CartDetailsRepository;
 import SD94.repository.CartRepository;
 import SD94.repository.ProductDetailsRepository;
@@ -26,10 +26,10 @@ public class CartController {
     CartDetailsRepository cartDetailsRepository;
 
     @RequestMapping("/list")
-    public List<CartDetails> listCart(@RequestParam("customer_id") Long customer_id) {
-        Cart cart = cartRepository.findbyCustomerID(customer_id);
-        long idCart = cart.getId();
-        List<CartDetails> cartList = cartDetailsRepository.findByCartID(idCart);
+    public List<GioHangChiTiet> listCart(@RequestParam("customer_id") Long customer_id) {
+        GioHang gioHang = cartRepository.findbyCustomerID(customer_id);
+        long idCart = gioHang.getId();
+        List<GioHangChiTiet> cartList = cartDetailsRepository.findByCartID(idCart);
         return cartList;
     }
 
@@ -37,48 +37,48 @@ public class CartController {
     public String addToCart(@RequestParam("product_details_id") long product_details_id,
                             @RequestParam("customer_id") long customer_id,
                             @RequestParam("quantity") Integer quantity) {
-        Cart cart = cartRepository.findbyCustomerID(customer_id);
-        ProductDetails productDetails = productDetailsRepository.findByID(product_details_id);
-        Float priceFloat = productDetails.getProduct().getPrice();
+        GioHang gioHang = cartRepository.findbyCustomerID(customer_id);
+        SanPhamChiTiet sanPhamChiTiet = productDetailsRepository.findByID(product_details_id);
+        Float priceFloat = sanPhamChiTiet.getSanPham().getGia();
         int price = Integer.valueOf(String.valueOf(priceFloat));
         Integer total = price * quantity;
         BigDecimal totalcart = BigDecimal.valueOf(total);
 
-        CartDetails cartDetails = new CartDetails();
-        cartDetails.setCart(cart);
-        cartDetails.setDeleted(false);
-        cartDetails.setQuanTity(quantity);
-        cartDetails.setUnitPrice(price);
-        cartDetails.setIntoMoney(totalcart);
-        cartDetailsRepository.save(cartDetails);
+        GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
+        gioHangChiTiet.setGioHang(gioHang);
+        gioHangChiTiet.setDeleted(false);
+        gioHangChiTiet.setSoLuong(quantity);
+        gioHangChiTiet.setDonGia(price);
+        gioHangChiTiet.setThanhTien(totalcart);
+        cartDetailsRepository.save(gioHangChiTiet);
         return "done";
     }
 
     @PostMapping("/delete/cartDetails")
-    public List<CartDetails> deletedCartDetails(@RequestBody CartDetails request) {
+    public List<GioHangChiTiet> deletedCartDetails(@RequestBody GioHangChiTiet request) {
         Long id_cart_details = request.getId();
 //        int total = request.getUnitPrice();
 
-        Optional<CartDetails> shoppingCart = cartDetailsRepository.findById(id_cart_details);
+        Optional<GioHangChiTiet> shoppingCart = cartDetailsRepository.findById(id_cart_details);
         long id_cart = 0;
         if (shoppingCart.isPresent()) {
-            CartDetails cartDetials = shoppingCart.get();
-            id_cart = cartDetials.getCart().getId();
+            GioHangChiTiet cartDetials = shoppingCart.get();
+            id_cart = cartDetials.getGioHang().getId();
             cartDetials.setDeleted(true);
             cartDetailsRepository.save(cartDetials);
         }
 
-        List<CartDetails> cartList = cartDetailsRepository.findByCartID(id_cart);
+        List<GioHangChiTiet> cartList = cartDetailsRepository.findByCartID(id_cart);
         return cartList;
     }
 
     @PostMapping("/update/quantity/product")
-    public List<CartDetails> updateSoLuong(@RequestBody CartDetails request) {
+    public List<GioHangChiTiet> updateSoLuong(@RequestBody GioHangChiTiet request) {
         Long id_cart_details = request.getId();
-        int quantity = request.getQuanTity();
-        Optional<CartDetails> shoppingCart = cartDetailsRepository.findById(id_cart_details);
+        int quantity = request.getSoLuong();
+        Optional<GioHangChiTiet> shoppingCart = cartDetailsRepository.findById(id_cart_details);
         if (shoppingCart.isPresent()) {
-            CartDetails cartDetails = shoppingCart.get();
+            GioHangChiTiet gioHangChiTiet = shoppingCart.get();
 //            int soLuongSanPhamHienCo = cartDetails.getProductDetails().getQuantity();
 //            Float priceFloat = cartDetails.getProductDetails().getProduct().getPrice();
 //            int price = Integer.valueOf(String.valueOf(priceFloat));
@@ -92,13 +92,13 @@ public class CartController {
 //                cartDetails.setIntoMoney(totalcart);
 //                cartDetailsRepository.save(cartDetails);
 //            }
-            cartDetails.setQuanTity(quantity);
-            cartDetails.setIntoMoney(BigDecimal.valueOf(2502));
-            cartDetailsRepository.save(cartDetails);
+            gioHangChiTiet.setSoLuong(quantity);
+            gioHangChiTiet.setThanhTien(BigDecimal.valueOf(2502));
+            cartDetailsRepository.save(gioHangChiTiet);
         }
 
-        long idCart = shoppingCart.get().getCart().getId();
-        List<CartDetails> cartList = cartDetailsRepository.findByCartID(idCart);
+        long idCart = shoppingCart.get().getGioHang().getId();
+        List<GioHangChiTiet> cartList = cartDetailsRepository.findByCartID(idCart);
 
         return cartList;
     }

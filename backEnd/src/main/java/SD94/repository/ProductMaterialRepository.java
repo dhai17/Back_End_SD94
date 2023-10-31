@@ -1,6 +1,6 @@
 package SD94.repository;
 
-import SD94.entity.product.Material;
+import SD94.entity.sanPham.ChatLieu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,19 +10,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductMaterialRepository extends JpaRepository<Material, Long> {
+public interface ProductMaterialRepository extends JpaRepository<ChatLieu, Long> {
     @Query(value = "SELECT * FROM product_material WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
-    List<Material> findAll();
+    List<ChatLieu> findAll();
 
     @Query(value = "select * from product_material where id = ? and is_deleted = false", nativeQuery = true)
-    Material findByID(Long id);
+    ChatLieu findByID(Long id);
 
     @Query(value = "SELECT * FROM product_material WHERE is_deleted = false AND (name LIKE %?1% OR maximumvalue LIKE %?1% OR percent_discount LIKE %?1%)", nativeQuery = true)
-    List<Material> findByAll(String input);
+    List<ChatLieu> findByAll(String input);
 
     @Query(value = "SELECT * FROM product_material WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
-    List<Material> findByDate(LocalDate ngayTao);
+    List<ChatLieu> findByDate(LocalDate ngayTao);
 
     @Query(value = "select * from product_material where name = ?", nativeQuery = true)
-    Optional<Material> findByName(String name);
+    Optional<ChatLieu> findByName(String name);
 }

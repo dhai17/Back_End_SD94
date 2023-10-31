@@ -1,8 +1,8 @@
 package SD94.controller.admin.product;
 
-import SD94.entity.product.Image;
+import SD94.entity.sanPham.HinhAnh;
 import SD94.repository.ProductImagesRepository;
-import SD94.service.service.ProductImagesService;
+import SD94.service.service.HinhAnhService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +15,14 @@ import java.util.List;
 public class ImagesController {
 
     @Autowired
-    ProductImagesService productImagesService;
+    HinhAnhService hinhAnhService;
 
     @Autowired
     ProductImagesRepository productImagesRepository;
 
     @GetMapping("/list")
-    public ResponseEntity<List<Image>> getImg() {
-        List<Image> list = productImagesRepository.findAll();
+    public ResponseEntity<List<HinhAnh>> getImg() {
+        List<HinhAnh> list = productImagesRepository.findAll();
         return ResponseEntity.ok().body(list);
     }
 
@@ -34,9 +34,9 @@ public class ImagesController {
 //    }
 
     @GetMapping("/detail/{id}")
-    public Image detail(@PathVariable(value = "id") Long id) {
-        Image image = productImagesService.findByMaSanPham(id);
-        return image;
+    public HinhAnh detail(@PathVariable(value = "id") Long id) {
+        HinhAnh hinhAnh = hinhAnhService.findByMaSanPham(id);
+        return hinhAnh;
     }
 
     @PostMapping("/{productId}/uploadImage")

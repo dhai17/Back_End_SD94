@@ -1,16 +1,16 @@
 package SD94.convert;
 
 import SD94.dto.ProductLineDTO;
-import SD94.entity.product.TypeProduct;
+import SD94.entity.sanPham.LoaiSanPham;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductLineConvert {
 
-    public ProductLineDTO toDto(TypeProduct entity) {
+    public ProductLineDTO toDto(LoaiSanPham entity) {
         ProductLineDTO dto = new ProductLineDTO();
         dto.setId(entity.getId());
-        dto.setName(entity.getName());
+        dto.setName(entity.getLoaiSanPham());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setCreatedby(entity.getCreatedby());
         dto.setLastModifiedDate(entity.getLastModifiedDate());
@@ -19,10 +19,10 @@ public class ProductLineConvert {
         return dto;
     }
 
-    public TypeProduct toEntity(ProductLineDTO dto) {
-        TypeProduct entity = new TypeProduct();
+    public LoaiSanPham toEntity(ProductLineDTO dto) {
+        LoaiSanPham entity = new LoaiSanPham();
         entity.setId(dto.getId());
-        entity.setName(dto.getName());
+        entity.setLoaiSanPham(dto.getName());
         entity.setCreatedDate(dto.getCreatedDate());
         entity.setCreatedby(dto.getCreatedby());
         entity.setLastModifiedDate(dto.getLastModifiedDate());
