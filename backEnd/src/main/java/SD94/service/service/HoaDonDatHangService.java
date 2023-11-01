@@ -9,38 +9,13 @@ import java.util.Map;
 
 @Service
 public interface HoaDonDatHangService {
-    List<HoaDon> findAllBill1();
-    List<HoaDon> findAllBill2();
-    List<HoaDon> findAllBill3();
-    List<HoaDon> findAllBill4();
-    List<HoaDon> findAllBill5();
+    List<HoaDon> findHoaDonByTrangThai(long trang_thai_id);
 
-    ResponseEntity<Map<String, Boolean>> updateStatus1(String id_bill);
-    ResponseEntity<Map<String, Boolean>> updateStatus2(String id_bill);
-    ResponseEntity<Map<String, Boolean>> updateStatus3(String id_bill);
-    ResponseEntity<Map<String, Boolean>> updateStatus4(String id_bill);
-    ResponseEntity<Map<String, Boolean>> updateStatus5(String id_bill);
-    List<HoaDon> searchAllBill1(String search);
+    ResponseEntity<Map<String, Boolean>> capNhatTrangThai(long trang_thai_id, long id_bill);
 
-    List<HoaDon> searchDateBill1(String searchDate);
+    ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id);
 
-    List<HoaDon> searchAllBill2(String search);
+    List<HoaDon> searchAllBill(long trang_thai_id, String search);
 
-    List<HoaDon> searchDateBill2(String searchDate);
-
-    List<HoaDon> searchAllBill3(String search);
-
-    List<HoaDon> searchDateBill3(String searchDate);
-
-    List<HoaDon> searchAllBill4(String search);
-
-    List<HoaDon> searchDateBill4(String searchDate);
-
-    List<HoaDon> searchAllBill5(String search);
-
-    List<HoaDon> searchDateBill5(String searchDate);
-
-    ResponseEntity<Map<String, Boolean>> updateStatusAll2();
-    ResponseEntity<Map<String, Boolean>> updateStatusAll3();
-
+    List<HoaDon> searchDateBill(long trang_thai_id, String searchDate);
 }

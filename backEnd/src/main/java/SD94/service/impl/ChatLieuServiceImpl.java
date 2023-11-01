@@ -2,7 +2,7 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.entity.sanPham.ChatLieu;
-import SD94.repository.ProductMaterialRepository;
+import SD94.repository.sanPham.ChatLieuRepository;
 import SD94.service.service.ChatLieuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Autowired
-    ProductMaterialRepository repository;
+    ChatLieuRepository repository;
 
     @Override
     public List<ChatLieu> findAllProductMaterial() {

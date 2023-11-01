@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "addRess")
+@Table(name = "diaChi")
 @Entity
 public class DiaChi extends Base implements Serializable {
     @Column(name = "diaChi", columnDefinition = "nvarchar(500) null")

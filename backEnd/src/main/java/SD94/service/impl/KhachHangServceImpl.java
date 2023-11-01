@@ -3,8 +3,8 @@ package SD94.service.impl;
 import SD94.controller.message.Message;
 import SD94.entity.gioHang.GioHang;
 import SD94.entity.khachHang.KhachHang;
-import SD94.repository.CartRepository;
-import SD94.repository.CustomerRepository;
+import SD94.repository.gioHang.GioHangRepository;
+import SD94.repository.khachHang.KhachHangRepository;
 import SD94.service.service.KhachHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,10 @@ import java.util.regex.Pattern;
 @Service
 public class KhachHangServceImpl implements KhachHangService {
     @Autowired
-    CustomerRepository customerRepository;
+    KhachHangRepository customerRepository;
 
     @Autowired
-    CartRepository cartRepository;
+    GioHangRepository cartRepository;
 
     @Override
     public List<KhachHang> findAllCustomer() {

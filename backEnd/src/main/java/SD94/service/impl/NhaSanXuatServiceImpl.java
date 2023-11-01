@@ -2,7 +2,7 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.entity.sanPham.NhaSanXuat;
-import SD94.repository.ProducerRepository;
+import SD94.repository.sanPham.NhaSanXuatRepository;
 import SD94.service.service.NhaSanXuatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class NhaSanXuatServiceImpl implements NhaSanXuatService {
 
     @Autowired
-    ProducerRepository producerRepository;
+    NhaSanXuatRepository producerRepository;
 
     @Override
     public List<NhaSanXuat> findAllProducer() {

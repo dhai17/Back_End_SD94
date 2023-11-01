@@ -1,6 +1,6 @@
 package SD94.convert;
 
-import SD94.dto.StaffDTO;
+import SD94.dto.NhanVienDTO;
 import SD94.entity.nhanVien.NhanVien;
 import org.springframework.stereotype.Component;
 
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 public class StaffConvert {
 
 
-    public StaffDTO toDto(NhanVien entity){
-        StaffDTO dto = new StaffDTO();
+    public NhanVienDTO toDto(NhanVien entity){
+        NhanVienDTO dto = new NhanVienDTO();
         dto.setId(entity.getId());
         dto.setName(entity.getHoTen());
         dto.setAddress(entity.getDiaChi());
@@ -29,7 +29,7 @@ public class StaffConvert {
     }
 
 
-    public NhanVien toEntity(StaffDTO dto){
+    public NhanVien toEntity(NhanVienDTO dto){
         NhanVien entity = new NhanVien();
         entity.setId(dto.getId());
         entity.setHoTen(dto.getName());

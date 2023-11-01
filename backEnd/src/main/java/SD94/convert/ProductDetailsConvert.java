@@ -1,14 +1,14 @@
 package SD94.convert;
 
-import SD94.dto.ProductDetailsDTO;
+import SD94.dto.SanPhamChiTietDTO;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductDetailsConvert {
 
-    public ProductDetailsDTO toDto(SanPhamChiTiet entity) {
-        ProductDetailsDTO dto = new ProductDetailsDTO();
+    public SanPhamChiTietDTO toDto(SanPhamChiTiet entity) {
+        SanPhamChiTietDTO dto = new SanPhamChiTietDTO();
         dto.setId(entity.getId());
         dto.setQuantity(entity.getSoLuong());
         dto.setStatus(entity.getTrangThai());
@@ -22,7 +22,7 @@ public class ProductDetailsConvert {
         return dto;
     }
 
-    public SanPhamChiTiet toEntity(ProductDetailsDTO dto) {
+    public SanPhamChiTiet toEntity(SanPhamChiTietDTO dto) {
         SanPhamChiTiet entity = new SanPhamChiTiet();
         entity.setId(dto.getId());
         entity.setSoLuong(dto.getQuantity());

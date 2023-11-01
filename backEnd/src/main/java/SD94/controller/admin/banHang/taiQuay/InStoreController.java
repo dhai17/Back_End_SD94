@@ -4,8 +4,11 @@ import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.hoaDon.TrangThai;
 import SD94.entity.sanPham.SanPhamChiTiet;
-import SD94.repository.*;
+import SD94.repository.hoaDon.HoaDonChiTietRepository;
+import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.sanPham.KichCoRepository;
+import SD94.repository.sanPham.MauSacRepository;
+import SD94.repository.sanPham.SanPhamChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,19 +23,19 @@ import java.util.Optional;
 @RestController
 public class InStoreController {
     @Autowired
-    ProductColorRepository productColorRepository;
+    MauSacRepository mauSacRepository;
 
     @Autowired
     KichCoRepository productSizeRepository;
 
     @Autowired
-    ProductDetailsRepository productDetailsRepository;
+    SanPhamChiTietRepository sanPhamChiTietRepository;
 
     @Autowired
-    BillRepository billRepository;
+    HoaDonRepository billRepository;
 
     @Autowired
-    BillDetailsRepository billDetailsRepository;
+    HoaDonChiTietRepository billDetailsRepository;
 
     @RequestMapping("/api/getSize")
     public ResponseEntity<List<String>> getSize(@RequestParam("product_id") String id) {
@@ -44,7 +47,7 @@ public class InStoreController {
     @RequestMapping("/api/getColor")
     public ResponseEntity<List<String>> getColor(@RequestParam("product_id") String id) {
         Long id_product = Long.valueOf(id);
-        List<String> productColor = productColorRepository.getColor(id_product);
+        List<String> productColor = mauSacRepository.getColor(id_product);
         String a[];
         return ResponseEntity.ok().body(productColor);
     }
@@ -52,7 +55,7 @@ public class InStoreController {
     @RequestMapping("/api/getProduct")
     public ResponseEntity<List<String>> getProduct(@RequestParam("product_id") String id) {
         Long id_product = Long.valueOf(id);
-        List<String> product = productDetailsRepository.getProduct(id_product);
+        List<String> product = sanPhamChiTietRepository.getProduct(id_product);
         return ResponseEntity.ok().body(product);
     }
 
@@ -84,7 +87,7 @@ public class InStoreController {
     public String productDetails(@RequestParam("id_product") long id_product,
                                  @RequestParam("id_color") long id_color,
                                  @RequestParam("id_size") long id_size) {
-        SanPhamChiTiet sanPhamChiTiet = productDetailsRepository.findByColorAndSize(id_product, id_color, id_size);
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByColorAndSize(id_product, id_color, id_size);
         Optional<HoaDon> optionalBill = billRepository.findById(1L);
         if (optionalBill.isPresent()) {
             HoaDon hoaDon = optionalBill.get();
@@ -131,11 +134,11 @@ public class InStoreController {
             hoaDon.setTongTienHoaDon(capNhatTongTien);
 
             long id_product_details = details.getSanPhamChiTiet().getId();
-            SanPhamChiTiet sanPhamChiTiet = productDetailsRepository.findByID(id_product_details);
+            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(id_product_details);
             int soLuong = details.getSoLuong();
             int soLuongBanDau = sanPhamChiTiet.getSoLuong();
             sanPhamChiTiet.setSoLuong(soLuongBanDau + soLuong);
-            productDetailsRepository.save(sanPhamChiTiet);
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
         }
         return "deleted san pham thanh cong";
     }

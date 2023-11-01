@@ -2,7 +2,7 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.entity.khuyenMai.KhuyenMai;
-import SD94.repository.DiscountRepository;
+import SD94.repository.khuyenMai.KhuyenMaiRepository;
 import SD94.service.service.KhuyenMaiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 public class KhuyenMaiServiceImpl implements KhuyenMaiService {
     @Autowired
-    DiscountRepository discountRepository;
+    KhuyenMaiRepository discountRepository;
 
     //Lấy danh sách
     @Transactional

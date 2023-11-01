@@ -4,8 +4,8 @@ import SD94.controller.message.Message;
 import SD94.entity.nhanVien.NhanVien;
 import SD94.entity.security.UserRole;
 import SD94.helper.UserFoundException;
-import SD94.repository.RoleRepository;
-import SD94.repository.StaffRepository;
+import SD94.repository.role.RoleRepository;
+import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.service.service.NhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 public class NhanVienServiceImpl implements NhanVienService {
     @Autowired
-    StaffRepository staffRepository;
+    NhanVienRepository staffRepository;
 
     @Override
     public List<NhanVien> findAllStaff() {

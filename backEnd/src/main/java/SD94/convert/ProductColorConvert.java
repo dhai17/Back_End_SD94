@@ -1,14 +1,14 @@
 package SD94.convert;
 
-import SD94.dto.ProductColorDTO;
+import SD94.dto.MauSacDTO;
 import SD94.entity.sanPham.MauSac;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductColorConvert {
 
-    public ProductColorDTO toDto(MauSac entity) {
-        ProductColorDTO dto = new ProductColorDTO();
+    public MauSacDTO toDto(MauSac entity) {
+        MauSacDTO dto = new MauSacDTO();
         dto.setId(entity.getId());
         dto.setCode(entity.getMaMauSac());
         dto.setColor(entity.getTenMauSac());
@@ -19,7 +19,7 @@ public class ProductColorConvert {
         return dto;
     }
 
-    public MauSac toEntity(ProductColorDTO dto) {
+    public MauSac toEntity(MauSacDTO dto) {
         MauSac entity = new MauSac();
         entity.setId(dto.getId());
         entity.setMaMauSac(dto.getCode());

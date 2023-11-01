@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "customer")
+@Table(name = "khachHang")
 @Entity
 public class KhachHang extends Base implements Serializable {
     @Column(name = "hoTen", columnDefinition = "nvarchar(50) not null")
@@ -25,12 +25,9 @@ public class KhachHang extends Base implements Serializable {
     @Column(name = "soDienThoai", columnDefinition = "nvarchar(10) null")
     private String soDienThoai;
 
-//    @Pattern(regexp = "^[\\w\\.-]+@[\\w\\.-]+$\n", message = "loi email ", payload = ErrorPayload.class)
     @Column(name = "email", columnDefinition = "nvarchar(200) null")
     private String email;
 
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Ho_Chi_Minh")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     @Temporal(TemporalType.DATE)
     @Column(name = "ngaySinh", columnDefinition = "Date null")
     private Date ngaySinh;

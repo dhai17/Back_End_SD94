@@ -11,29 +11,29 @@ import java.util.Optional;
 
 @Repository
 public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, Long> {
-    @Query(value = "SELECT * FROM product_details WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
     List<SanPhamChiTiet> findAll();
 
-    @Query(value = "select * from product_details where id = ? and is_deleted = false", nativeQuery = true)
+    @Query(value = "select * from san_pham_chi_tiet where id = ? and is_deleted = false", nativeQuery = true)
     SanPhamChiTiet findByID(Long id);
 
-    @Query(value = "SELECT * FROM product_details WHERE is_deleted = false AND (name LIKE %?1% OR maximumvalue LIKE %?1% OR percent_discount LIKE %?1%)", nativeQuery = true)
+    @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false AND (name LIKE %?1% OR maximumvalue LIKE %?1% OR percent_discount LIKE %?1%)", nativeQuery = true)
     List<SanPhamChiTiet> findByAll(String input);
 
-    @Query(value = "SELECT * FROM product_details WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
+    @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
     List<SanPhamChiTiet> findByDate(LocalDate ngayTao);
 
-    @Query(value = "select * from product_details where name = ?", nativeQuery = true)
+    @Query(value = "select * from san_pham_chi_tiet where name = ?", nativeQuery = true)
     Optional<SanPhamChiTiet> findByName(String name);
 
-    @Query(value = "select * from product_details where id_product = ?", nativeQuery = true)
+    @Query(value = "select * from san_pham_chi_tiet where id_product = ?", nativeQuery = true)
     List<SanPhamChiTiet> findByProductID(Long id);
 
-    @Query(value = "select * from product_details where id_product = ? and id_color = ? and id_size = ?", nativeQuery = true)
+    @Query(value = "select * from san_pham_chi_tiet where id_product = ? and id_color = ? and id_size = ?", nativeQuery = true)
     SanPhamChiTiet findByColorAndSize(long id_product, long id_color, long id_size);
 
     @Query(value = "SELECT pc.color AS color_name, ps.shoe_size AS size_name\n" +
-            "FROM product_details pd\n" +
+            "FROM san_pham_chi_tiet pd\n" +
             "         JOIN product_color pc ON pd.id_color = pc.id\n" +
             "         JOIN product_size ps ON pd.id_size = ps.id\n" +
             "WHERE pd.id_product = ?\n" +

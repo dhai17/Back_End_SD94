@@ -3,6 +3,7 @@ package SD94;
 import SD94.entity.nhanVien.NhanVien;
 import SD94.entity.security.Role;
 import SD94.entity.security.UserRole;
+import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.service.service.NhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -21,7 +22,11 @@ public class SD94Application implements CommandLineRunner {
     private NhanVienService nhanVienService;
 
     @Autowired
+    NhanVienRepository nhanVienRepository;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     public static void main(String[] args) {
         SpringApplication.run(SD94Application.class, args);
     }
@@ -30,26 +35,31 @@ public class SD94Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println("starting code");
-        NhanVien staff = new NhanVien();
-        staff.setDiaChi("Ducnv-123");
-        staff.setGioiTinh(true);
-        staff.setMatKhau(this.bCryptPasswordEncoder.encode("123123"));
-        staff.setEmail("admin@fpt.com");
-        staff.setHoTen("Duc Nguyen");
+        NhanVien nhanVien = null;
+        nhanVien = nhanVienRepository.findByEmail("admin@gmail.com");
+        if (nhanVien != null) {
+            String account = nhanVien.getEmail();
+            System.out.println(account);
+        } else {
+            nhanVien = new NhanVien();
+            nhanVien.setDiaChi("Hà Nội");
+            nhanVien.setGioiTinh(true);
+            nhanVien.setMatKhau(this.bCryptPasswordEncoder.encode("123123"));
+            nhanVien.setEmail("admin@gmail.com");
+            nhanVien.setHoTen("SD94");
 
-        Role role1 = new Role();
-        role1.setRoleId(44L);
-        role1.setRoleName("ADMIN");
+            Role role = new Role();
+            role.setRoleId(44L);
+            role.setRoleName("ADMIN");
 
-        Set<UserRole> userRoleSet = new HashSet<>();
-        UserRole userRole = new UserRole();
-        userRole.setRole(role1);
-        userRole.setStaff(staff);
-        userRoleSet.add(userRole);
+            Set<UserRole> userRoleSet = new HashSet<>();
+            UserRole userRole = new UserRole();
+            userRole.setRole(role);
+            userRole.setStaff(nhanVien);
+            userRoleSet.add(userRole);
 
-        NhanVien user1 = nhanVienService.createStaffV1(staff, userRoleSet);
-        System.out.println(user1.getUsername());
-
+            NhanVien user = nhanVienService.createStaffV1(nhanVien, userRoleSet);
+            System.out.println(user.getUsername());
+        }
     }
 }

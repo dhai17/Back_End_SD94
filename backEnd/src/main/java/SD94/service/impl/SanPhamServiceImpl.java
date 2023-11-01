@@ -5,10 +5,10 @@ import SD94.entity.sanPham.ChatLieu;
 import SD94.entity.sanPham.NhaSanXuat;
 import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.LoaiSanPham;
-import SD94.repository.ProducerRepository;
-import SD94.repository.ProductLineRepository;
-import SD94.repository.ProductMaterialRepository;
-import SD94.repository.ProductRepository;
+import SD94.repository.sanPham.ChatLieuRepository;
+import SD94.repository.sanPham.LoaiSanPhamRepository;
+import SD94.repository.sanPham.NhaSanXuatRepository;
+import SD94.repository.sanPham.SanPhamRepository;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,16 +24,16 @@ import java.util.Optional;
 public class SanPhamServiceImpl implements SanPhamService {
 
     @Autowired
-    ProductRepository repository;
+    SanPhamRepository repository;
 
     @Autowired
-    ProductMaterialRepository productMaterialRepository;
+    ChatLieuRepository productMaterialRepository;
 
     @Autowired
-    ProductLineRepository productLineRepository;
+    LoaiSanPhamRepository productLineRepository;
 
     @Autowired
-    ProducerRepository producerRepository;
+    NhaSanXuatRepository producerRepository;
 
 
     @Override

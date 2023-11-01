@@ -2,7 +2,7 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.entity.sanPham.HinhAnh;
-import SD94.repository.ProductImagesRepository;
+import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.service.service.HinhAnhService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -20,7 +20,7 @@ import java.util.Optional;
 public class HinhAnhServiceImpl implements HinhAnhService {
 
     @Autowired
-    ProductImagesRepository repository;
+    HinhAnhRepository repository;
 
 
     @Override

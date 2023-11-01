@@ -23,6 +23,7 @@ public interface NhanVienService {
     List<NhanVien> searchDateStaff(String searchDate);
 
     public NhanVien createStaffV1(NhanVien user, Set<UserRole> userRoles) throws Exception;
+
     NhanVien getStaff(String email);
 
     void deleteUser(Long userId);

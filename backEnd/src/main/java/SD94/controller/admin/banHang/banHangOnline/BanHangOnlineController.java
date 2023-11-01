@@ -6,7 +6,11 @@ import SD94.entity.hoaDon.TrangThai;
 import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.khuyenMai.KhuyenMai;
 import SD94.entity.sanPham.SanPhamChiTiet;
-import SD94.repository.*;
+import SD94.repository.gioHang.GioHangChiTietRepository;
+import SD94.repository.hoaDon.HoaDonChiTietRepository;
+import SD94.repository.hoaDon.HoaDonRepository;
+import SD94.repository.khuyenMai.KhuyenMaiRepository;
+import SD94.repository.sanPham.SanPhamChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,19 +24,19 @@ import java.util.Optional;
 @RequestMapping("/api/banHang/online")
 public class BanHangOnlineController {
     @Autowired
-    CartDetailsRepository cartDetailsRepository;
+    GioHangChiTietRepository cartDetailsRepository;
 
     @Autowired
-    BillDetailsRepository billDetailsRepository;
+    HoaDonChiTietRepository billDetailsRepository;
 
     @Autowired
-    BillRepository billRepository;
+    HoaDonRepository billRepository;
 
     @Autowired
-    ProductDetailsRepository productDetailsRepository;
+    SanPhamChiTietRepository sanPhamChiTietRepository;
 
     @Autowired
-    DiscountRepository discountRepository;
+    KhuyenMaiRepository discountRepository;
 
     private Long idBill;
 
@@ -132,9 +136,9 @@ public class BanHangOnlineController {
                 int soLuongDangCoSanPham = billDtails.getSanPhamChiTiet().getSoLuong();
                 int soLuongCapNhat = soLuongDangCoSanPham - soLuongDangCo;
                 long idProductDetails = billDtails.getSanPhamChiTiet().getId();
-                SanPhamChiTiet sanPhamChiTiet = productDetailsRepository.findByID(idProductDetails);
+                SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(idProductDetails);
                 sanPhamChiTiet.setSoLuong(soLuongCapNhat);
-                productDetailsRepository.save(sanPhamChiTiet);
+                sanPhamChiTietRepository.save(sanPhamChiTiet);
 
                 GioHangChiTiet cart = cartDetailsRepository.findByProductDetailsID(idProductDetails);
                 cart.setDeleted(true);

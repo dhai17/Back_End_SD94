@@ -1,14 +1,14 @@
 package SD94.convert;
 
-import SD94.dto.ProducerDTO;
+import SD94.dto.NhaSanXuatDTO;
 import SD94.entity.sanPham.NhaSanXuat;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProducerConvert {
 
-    public ProducerDTO toDto(NhaSanXuat entity) {
-        ProducerDTO dto = new ProducerDTO();
+    public NhaSanXuatDTO toDto(NhaSanXuat entity) {
+        NhaSanXuatDTO dto = new NhaSanXuatDTO();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setAddress(entity.getDiaChi());
@@ -19,7 +19,7 @@ public class ProducerConvert {
         return dto;
     }
 
-    public NhaSanXuat toEntity(ProducerDTO dto) {
+    public NhaSanXuat toEntity(NhaSanXuatDTO dto) {
         NhaSanXuat entity = new NhaSanXuat();
         entity.setId(dto.getId());
         entity.setName(dto.getName());

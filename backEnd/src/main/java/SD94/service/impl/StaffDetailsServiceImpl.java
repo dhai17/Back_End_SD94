@@ -1,6 +1,6 @@
 package SD94.service.impl;
 import SD94.entity.nhanVien.NhanVien;
-import SD94.repository.StaffRepository;
+import SD94.repository.nhanVien.NhanVienRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class StaffDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private StaffRepository staffRepository;
+    private NhanVienRepository staffRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

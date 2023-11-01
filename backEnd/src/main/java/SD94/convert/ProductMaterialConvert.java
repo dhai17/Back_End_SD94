@@ -1,14 +1,14 @@
 package SD94.convert;
 
-import SD94.dto.ProductMaterialDTO;
+import SD94.dto.ChatLieuDTO;
 import SD94.entity.sanPham.ChatLieu;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductMaterialConvert {
 
-    public ProductMaterialDTO toDto(ChatLieu entity) {
-        ProductMaterialDTO dto = new ProductMaterialDTO();
+    public ChatLieuDTO toDto(ChatLieu entity) {
+        ChatLieuDTO dto = new ChatLieuDTO();
         dto.setId(entity.getId());
         dto.setMaterial(entity.getChatLieu());
         dto.setCreatedDate(entity.getCreatedDate());
@@ -19,7 +19,7 @@ public class ProductMaterialConvert {
         return dto;
     }
 
-    public ChatLieu toEntity(ProductMaterialDTO dto) {
+    public ChatLieu toEntity(ChatLieuDTO dto) {
         ChatLieu entity = new ChatLieu();
         entity.setId(dto.getId());
         entity.setChatLieu(dto.getMaterial());

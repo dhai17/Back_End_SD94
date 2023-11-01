@@ -2,7 +2,7 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.entity.sanPham.LoaiSanPham;
-import SD94.repository.ProductLineRepository;
+import SD94.repository.sanPham.LoaiSanPhamRepository;
 import SD94.service.service.LoaiSanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
 
     @Autowired
-    ProductLineRepository repository;
+    LoaiSanPhamRepository repository;
 
 
     @Override

@@ -11,21 +11,18 @@ import java.util.Optional;
 
 @Repository
 public interface KichCoRepository extends JpaRepository<KichCo, Long> {
-    @Query(value = "SELECT * FROM product_KichCo WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM kich_co WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
     List<KichCo> findAll();
 
-    @Query(value = "select * from product_KichCo where id = ? and is_deleted = false", nativeQuery = true)
+    @Query(value = "select * from kich_co where id = ? and is_deleted = false", nativeQuery = true)
     KichCo findByID(Long id);
 
-    @Query(value = "SELECT * FROM product_KichCo WHERE is_deleted = false AND (name LIKE %?1% OR maximumvalue LIKE %?1% OR percent_discount LIKE %?1%)", nativeQuery = true)
-    List<KichCo> findByAll(String input);
-
-    @Query(value = "SELECT * FROM product_KichCo WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
+    @Query(value = "SELECT * FROM kich_co WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
     List<KichCo> findByDate(LocalDate ngayTao);
 
-    @Query(value = "select * from product_KichCo where name = ?", nativeQuery = true)
+    @Query(value = "select * from kich_co where name = ?", nativeQuery = true)
     Optional<KichCo> findByName(String name);
 
-    @Query(value = "SELECT pc.shoe_KichCo AS KichCo_name FROM product_details pd JOIN product_KichCo pc ON pd.id_KichCo = pc.id WHERE pd.id_product = ? GROUP BY pd.id_KichCo\n", nativeQuery = true)
+    @Query(value = "SELECT pc.kich_co AS ten_kich_co FROM san_pham_chi_tiet pd JOIN kich_co pc ON pd.kich_co_id = pc.id WHERE pd.san_pham_id = ? GROUP BY pd.kich_co_id\n", nativeQuery = true)
     List<String> getKichCo(long id_product);
 }

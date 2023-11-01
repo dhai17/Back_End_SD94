@@ -2,7 +2,7 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.entity.sanPham.SanPhamChiTiet;
-import SD94.repository.ProductDetailsRepository;
+import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Autowired
-    ProductDetailsRepository repository;
+    SanPhamChiTietRepository repository;
 
 
     @Override

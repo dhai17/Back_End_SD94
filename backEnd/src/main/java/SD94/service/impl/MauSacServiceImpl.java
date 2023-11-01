@@ -2,7 +2,7 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.entity.sanPham.MauSac;
-import SD94.repository.ProductColorRepository;
+import SD94.repository.sanPham.MauSacRepository;
 import SD94.service.service.MauSacService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class MauSacServiceImpl implements MauSacService {
 
     @Autowired
-    ProductColorRepository repository;
+    MauSacRepository repository;
 
     @Override
     public List<MauSac> findAllProductColor() {

@@ -11,18 +11,15 @@ import java.util.Optional;
 
 @Repository
 public interface HinhAnhRepository extends JpaRepository<HinhAnh, Long> {
-    @Query(value = "SELECT * FROM productImages WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM hinh_anh WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
     List<HinhAnh> findAll();
 
-    @Query(value = "select * from productImages where id = ? and is_deleted = false", nativeQuery = true)
+    @Query(value = "select * from hinh_anh where id = ? and is_deleted = false", nativeQuery = true)
     HinhAnh findByID(Long id);
 
-    @Query(value = "SELECT * FROM productImages WHERE is_deleted = false AND (name LIKE %?1% OR maximumvalue LIKE %?1% OR percent_discount LIKE %?1%)", nativeQuery = true)
-    List<HinhAnh> findByAll(String input);
-
-    @Query(value = "SELECT * FROM productImages WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
+    @Query(value = "SELECT * FROM hinh_anh WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
     List<HinhAnh> findByDate(LocalDate ngayTao);
 
-    @Query(value = "select * from productImages where name = ?", nativeQuery = true)
+    @Query(value = "select * from hinh_anh where name = ?", nativeQuery = true)
     Optional<HinhAnh> findByName(String name);
 }
