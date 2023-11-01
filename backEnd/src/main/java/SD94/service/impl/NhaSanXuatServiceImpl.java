@@ -100,7 +100,6 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
     @Override
     public List<NhaSanXuat> searchAllProducer(String search) {
         List<NhaSanXuat> nhaSanXuatList = producerRepository.findProducerByAll(search);
-        System.out.println("Search ...");
         return nhaSanXuatList;
     }
 

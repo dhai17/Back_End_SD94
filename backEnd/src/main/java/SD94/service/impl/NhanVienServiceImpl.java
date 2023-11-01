@@ -206,7 +206,6 @@ public class NhanVienServiceImpl implements NhanVienService {
     public NhanVien createStaffV1(NhanVien user, Set<UserRole> userRoles) throws Exception {
         NhanVien local = staffRepository.findByEmail(user.getEmail());
         if (local != null) {
-            System.out.println("User is already there");
             throw new UserFoundException();
         } else {
             for (UserRole ur : userRoles) {

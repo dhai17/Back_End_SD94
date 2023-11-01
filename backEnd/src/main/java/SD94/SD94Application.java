@@ -58,6 +58,7 @@ public class SD94Application implements CommandLineRunner {
             userRole.setStaff(nhanVien);
             userRoleSet.add(userRole);
 
+
             NhanVien user = nhanVienService.createStaffV1(nhanVien, userRoleSet);
             System.out.println(user.getUsername());
         }
