@@ -35,8 +35,9 @@ public class KhachHangController {
         return khachHangService.createCustomer(khachHangCreate);
     }
 
-    @PutMapping("/xoa/{id}")
-    public ResponseEntity<List<KhachHang>> deleteCustomer(@PathVariable("id") Long id){
+    @PostMapping("/xoaKhachHang")
+    public ResponseEntity<List<KhachHang>> deleteCustomer(@RequestBody KhachHang khachHang){
+        Long id = khachHang.getId();
         return khachHangService.deleteCustomer(id);
     }
 
