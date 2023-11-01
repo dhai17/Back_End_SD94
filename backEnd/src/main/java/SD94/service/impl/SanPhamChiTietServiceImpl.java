@@ -104,7 +104,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public List<SanPhamChiTiet> searchAllProductDetails(String search) {
         List<SanPhamChiTiet> list = repository.findByAll(search);
-        System.out.println("Search ...");
         return list;
     }
 

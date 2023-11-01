@@ -15,9 +15,7 @@ public class StaffDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         NhanVien user = this.staffRepository.findByEmail(username);
-        System.out.println("user-----" +user);
         if (user == null) {
-            System.out.println("User not found");
             throw new UsernameNotFoundException("No user found !!");
         }
         return user;

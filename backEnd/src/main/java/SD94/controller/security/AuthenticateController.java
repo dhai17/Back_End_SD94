@@ -34,7 +34,6 @@ public class AuthenticateController {
     @SneakyThrows
     @PostMapping("/login")
     public ResponseEntity<?> generateToken(@RequestBody JwtRequest jwtRequest) {
-        System.out.println("JwtRequest" + jwtRequest);
         try {
             authenticate(jwtRequest.getEmail(), jwtRequest.getPassword());
         } catch (UserNotFoundException e) {
@@ -43,7 +42,6 @@ public class AuthenticateController {
         }
         //////
         UserDetails userDetails = this.staffDetailsService.loadUserByUsername(jwtRequest.getEmail());
-        System.out.println("userDetails --->" +userDetails);
         String token = this.jwtUtils.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
     }

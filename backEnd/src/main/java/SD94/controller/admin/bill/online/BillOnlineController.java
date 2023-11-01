@@ -90,7 +90,6 @@ public class BillOnlineController {
 
     @RequestMapping("/api/bill/pending1/search={search}")
     public List<HoaDon> searchAllBill1(@PathVariable("search") String search) {
-        System.out.println(search);
         return purchaseBillService.searchAllBill1(search);
 
     }
@@ -101,7 +100,6 @@ public class BillOnlineController {
     }
     @RequestMapping("/api/bill/pending2/search={search}")
     public List<HoaDon> searchAllBill2(@PathVariable("search") String search) {
-        System.out.println(search);
         return purchaseBillService.searchAllBill2(search);
 
     }
@@ -112,7 +110,6 @@ public class BillOnlineController {
     }
     @RequestMapping("/api/bill/pending3/search={search}")
     public List<HoaDon> searchAllBill3(@PathVariable("search") String search) {
-        System.out.println(search);
         return purchaseBillService.searchAllBill3(search);
 
     }
@@ -123,7 +120,6 @@ public class BillOnlineController {
     }
     @RequestMapping("/api/bill/pending4/search={search}")
     public List<HoaDon> searchAllBill4(@PathVariable("search") String search) {
-        System.out.println(search);
         return purchaseBillService.searchAllBill4(search);
 
     }
@@ -135,7 +131,6 @@ public class BillOnlineController {
 
     @RequestMapping("/api/bill/pending5/search={search}")
     public List<HoaDon> searchAllBill5(@PathVariable("search") String search) {
-        System.out.println(search);
         return purchaseBillService.searchAllBill5(search);
 
     }

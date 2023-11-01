@@ -37,10 +37,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("error");
             }
         } else {
-            System.out.println("Invalid token, not start with bearer string");
         }
 
         // validated
@@ -54,7 +52,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthentication);
             }
         } else {
-            System.out.println("Token is not valid");
         }
         filterChain.doFilter(request, response);
     }

@@ -32,7 +32,7 @@ public class BanHangOnlineController {
     ProductDetailsRepository productDetailsRepository;
 
     @Autowired
-    DiscountRepository discountRepository;
+    KhuyenMaiRepository discountRepository;
 
     private Long idBill;
 

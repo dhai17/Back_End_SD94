@@ -97,7 +97,6 @@ public class MauSacServiceImpl implements MauSacService {
     @Override
     public List<MauSac> searchAllProductColor(String search) {
         List<MauSac> mauSacList = repository.findByAll(search);
-        System.out.println("Search ...");
         return mauSacList;
     }
 
