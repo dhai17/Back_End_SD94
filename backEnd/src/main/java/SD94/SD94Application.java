@@ -30,26 +30,26 @@ public class SD94Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println("starting code");
-        NhanVien staff = new NhanVien();
-        staff.setDiaChi("Ducnv-123");
-        staff.setGioiTinh(true);
-        staff.setMatKhau(this.bCryptPasswordEncoder.encode("123123"));
-        staff.setEmail("admin@fpt.com");
-        staff.setHoTen("Duc Nguyen");
-
-        Role role1 = new Role();
-        role1.setRoleId(44L);
-        role1.setRoleName("ADMIN");
-
-        Set<UserRole> userRoleSet = new HashSet<>();
-        UserRole userRole = new UserRole();
-        userRole.setRole(role1);
-        userRole.setStaff(staff);
-        userRoleSet.add(userRole);
-
-        NhanVien user1 = nhanVienService.createStaffV1(staff, userRoleSet);
-        System.out.println(user1.getUsername());
+//        System.out.println("starting code");
+//        NhanVien staff = new NhanVien();
+//        staff.setDiaChi("Ducnv-123");
+//        staff.setGioiTinh(true);
+//        staff.setMatKhau(this.bCryptPasswordEncoder.encode("123123"));
+//        staff.setEmail("admin@fpt.com");
+//        staff.setHoTen("Duc Nguyen");
+//
+//        Role role1 = new Role();
+//        role1.setRoleId(44L);
+//        role1.setRoleName("ADMIN");
+//
+//        Set<UserRole> userRoleSet = new HashSet<>();
+//        UserRole userRole = new UserRole();
+//        userRole.setRole(role1);
+//        userRole.setStaff(staff);
+//        userRoleSet.add(userRole);
+//
+//        NhanVien user1 = nhanVienService.createStaffV1(staff, userRoleSet);
+//        System.out.println(user1.getUsername());
 
     }
 }

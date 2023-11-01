@@ -1,14 +1,14 @@
 package SD94.convert;
 
-import SD94.dto.DiscountDTO;
+import SD94.dto.KhuyenMaiDTO;
 import SD94.entity.khuyenMai.KhuyenMai;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DiscountConvert {
 
-    public DiscountDTO toDto(KhuyenMai entity) {
-        DiscountDTO dto = new DiscountDTO();
+    public KhuyenMaiDTO toDto(KhuyenMai entity) {
+        KhuyenMaiDTO dto = new KhuyenMaiDTO();
         dto.setId(entity.getId());
         dto.setName(entity.getTenKhuyenMai());
         dto.setStartedDate(entity.getNgayBatDau());
@@ -24,7 +24,7 @@ public class DiscountConvert {
         return dto;
     }
 
-    public KhuyenMai toEntity(DiscountDTO dto) {
+    public KhuyenMai toEntity(KhuyenMaiDTO dto) {
         KhuyenMai entity = new KhuyenMai();
         entity.setId(dto.getId());
         entity.setTenKhuyenMai(dto.getName());

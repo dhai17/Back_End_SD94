@@ -22,7 +22,6 @@ public class VnpayController {
     @RequestMapping("/payment/return")
     public ResponseEntity<String> returnPayment(HttpServletRequest request){
         int paymentStatus = VnpayConflig.orderReturn(request);
-        System.out.println(paymentStatus);
         if(paymentStatus == 1){
             return ResponseEntity.status(200).body("Success");
         }else {

@@ -85,7 +85,6 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public ResponseEntity<SanPham> saveCreate(SanPham sanPhamCreate) {
-        System.out.println(sanPhamCreate);
         try {
             if (sanPhamCreate.getChatLieu() != null) {
                 Optional<ChatLieu> optionalProductMaterial = productMaterialRepository.findById(sanPhamCreate.getChatLieu().getId());
@@ -127,7 +126,6 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public List<SanPham> searchAllProduct(String search) {
         List<SanPham> list = repository.findByAll(search);
-        System.out.println("Search ...");
         return list;
     }
 

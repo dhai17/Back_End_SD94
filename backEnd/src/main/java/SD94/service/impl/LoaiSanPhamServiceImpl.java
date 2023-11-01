@@ -96,7 +96,6 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
     @Override
     public List<LoaiSanPham> searchAllProductLine(String search) {
         List<LoaiSanPham> list = repository.findByAll(search);
-        System.out.println("Search ...");
         return list;
     }
 

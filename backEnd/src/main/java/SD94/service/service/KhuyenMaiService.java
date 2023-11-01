@@ -8,15 +8,15 @@ import java.util.List;
 
 @Service
 public interface KhuyenMaiService {
-    List<KhuyenMai> findAllDiscount();
+    List<KhuyenMai> findAllkhuyenMai();
 
     ResponseEntity<KhuyenMai> saveEdit(KhuyenMai khuyenMaiUpdate);
 
-    ResponseEntity<List<KhuyenMai>> deleteDiscount(Long id);
+    ResponseEntity<List<KhuyenMai>> deletekhuyenMai(Long id);
 
     ResponseEntity<KhuyenMai> saveCreate(KhuyenMai khuyenMaiCreate);
 
-    List<KhuyenMai> searchAllDiscount(String search);
+    List<KhuyenMai> searchAllkhuyenMai(String search);
 
-    List<KhuyenMai> searchDateDiscount(String searchDate);
+    List<KhuyenMai> searchDatekhuyenMai(String searchDate);
 }
