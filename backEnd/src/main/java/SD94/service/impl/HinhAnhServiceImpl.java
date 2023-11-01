@@ -84,9 +84,9 @@ public class HinhAnhServiceImpl implements HinhAnhService {
 
     @Override
     public List<HinhAnh> searchAllProductImages(String search) {
-        List<HinhAnh> list = repository.findByAll(search);
-        System.out.println("Search ...");
-        return list;
+//        List<HinhAnh> list = repository.findByAll(search);
+//        System.out.println("Search ...");
+        return null;
     }
 
     @Override

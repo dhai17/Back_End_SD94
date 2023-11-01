@@ -11,7 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,8 +44,23 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             hoaDon.setTrangThai(trangThai);
             hoaDonRepository.save(hoaDon);
         }
-        return ResponseEntity.ok().build();
 
+        Instant now = Instant.now();
+
+        LocalDateTime ngayTao = hoaDon.getCreatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        long soNgay = ChronoUnit.DAYS.between(ngayTao, now);
+
+        if (soNgay > 2) {
+            Optional<TrangThai> optionalTrangThai2 = trangThaiRepository.findById(5L);
+
+            if (optionalTrangThai2.isPresent()) {
+                TrangThai trangThai = optionalTrangThai2.get();
+                hoaDon.setTrangThai(trangThai);
+                hoaDonRepository.save(hoaDon);
+            }
+        }
+        return ResponseEntity.ok().build();
     }
 
     @Override

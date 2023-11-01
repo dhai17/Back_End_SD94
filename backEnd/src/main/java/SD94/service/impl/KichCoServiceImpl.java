@@ -95,9 +95,9 @@ public class KichCoServiceImpl implements KichCoService {
 
     @Override
     public List<KichCo> searchAllProductSize(String search) {
-        List<KichCo> list = kichCoRepository.findByAll(search);
-        System.out.println("Search ...");
-        return list;
+//        List<KichCo> list = kichCoRepository.findByAll(search);
+//        System.out.println("Search ...");
+        return null;
     }
 
     @Override
