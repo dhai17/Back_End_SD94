@@ -31,7 +31,6 @@ public class SD94Application implements CommandLineRunner {
         SpringApplication.run(SD94Application.class, args);
     }
 
-
     @Override
     public void run(String... args) throws Exception {
 

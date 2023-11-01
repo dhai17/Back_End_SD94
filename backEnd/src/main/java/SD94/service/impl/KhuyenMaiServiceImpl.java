@@ -2,6 +2,7 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.entity.khuyenMai.KhuyenMai;
+import SD94.repository.khuyenMai.KhuyenMaiRepository;
 import SD94.service.service.KhuyenMaiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
     @Transactional
     @Override
     public List<KhuyenMai> findAllkhuyenMai() {
-        List<KhuyenMai> khuyenMais = khuyenMaiRepository.findAllkhuyenMai();
+        List<KhuyenMai> khuyenMais = khuyenMaiRepository.findAllDiscount();
         long homNay = new Date().getTime();
         for(KhuyenMai khuyenMai : khuyenMais){
             long startDate = khuyenMai.getNgayBatDau().getTime();
@@ -41,7 +42,7 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
             }
         }
 
-        List<KhuyenMai> listReturn = khuyenMaiRepository.findAllkhuyenMai();
+        List<KhuyenMai> listReturn = khuyenMaiRepository.findAllDiscount();
 
         return listReturn;
     }
@@ -138,7 +139,7 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
     //Thêm mới
     @Override
     public ResponseEntity<KhuyenMai> saveCreate(KhuyenMai khuyenMaiCreate) {
-        Optional<KhuyenMai> optionalDiscount = khuyenMaiRepository.findByten(khuyenMaiCreate.getTenKhuyenMai());
+        Optional<KhuyenMai> optionalDiscount = khuyenMaiRepository.findByName(khuyenMaiCreate.getTenKhuyenMai());
         String errorMessage;
         Message errorResponse;
         if (optionalDiscount.isPresent()) {
@@ -205,14 +206,14 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
     //Tìm kiếm
     @Override
     public List<KhuyenMai> searchAllkhuyenMai(String search) {
-        List<KhuyenMai> khuyenMaiList = khuyenMaiRepository.findkhuyenMaiByAll(search);
+        List<KhuyenMai> khuyenMaiList = khuyenMaiRepository.findDiscountByAll(search);
         return khuyenMaiList;
     }
 
     @Override
     public List<KhuyenMai> searchDatekhuyenMai(String searchDate) {
         LocalDate search = LocalDate.parse(searchDate);
-        List<KhuyenMai> khuyenMaiList = khuyenMaiRepository.findkhuyenMaiByDate(search);
+        List<KhuyenMai> khuyenMaiList = khuyenMaiRepository.findDiscountByDate(search);
         return khuyenMaiList;
     }
 }

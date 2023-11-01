@@ -22,7 +22,7 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
 
     @Override
     public List<NhaSanXuat> findAllProducer() {
-        List<NhaSanXuat> nhaSanXuats = producerRepository.findAllProducer();
+        List<NhaSanXuat> nhaSanXuats = producerRepository.findAllnha_san_xuat();
         return nhaSanXuats;
     }
 
@@ -99,14 +99,14 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
 
     @Override
     public List<NhaSanXuat> searchAllProducer(String search) {
-        List<NhaSanXuat> nhaSanXuatList = producerRepository.findProducerByAll(search);
+        List<NhaSanXuat> nhaSanXuatList = producerRepository.findnha_san_xuatByAll(search);
         return nhaSanXuatList;
     }
 
     @Override
     public List<NhaSanXuat> searchDateProducer(String searchDate) {
         LocalDate search = LocalDate.parse(searchDate);
-        List<NhaSanXuat> nhaSanXuatList = producerRepository.findProducerByDate(search);
+        List<NhaSanXuat> nhaSanXuatList = producerRepository.findnha_san_xuatByDate(search);
         return nhaSanXuatList;
     }
 }

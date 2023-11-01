@@ -94,8 +94,8 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public List<ChatLieu> searchAllProductMaterial(String search) {
-        List<ChatLieu> list = repository.findByAll(search);
-        return list;
+//        List<ChatLieu> list = repository.f(search);
+        return null;
     }
 
     @Override
