@@ -84,8 +84,7 @@ public class HinhAnhServiceImpl implements HinhAnhService {
 
     @Override
     public List<HinhAnh> searchAllProductImages(String search) {
-//        List<HinhAnh> list = repository.findByAll(search);
-//        return list;
+
         return null;
     }
 

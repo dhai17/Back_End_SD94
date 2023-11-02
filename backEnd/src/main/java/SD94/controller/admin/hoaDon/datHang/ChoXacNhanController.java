@@ -22,11 +22,10 @@ public class ChoXacNhanController {
     }
 
     @PostMapping("/capNhatTrangThai/daXacNhan")
-    public ResponseEntity<Map<String, Boolean>> updateStatus2(@RequestBody Map<String, String> body) {
-        String id_bill = body.get("id_bill");
-        Long id = Long.valueOf(id_bill);
+    public List<HoaDon> updateStatus2(@RequestBody HoaDon hoaDon) {
+        Long id = hoaDon.getId();
         hoaDonDatHangService.capNhatTrangThai(2, id);
-        return ResponseEntity.ok().build();
+        return hoaDonDatHangService.findHoaDonByTrangThai(1);
     }
 
     @PostMapping("/capNhatTrangThai/huyDon")
@@ -37,9 +36,14 @@ public class ChoXacNhanController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/xacNhanDon/tatCa")
+    @DeleteMapping("/xacNhanDon/tatCa")
     public ResponseEntity<Map<String, Boolean>> updateStatusAll2() {
-        hoaDonDatHangService.capNhatTrangThai_TatCa(2);
+        hoaDonDatHangService.capNhatTrangThai_TatCa(1,2);
+        return ResponseEntity.ok().build();
+    }
+    @PutMapping("/xacNhanDon/daChon")
+    public ResponseEntity<Void> updateStatusSelect2(@RequestBody List<String> listID) {
+        hoaDonDatHangService.capNhatTrangThai_DaChon(listID, 2);
         return ResponseEntity.ok().build();
     }
 

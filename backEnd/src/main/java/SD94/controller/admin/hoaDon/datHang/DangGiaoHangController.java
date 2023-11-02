@@ -28,14 +28,21 @@ public class DangGiaoHangController {
         hoaDonDatHangService.capNhatTrangThai(4, id);
         return ResponseEntity.ok().build();
     }
+    @PostMapping("/capNhatTrangThai/huyDon5")
+    public ResponseEntity<Map<String, Boolean>> updateStatus5(@RequestBody Map<String, String> body) {
+        String id_bill = body.get("id_bill");
+        Long id = Long.valueOf(id_bill);
+        hoaDonDatHangService.capNhatTrangThai(5, id);
+        return ResponseEntity.ok().build();
+    }
 
     @RequestMapping("/timKiem={search}")
     public List<HoaDon> searchAllBill3(@PathVariable("search") String search) {
-        return hoaDonDatHangService.searchAllBill(4, search);
+        return hoaDonDatHangService.searchAllBill(3, search);
     }
 
     @RequestMapping("/timKiemNgay={searchDate}")
     public List<HoaDon> searchDateBill3(@PathVariable("searchDate") String searchDate) {
-        return hoaDonDatHangService.searchDateBill(4, searchDate);
+        return hoaDonDatHangService.searchDateBill(3, searchDate);
     }
 }
