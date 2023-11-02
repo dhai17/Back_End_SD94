@@ -10,9 +10,12 @@ import SD94.service.service.NhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.net.PasswordAuthentication;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
@@ -26,6 +29,10 @@ public class NhanVienServiceImpl implements NhanVienService {
     @Autowired
     NhanVienRepository staffRepository;
 
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
+
     @Override
     public List<NhanVien> findAllStaff() {
         List<NhanVien> staffs = staffRepository.findAllStaff();
@@ -35,19 +42,18 @@ public class NhanVienServiceImpl implements NhanVienService {
     @Override
     public ResponseEntity<NhanVien> createStaff(NhanVien staffCreate) {
 
-        Optional<NhanVien> optionalStaff = staffRepository.findByName(staffCreate.getHoTen());
+        NhanVien optionalStaff = staffRepository.findByName(staffCreate.getHoTen());
         String errorMessage;
         Message errorRespone;
 
-        if (optionalStaff.isPresent()) {
+        if (optionalStaff != null) {
             errorMessage = " Trùng mã nhân viên";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
         }
         if (staffCreate.getHoTen() == null || staffCreate.getGioiTinh() == null ||
                 staffCreate.getDiaChi() == null || staffCreate.getSoDienThoai() == null ||
-                staffCreate.getNgaySinh() == null || staffCreate.getEmail() == null ||
-                staffCreate.getPassword() == null) {
+                staffCreate.getNgaySinh() == null || staffCreate.getEmail() == null ) {
             errorMessage = "Nhap day du thong tin";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
@@ -67,29 +73,29 @@ public class NhanVienServiceImpl implements NhanVienService {
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches()) {
-            errorMessage = "Mail khong dung dinh dang";
+            errorMessage = "Mail không đúng định dạng";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
         }
 
         //dateOfbirth
-        Date dateC = new Date();
-        Date dateOfBirth = staffCreate.getNgaySinh();
-
-
-        if (dateOfBirth.after(dateC)) {
-            errorMessage = "Ngay sinh khong duoc vuot qua thoi gian hien tai";
-            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
-            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
-        }
+//        Date dateC = new Date();
+//        Date dateOfBirth = staffCreate.getNgaySinh();
+//
+//
+//        if (dateOfBirth.after(dateC)) {
+//            errorMessage = "Ngay sinh khong duoc vuot qua thoi gian hien tai";
+//            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+//            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
+//        }
         try {
             NhanVien staff = new NhanVien();
             staff.setHoTen(staffCreate.getHoTen());
             staff.setGioiTinh(staffCreate.getGioiTinh());
-            staff.setEmail(staffCreate.getEmail());
+           staff.setEmail(staffCreate.getEmail());
             staff.setDiaChi(staffCreate.getDiaChi());
             staff.setNgaySinh(staffCreate.getNgaySinh());
-            staff.setMatKhau(staffCreate.getPassword());
+            staff.setMatKhau(bCryptPasswordEncoder.encode(staffCreate.getPassword()));
             staff.setSoDienThoai(staffCreate.getSoDienThoai());
             staffRepository.save(staff);
             return ResponseEntity.ok(staff);
@@ -151,7 +157,7 @@ public class NhanVienServiceImpl implements NhanVienService {
                 staff.setEmail(staffEdit.getEmail());
                 staff.setDiaChi(staffEdit.getDiaChi());
                 staff.setNgaySinh(staffEdit.getNgaySinh());
-                staff.setMatKhau(staffEdit.getPassword());
+                staff.setMatKhau(bCryptPasswordEncoder.encode(staffEdit.getPassword()));
                 staff.setSoDienThoai(staffEdit.getSoDienThoai());
                 staff.setGioiTinh(staffEdit.getGioiTinh());
                 staffRepository.save(staff);

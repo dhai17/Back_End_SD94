@@ -29,7 +29,7 @@ public class NhanVien extends Base implements UserDetails {
     private String hoTen;
 
     @Column(name = "soDienThoai", columnDefinition = "nvarchar(50) null")
-    private String SoDienThoai;
+    private String soDienThoai;
 
     @Column(name = "email", columnDefinition = "nvarchar(256) not null unique")
     private String email;
