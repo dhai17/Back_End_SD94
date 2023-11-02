@@ -3,6 +3,7 @@ package SD94.entity.khachHang;
 import javax.persistence.*;
 
 import SD94.entity.Base;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,7 @@ public class KhachHang extends Base implements Serializable {
     @Column(name = "email", columnDefinition = "nvarchar(200) null")
     private String email;
 
-    @Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "ngaySinh", columnDefinition = "Date null")
     private Date ngaySinh;
 
