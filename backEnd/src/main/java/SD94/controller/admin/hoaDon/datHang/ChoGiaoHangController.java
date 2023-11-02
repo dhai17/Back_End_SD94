@@ -29,20 +29,20 @@ public class ChoGiaoHangController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/capNhatTrangThai/dangGiaoHang-tatCa")
+    @DeleteMapping("/capNhatTrangThai/dangGiaoHang-tatCa")
     public ResponseEntity<Map<String, Boolean>> updateStatusAll3() {
-        hoaDonDatHangService.capNhatTrangThai_TatCa(3);
+        hoaDonDatHangService.capNhatTrangThai_TatCa(2,3);
         return ResponseEntity.ok().build();
     }
 
     @RequestMapping("/timKiem={search}")
     public List<HoaDon> searchAllBill2(@PathVariable("search") String search) {
-        return hoaDonDatHangService.searchAllBill(3, search);
+        return hoaDonDatHangService.searchAllBill(2, search);
 
     }
 
     @RequestMapping("/timKiemNgay={searchDate}")
     public List<HoaDon> searchDateBill2(@PathVariable("searchDate") String searchDate) {
-        return hoaDonDatHangService.searchDateBill(3, searchDate);
+        return hoaDonDatHangService.searchDateBill(2, searchDate);
     }
 }

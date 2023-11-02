@@ -13,7 +13,8 @@ public interface HoaDonDatHangService {
 
     ResponseEntity<Map<String, Boolean>> capNhatTrangThai(long trang_thai_id, long id_bill);
 
-    ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id);
+    ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id, long trang_thai_id_sau);
+    ResponseEntity<Map<String, Boolean>> capNhatTrangThai_DaChon(List<String> id,long trang_thai_id);
 
     List<HoaDon> searchAllBill(long trang_thai_id, String search);
 

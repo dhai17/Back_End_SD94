@@ -16,7 +16,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Long> {
     List<HoaDon> findHoaDonByTrangThai(long trang_thai_id);
 
     @Query(value = "SELECT * from hoa_don  WHERE is_deleted = false and  trang_thai_id = ?1 " +
-            "AND (ma_hoa_don LIKE %?1% OR SDTNguoi_nhan LIKE %?1% OR email_nguoi_nhan LIKE %?1%)", nativeQuery = true)
+            "AND (ma_hoa_don LIKE %?2% OR SDTNguoi_nhan LIKE %?2% OR email_nguoi_nhan LIKE %?2%)", nativeQuery = true)
     List<HoaDon> findBill(long trang_thai_id, String input);
 
     @Query(value = "SELECT * from hoa_don WHERE is_deleted = false and trang_thai_id = ? AND DATE(created_date) = ?", nativeQuery = true)
