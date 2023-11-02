@@ -1,22 +1,20 @@
 package SD94.service.impl;
 
 import SD94.controller.message.Message;
-import SD94.entity.sanPham.ChatLieu;
-import SD94.entity.sanPham.NhaSanXuat;
-import SD94.entity.sanPham.SanPham;
-import SD94.entity.sanPham.LoaiSanPham;
-import SD94.repository.sanPham.ChatLieuRepository;
-import SD94.repository.sanPham.LoaiSanPhamRepository;
-import SD94.repository.sanPham.NhaSanXuatRepository;
-import SD94.repository.sanPham.SanPhamRepository;
+import SD94.dto.SanPhamDTO;
+import SD94.entity.sanPham.*;
+import SD94.repository.sanPham.*;
+import SD94.service.service.HinhAnhService;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,14 +25,25 @@ public class SanPhamServiceImpl implements SanPhamService {
     SanPhamRepository repository;
 
     @Autowired
-    ChatLieuRepository productMaterialRepository;
+    HinhAnhService hinhAnhService;
 
     @Autowired
-    LoaiSanPhamRepository productLineRepository;
+    ChatLieuRepository chatLieuRepository;
 
     @Autowired
-    NhaSanXuatRepository producerRepository;
+    LoaiSanPhamRepository loaiSanPhamRepository;
 
+    @Autowired
+    NhaSanXuatRepository nhaSanXuatRepository;
+
+    @Autowired
+    MauSacRepository mauSacRepository;
+
+    @Autowired
+    KichCoRepository kichCoRepository;
+
+    @Autowired
+    SanPhamChiTietRepository sanPhamChiTietRepository;
 
     @Override
     public List<SanPham> findAllProduct() {
@@ -87,7 +96,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     public ResponseEntity<SanPham> saveCreate(SanPham sanPhamCreate) {
         try {
             if (sanPhamCreate.getChatLieu() != null) {
-                Optional<ChatLieu> optionalProductMaterial = productMaterialRepository.findById(sanPhamCreate.getChatLieu().getId());
+                Optional<ChatLieu> optionalProductMaterial = chatLieuRepository.findById(sanPhamCreate.getChatLieu().getId());
                 if (optionalProductMaterial.isPresent()) {
                     ChatLieu chatLieu = optionalProductMaterial.get();
                     sanPhamCreate.setChatLieu(chatLieu);
@@ -97,7 +106,7 @@ public class SanPhamServiceImpl implements SanPhamService {
             }
 
             if (sanPhamCreate.getLoaiSanPham() != null) {
-                Optional<LoaiSanPham> optionalProductLine = productLineRepository.findById(sanPhamCreate.getLoaiSanPham().getId());
+                Optional<LoaiSanPham> optionalProductLine = loaiSanPhamRepository.findById(sanPhamCreate.getLoaiSanPham().getId());
                 if (optionalProductLine.isPresent()) {
                     LoaiSanPham line = optionalProductLine.get();
                     sanPhamCreate.setLoaiSanPham(line);
@@ -107,7 +116,7 @@ public class SanPhamServiceImpl implements SanPhamService {
             }
 
             if (sanPhamCreate.getNhaSanXuat() != null) {
-                Optional<NhaSanXuat> optionalProducer = producerRepository.findById(sanPhamCreate.getNhaSanXuat().getId());
+                Optional<NhaSanXuat> optionalProducer = nhaSanXuatRepository.findById(sanPhamCreate.getNhaSanXuat().getId());
                 if (optionalProducer.isPresent()) {
                     NhaSanXuat nhaSanXuat = optionalProducer.get();
                     sanPhamCreate.setNhaSanXuat(nhaSanXuat);
@@ -134,6 +143,48 @@ public class SanPhamServiceImpl implements SanPhamService {
         LocalDate search = LocalDate.parse(searchDate);
         List<SanPham> list = repository.findByDate(search);
         return list;
+    }
+
+    @Override
+    public List<SanPhamChiTiet> taoSanPham(SanPhamDTO sanPhamDTO) {
+        ChatLieu chatLieu = chatLieuRepository.findByID(sanPhamDTO.getChatLieu_id());
+        LoaiSanPham loaiSanPham = loaiSanPhamRepository.findByID(sanPhamDTO.getLoaiSanPham_id());
+        NhaSanXuat nhaSanXuat = nhaSanXuatRepository.findByID(sanPhamDTO.getNhaSanXuat_id());
+
+        SanPham sanPham = new SanPham();
+        sanPham.setTenSanPham(sanPhamDTO.getTenSanPham());
+        sanPham.setGia(sanPhamDTO.getGia());
+        sanPham.setTrangThai(0);
+        sanPham.setLoaiSanPham(loaiSanPham);
+        sanPham.setNhaSanXuat(nhaSanXuat);
+        sanPham.setChatLieu(chatLieu);
+        repository.save(sanPham);
+
+        List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
+        for (Long kichCo_id : sanPhamDTO.getKichCo()) {
+            KichCo kichCo = kichCoRepository.findByID(kichCo_id);
+            for (Long mauSac_id : sanPhamDTO.getMauSac()) {
+                MauSac mauSac = mauSacRepository.findByID(mauSac_id);
+                SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
+                sanPhamChiTiet.setSanPham(sanPham);
+                sanPhamChiTiet.setMauSac(mauSac);
+                sanPhamChiTiet.setKichCo(kichCo);
+                sanPhamChiTiet.setSoLuong(sanPhamDTO.getSoLuong());
+                sanPhamChiTietRepository.save(sanPhamChiTiet);
+                sanPhamChiTietList.add(sanPhamChiTiet);
+            }
+        }
+        return sanPhamChiTietList;
+    }
+
+    @Override
+    public List<Object> chiTietSanPham(long id_SanPham) {
+        SanPham sanPham = repository.findByID(id_SanPham);
+        List<SanPhamChiTiet> sanPhamChiTiets = sanPhamChiTietRepository.findByProductID(id_SanPham);
+        List<Object> respone = new ArrayList<>();
+        respone.add(sanPham);
+        respone.add(sanPhamChiTiets);
+        return respone;
     }
 
 }
