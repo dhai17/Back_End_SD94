@@ -12,16 +12,17 @@ import java.util.Optional;
 
 @Repository
 public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai, Long> {
-    @Query(value = "SELECT * FROM  WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
+    @Modifying
+    @Query(value = "select * from khuyen_mai where is_deleted= false", nativeQuery = true)
     List<KhuyenMai> findAllDiscount();
 
     @Query(value = "select * from khuyen_mai where id = ? and is_deleted = false", nativeQuery = true)
     KhuyenMai findByID(Long id);
 
-    @Query(value = "SELECT * from khuyen_mai WHERE is_deleted = false AND (name LIKE %?1% OR tien_giam_toi_da LIKE %?1% OR phan_tram_giam LIKE %?1%)", nativeQuery = true)
+    @Query(value = "SELECT * from khuyen_mai WHERE is_deleted = false AND (ten_Khuyen_Mai LIKE %?1% OR tien_giam_toi_da LIKE %?1% OR phan_tram_giam LIKE %?1%)", nativeQuery = true)
     List<KhuyenMai> findDiscountByAll(String input);
 
-    @Query(value = "SELECT * from khuyen_mai WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
+    @Query(value = "SELECT * from khuyen_mai WHERE is_deleted = false AND DATE(ngay_bat_dau) = ?", nativeQuery = true)
     List<KhuyenMai> findDiscountByDate(LocalDate ngayTao);
 
     @Query(value = "select * from khuyen_mai where ten_khuyen_mai = ?", nativeQuery = true)
