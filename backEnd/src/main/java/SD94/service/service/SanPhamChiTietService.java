@@ -13,6 +13,8 @@ public interface SanPhamChiTietService {
 
     List<SanPhamChiTiet> findAllProductDetails();
 
+    List<SanPhamChiTiet> findProductDetails();
+
     ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate);
 
     ResponseEntity<List<SanPhamChiTiet>> deleteProductDetails(Long id);

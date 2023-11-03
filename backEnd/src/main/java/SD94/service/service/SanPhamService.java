@@ -13,11 +13,9 @@ public interface SanPhamService {
 
     List<SanPham> findAllProduct();
 
-    ResponseEntity<SanPham> saveEdit(SanPham sanPhamUpdate);
+    ResponseEntity<SanPham> saveEdit(SanPhamDTO sanPhamDTO);
 
     ResponseEntity<List<SanPham>> deleteProduct(Long id);
-
-    ResponseEntity<SanPham> saveCreate(SanPham sanPhamCreate);
 
     List<SanPham> searchAllProduct(String search);
 

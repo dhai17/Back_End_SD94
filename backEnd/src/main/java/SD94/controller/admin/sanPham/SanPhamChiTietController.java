@@ -93,8 +93,6 @@ public class SanPhamChiTietController {
         return sanPhamChiTietService.searchDateProductDetails(search);
     }
 
-
-    //Hduong25
     @GetMapping("/get/SanPhamChiTiet")
     public SanPhamChiTiet getSPCT(@RequestParam long id_SPCT) {
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(id_SPCT);

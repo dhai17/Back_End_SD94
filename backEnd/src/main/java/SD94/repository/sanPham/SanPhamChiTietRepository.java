@@ -3,6 +3,7 @@ package SD94.repository.sanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -11,6 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, Long> {
+    @Query(value = "select spct from SanPhamChiTiet spct where spct.sanPham.id=:idsp and spct.isDeleted=false")
+    List<SanPhamChiTiet> findSpctByIdSp(@Param("idsp")Long idsp);
+
     @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
     List<SanPhamChiTiet> findAll();
 
@@ -39,5 +43,8 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
             "WHERE pd.id_product = ?\n" +
             "GROUP BY pc.color, ps.shoe_size;", nativeQuery = true)
     List<String> getProduct(long id_product);
+
+    @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false AND san_pham_id = ?", nativeQuery = true)
+    List<SanPhamChiTiet> findProductDetails();
 
 }

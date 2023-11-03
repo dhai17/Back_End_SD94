@@ -1,18 +1,14 @@
 package SD94.controller.admin.sanPham;
 
 import SD94.dto.SanPhamDTO;
-import SD94.dto.ThemMoiSanPhamDTO;
 import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
-import SD94.service.service.SanPhamChiTietService;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -36,7 +32,6 @@ public class SanPhamController {
         return sanPhamService.chiTietSanPham(id_SanPham);
     }
 
-
     //Tạo mới và gen ra sản phẩm chi tiết
     @PostMapping("/TaoSanPham")
     public List<SanPhamChiTiet> saveCreate(@RequestBody SanPhamDTO sanPhamDTO) {
@@ -59,7 +54,7 @@ public class SanPhamController {
     }
 
     @PutMapping("/luuChinhSua")
-    public ResponseEntity<SanPham> saveUpdate(@RequestBody SanPham sanPham) {
+    public ResponseEntity<SanPham> saveUpdate(@RequestBody SanPhamDTO sanPham) {
         return sanPhamService.saveEdit(sanPham);
     }
 
