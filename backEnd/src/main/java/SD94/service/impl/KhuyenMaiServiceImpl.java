@@ -40,6 +40,10 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
             if(startDate > homNay && khuyenMai.getTrangThai() != 1){
                 khuyenMaiRepository.updateStatusDiscount(1, idkhuyeMai);
             }
+
+            if(startDate < homNay && endDate > homNay){
+                khuyenMaiRepository.updateStatusDiscount(0, idkhuyeMai);
+            }
         }
 
         List<KhuyenMai> listReturn = khuyenMaiRepository.findAllDiscount();
