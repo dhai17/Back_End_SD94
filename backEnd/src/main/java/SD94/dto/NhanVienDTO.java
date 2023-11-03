@@ -13,7 +13,7 @@ public class NhanVienDTO {
 
     private Date dateOfBirth;
 
-    private Boolean gender;
+    private Boolean gioiTinh;
 
     private String password;
 

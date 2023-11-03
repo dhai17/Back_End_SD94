@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai, Long> {
+
     @Modifying
     @Query(value = "select * from khuyen_mai where is_deleted= false", nativeQuery = true)
     List<KhuyenMai> findAllDiscount();

@@ -25,11 +25,11 @@ import java.util.Set;
 @Table(name = "NhanVien")
 public class NhanVien extends Base implements UserDetails {
 
-    @Column(name = "hoTen", columnDefinition = "nvarchar(256) not null unique")
+    @Column(name = "hoTen", columnDefinition = "nvarchar(256) null")
     private String hoTen;
 
     @Column(name = "soDienThoai", columnDefinition = "nvarchar(50) null")
-    private String SoDienThoai;
+    private String soDienThoai;
 
     @Column(name = "email", columnDefinition = "nvarchar(256) not null unique")
     private String email;
@@ -40,7 +40,7 @@ public class NhanVien extends Base implements UserDetails {
     @Column(name = "gioiTinh", columnDefinition = "bit")
     private Boolean gioiTinh;
 
-    @Column(name = "diaChi", columnDefinition = "nvarchar(256) not null ")
+    @Column(name = "diaChi", columnDefinition = "nvarchar(256) null ")
     private String diaChi;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
