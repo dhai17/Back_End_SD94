@@ -40,4 +40,6 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
             "GROUP BY pc.color, ps.shoe_size;", nativeQuery = true)
     List<String> getProduct(long id_product);
 
+    @Query(value = "select tenAnh from hinh_anh where id_product = ? and anh_mac_dinh = true", nativeQuery = true)
+    String getAnhMacDinh(long sanPham_id);
 }
