@@ -61,7 +61,7 @@ public class SanPhamCustomerController {
         return list;
     }
 
-    @GetMapping("/getAnhMacDinh")
+//    @GetMapping("/getAnhMacDinh")
 
 
 }
