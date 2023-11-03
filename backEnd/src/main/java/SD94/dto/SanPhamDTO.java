@@ -4,34 +4,44 @@ import SD94.entity.sanPham.NhaSanXuat;
 import SD94.entity.sanPham.LoaiSanPham;
 import SD94.entity.sanPham.ChatLieu;
 import lombok.Data;
+import lombok.extern.java.Log;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class SanPhamDTO {
 
     private Long id;
 
-    private String name;
+    private String tenSanPham;
 
-    private Float price;
+    private Float gia;
 
     private String origin;
 
-    private Integer status;
+    private Integer trangThai;
 
-    private Date createdDate;
+    private Date ngayTao;
 
-    private String createdby;
+    private String nguoiTao;
 
-    private Date lastModifiedDate;
+    private ChatLieu chatLieu;
 
-    private String lastModifiedBy;
+    private LoaiSanPham loaiSanPham;
 
-    private ChatLieu idChatLieu;
+    private NhaSanXuat nhaSanXuat;
 
-    private LoaiSanPham idLoaiSanPham;
+    private List<Long> kichCo;
 
-    private NhaSanXuat idNhaSanXuat;
+    private List<Long> mauSac;
+
+    private long chatLieu_id;
+
+    private long loaiSanPham_id;
+
+    private long nhaSanXuat_id;
+
+    private int soLuong;
 
 }

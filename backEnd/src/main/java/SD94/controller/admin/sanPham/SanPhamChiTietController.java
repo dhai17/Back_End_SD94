@@ -1,23 +1,21 @@
 package SD94.controller.admin.sanPham;
 
+import SD94.dto.HinhAnhDTO;
 import SD94.dto.HoaDonChiTietDTO;
+import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.KichCo;
+import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPhamChiTiet;
+import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.KichCoRepository;
 import SD94.repository.sanPham.MauSacRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.SanPhamChiTietService;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,6 +37,12 @@ public class SanPhamChiTietController {
 
     @Autowired
     KichCoRepository productSizeRepository;
+
+    @Autowired
+    SanPhamChiTietRepository sanPhamChiTietRepository;
+
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
 
     //Hien thi
     @GetMapping("/danhSach")
@@ -62,18 +66,17 @@ public class SanPhamChiTietController {
     //Xóa
     @DeleteMapping("/xoa/{id}")
     public ResponseEntity<List<SanPhamChiTiet>> deleteProductDetails(@PathVariable("id") Long id){
-//        System.out.println(id);
         return sanPhamChiTietService.deleteProductDetails(id);
     }
 
     @PostMapping("/themMoi")
-    public ResponseEntity<SanPhamChiTiet> saveCreate(@RequestBody HoaDonChiTietDTO detailsDTO){
+    public SanPhamChiTiet saveCreate(@RequestBody HoaDonChiTietDTO detailsDTO){
         KichCo size = productSizeRepository.findByID(detailsDTO.getIdSize());
         SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
         sanPhamChiTiet.setKichCo(size);
         sanPhamChiTiet.setSoLuong(detailsDTO.getQuantity());
         productDetailsRepository.save(sanPhamChiTiet);
-        return null;
+        return sanPhamChiTiet;
     }
 
     //Tìm kiếm
@@ -87,4 +90,26 @@ public class SanPhamChiTietController {
         return sanPhamChiTietService.searchDateProductDetails(search);
     }
 
+
+    //Hduong25
+    @GetMapping("/get/SanPhamChiTiet")
+    public SanPhamChiTiet getSPCT(@RequestParam long id_SPCT) {
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(id_SPCT);
+        return sanPhamChiTiet;
+    }
+
+    @PutMapping("/ChinhSuaSoLuongSPCT")
+    public ResponseEntity chinhSuaSoLuongSPCT(@RequestBody SanPhamChiTiet sanPhamChiTiet) {
+        return sanPhamChiTietService.chinhSuaSoLuongSPCT(sanPhamChiTiet);
+    }
+
+    @PostMapping("/themAnhSanPham")
+    public ResponseEntity themAnhSanPham(@RequestBody HinhAnhDTO hinhAnhDTO) {
+        return sanPhamChiTietService.themAnhSanPham(hinhAnhDTO);
+    }
+
+    @PutMapping("/ThemAnhMacDinh")
+    public ResponseEntity themAnhMacDinh(@RequestBody HinhAnhDTO hinhAnhDTO) {
+        return sanPhamChiTietService.themAnhMacDinh(hinhAnhDTO);
+    }
 }

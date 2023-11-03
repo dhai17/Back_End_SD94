@@ -17,4 +17,6 @@ public class HinhAnhDTO {
 
     private SanPhamChiTiet sanPhamChiTiet;
 
+    private long id_SPCT;
+
 }
