@@ -5,6 +5,7 @@ import SD94.entity.nhanVien.NhanVien;
 import SD94.helper.UserNotFoundException;
 import SD94.model.request.JwtRequest;
 import SD94.model.response.JwtResponse;
+import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.service.impl.StaffDetailsServiceImpl;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class AuthenticateController {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    NhanVienRepository nhanVienRepository;
+
     // generte token
     @SneakyThrows
     @PostMapping("/login")
@@ -42,7 +46,9 @@ public class AuthenticateController {
         }
         //////
         UserDetails userDetails = this.staffDetailsService.loadUserByUsername(jwtRequest.getEmail());
-        String token = this.jwtUtils.generateToken(userDetails);
+        NhanVien nhanVien = nhanVienRepository.findByEmail(jwtRequest.getEmail());
+
+        String token = this.jwtUtils.generateToken(nhanVien);
         return ResponseEntity.ok(new JwtResponse(token));
     }
 

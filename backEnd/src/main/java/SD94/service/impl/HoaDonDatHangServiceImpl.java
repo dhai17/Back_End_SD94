@@ -16,10 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
@@ -44,18 +41,16 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             hoaDon.setTrangThai(trangThai);
             hoaDonRepository.save(hoaDon);
         }
+        return ResponseEntity.ok().build();
+    }
 
-        Instant now = Instant.now();
-
-        LocalDateTime ngayTao = hoaDon.getCreatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-
-        long soNgay = ChronoUnit.DAYS.between(ngayTao, now);
-
-        if (soNgay > 2) {
-            Optional<TrangThai> optionalTrangThai2 = trangThaiRepository.findById(5L);
-
-            if (optionalTrangThai2.isPresent()) {
-                TrangThai trangThai = optionalTrangThai2.get();
+    @Override
+    public ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id, long trang_thai_id_sau) {
+        List<HoaDon> list = hoaDonRepository.findHoaDonByTrangThai(trang_thai_id);
+        for (HoaDon hoaDon : list) {
+            Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id_sau);
+            if (optionalTrangThai.isPresent()) {
+                TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
                 hoaDonRepository.save(hoaDon);
             }
@@ -64,9 +59,16 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id) {
-        List<HoaDon> list = hoaDonRepository.findHoaDonByTrangThai(trang_thai_id);
-        for (HoaDon hoaDon : list) {
+    public ResponseEntity<Map<String, Boolean>> capNhatTrangThai_DaChon(List<String> listId, long trang_thai_id) {
+        List<HoaDon> hoaDonList = new ArrayList<>();
+        Long id;
+        for (String  stId : listId) {
+            id = Long.valueOf(stId);
+            HoaDon hoaDon = hoaDonRepository.findByID(id);
+            hoaDonList.add(hoaDon);
+        }
+
+        for (HoaDon hoaDon : hoaDonList) {
             Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id);
             if (optionalTrangThai.isPresent()) {
                 TrangThai trangThai = optionalTrangThai.get();
@@ -76,6 +78,8 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         }
         return ResponseEntity.ok().build();
     }
+
+
 
 
     @Override

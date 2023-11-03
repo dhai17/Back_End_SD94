@@ -32,7 +32,6 @@ public class NhanVienServiceImpl implements NhanVienService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-
     @Override
     public List<NhanVien> findAllStaff() {
         List<NhanVien> staffs = staffRepository.findAllStaff();
@@ -51,9 +50,10 @@ public class NhanVienServiceImpl implements NhanVienService {
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
         }
-        if (staffCreate.getHoTen() == null || staffCreate.getGioiTinh() == null ||
+        if (staffCreate.getHoTen() == null ||
+                staffCreate.getGioiTinh() == null ||
                 staffCreate.getDiaChi() == null || staffCreate.getSoDienThoai() == null ||
-                staffCreate.getNgaySinh() == null || staffCreate.getEmail() == null ) {
+                staffCreate.getNgaySinh() == null || staffCreate.getEmail() == null) {
             errorMessage = "Nhap day du thong tin";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
@@ -79,27 +79,27 @@ public class NhanVienServiceImpl implements NhanVienService {
         }
 
         //dateOfbirth
-//        Date dateC = new Date();
-//        Date dateOfBirth = staffCreate.getNgaySinh();
-//
-//
-//        if (dateOfBirth.after(dateC)) {
-//            errorMessage = "Ngay sinh khong duoc vuot qua thoi gian hien tai";
-//            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
-//            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
-//        }
+        Date dateC = new Date();
+        Date dateOfBirth = staffCreate.getNgaySinh();
+
+        if (dateOfBirth.after(dateC)) {
+            errorMessage = "Ngay sinh khong duoc vuot qua thoi gian hien tai";
+            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
+        }
         try {
             NhanVien staff = new NhanVien();
             staff.setHoTen(staffCreate.getHoTen());
             staff.setGioiTinh(staffCreate.getGioiTinh());
-           staff.setEmail(staffCreate.getEmail());
+            staff.setEmail(staffCreate.getEmail());
             staff.setDiaChi(staffCreate.getDiaChi());
             staff.setNgaySinh(staffCreate.getNgaySinh());
-            staff.setMatKhau(bCryptPasswordEncoder.encode(staffCreate.getPassword()));
+            staff.setMatKhau("12345");
             staff.setSoDienThoai(staffCreate.getSoDienThoai());
             staffRepository.save(staff);
             return ResponseEntity.ok(staff);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
 
@@ -122,7 +122,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         }
 
         //SDT
-//        if (staffEdit.getPhoneNumber().intValue()!=10) {
+//        if (staffEdit.getSoDienThoai().()!=10) {
 //            errorMessage = "Phone number must have 10 digits";
 //            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
 //            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);

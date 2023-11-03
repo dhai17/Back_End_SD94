@@ -7,14 +7,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class StaffConvert {
 
-
     public NhanVienDTO toDto(NhanVien entity){
         NhanVienDTO dto = new NhanVienDTO();
         dto.setId(entity.getId());
         dto.setName(entity.getHoTen());
         dto.setAddress(entity.getDiaChi());
         dto.setEmail(entity.getEmail());
-        dto.setGender(Boolean.valueOf(entity.getGioiTinh()));
+        dto.setGioiTinh(Boolean.valueOf(entity.getGioiTinh()));
         dto.setPhoneNumber((entity.getSoDienThoai()));
         dto.setPassword(entity.getPassword());
         dto.setStatus(entity.getTrangThai());
@@ -35,7 +34,7 @@ public class StaffConvert {
         entity.setHoTen(dto.getName());
         entity.setDiaChi(dto.getAddress());
         entity.setEmail(dto.getEmail());
-        entity.setGioiTinh(Boolean.valueOf(dto.getGender()));
+        entity.setGioiTinh(Boolean.valueOf(dto.getGioiTinh()));
         entity.setSoDienThoai(dto.getPhoneNumber());
         entity.setMatKhau(dto.getPassword());
         entity.setTrangThai(dto.getStatus());
