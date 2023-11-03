@@ -18,8 +18,8 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Long> {
     @Query(value = "select * from nhan_vien where id = ? and is_deleted = false", nativeQuery = true)
     NhanVien findByID(Long id);
 
-    @Query(value = "select * from nhan_vien where is_deleted = false and (so_dien_thoai LIKE %?1% OR name LIKE %?1% OR email LIKE %?1%) ", nativeQuery = true)
-    Optional<NhanVien> findByName(String name);
+    @Query(value = "select * from nhan_vien where ho_ten = ? and is_deleted = false ", nativeQuery = true)
+    NhanVien findByName(String hoTen);
 
     @Query(value = "select * from nhan_vien where is_deleted = false and (so_dien_thoai LIKE %?1% OR name LIKE %?1% OR email LIKE %?1%)", nativeQuery = true)
     List<NhanVien> findStaffAll(String input);
