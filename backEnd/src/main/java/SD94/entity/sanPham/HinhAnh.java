@@ -27,4 +27,7 @@ public class HinhAnh extends Base implements Serializable {
 
     @Column(name = "name", columnDefinition = "nvarchar(256) null")
     private String tenAnh;
+
+    @Column(name = "anh_mac_dinh", columnDefinition = "bit")
+    private Boolean anhMacDinh;
 }

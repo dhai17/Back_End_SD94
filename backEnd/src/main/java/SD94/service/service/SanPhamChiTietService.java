@@ -1,5 +1,7 @@
 package SD94.service.service;
 
+import SD94.dto.HinhAnhDTO;
+import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,8 +13,6 @@ public interface SanPhamChiTietService {
 
     List<SanPhamChiTiet> findAllProductDetails();
 
-    List<SanPhamChiTiet> findAllDetailsByIdProduct(Long id);
-
     ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate);
 
     ResponseEntity<List<SanPhamChiTiet>> deleteProductDetails(Long id);
@@ -22,5 +22,11 @@ public interface SanPhamChiTietService {
     List<SanPhamChiTiet> searchAllProductDetails(String search);
 
     List<SanPhamChiTiet> searchDateProductDetails(String searchDate);
+
+    ResponseEntity chinhSuaSoLuongSPCT(SanPhamChiTiet sanPhamChiTiet);
+
+    ResponseEntity themAnhSanPham(HinhAnhDTO hinhAnhDTO);
+
+    ResponseEntity themAnhMacDinh(HinhAnhDTO hinhAnhDTO);
 
 }

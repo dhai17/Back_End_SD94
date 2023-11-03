@@ -12,12 +12,12 @@ import java.util.List;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/khuyenMai")
-public class DiscountController {
+public class khuyenMaiController {
     @Autowired
     KhuyenMaiService khuyenMaiService;
 
     @Autowired
-    KhuyenMaiRepository discountRepository;
+    KhuyenMaiRepository khuyenMaiRepository;
 
     @GetMapping("/danhSach")
     public List<KhuyenMai> listDiscount() {
@@ -26,7 +26,7 @@ public class DiscountController {
 
     @GetMapping("/chinhSua/{id}")
     public KhuyenMai editDiscount(@PathVariable("id") Long id) {
-        return discountRepository.findByID(id);
+        return  khuyenMaiRepository.findByID(id);
     }
 
     @PutMapping("/luuChinhSua")
@@ -34,8 +34,9 @@ public class DiscountController {
         return khuyenMaiService.saveEdit(khuyenMaiUpdate);
     }
 
-    @PutMapping("/xoa/{id}")
-    public ResponseEntity<List<KhuyenMai>> deleteDiscount(@PathVariable("id") Long id) {
+    @PutMapping("/xoa")
+    public ResponseEntity<List<KhuyenMai>> deleteDiscount(@RequestBody KhuyenMai khuyenMai) {
+        Long id = khuyenMai.getId();
         return khuyenMaiService.deletekhuyenMai(id);
     }
 

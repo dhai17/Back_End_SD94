@@ -30,4 +30,6 @@ public class SanPhamChiTietDTO {
 
     private KichCo size;
 
+
+
 }
