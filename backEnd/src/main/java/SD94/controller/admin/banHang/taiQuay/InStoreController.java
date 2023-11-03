@@ -48,7 +48,6 @@ public class InStoreController {
     public ResponseEntity<List<String>> getColor(@RequestParam("product_id") String id) {
         Long id_product = Long.valueOf(id);
         List<String> productColor = mauSacRepository.getColor(id_product);
-        String a[];
         return ResponseEntity.ok().body(productColor);
     }
 
