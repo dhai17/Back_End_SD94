@@ -62,7 +62,6 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
                 NhaSanXuat nhaSanXuat = optionalProducer.get();
                 nhaSanXuat.setDeleted(true);
                 producerRepository.save(nhaSanXuat);
-
                 List<NhaSanXuat> nhaSanXuatList = findAllProducer();
                 return ResponseEntity.ok(nhaSanXuatList);
             } else {
@@ -100,10 +99,6 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
     @Override
     public List<NhaSanXuat> searchAllProducer(String search) {
         List<NhaSanXuat> nhaSanXuatList = producerRepository.findnha_san_xuatByAll(search);
-<<<<<<< HEAD
-=======
-        System.out.println("Search ...");
->>>>>>> lduong
         return nhaSanXuatList;
     }
 

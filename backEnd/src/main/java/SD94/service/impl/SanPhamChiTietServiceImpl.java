@@ -1,8 +1,10 @@
 package SD94.service.impl;
 
 import SD94.controller.message.Message;
+import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
+import SD94.repository.sanPham.SanPhamRepository;
 import SD94.service.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Autowired
     SanPhamChiTietRepository repository;
 
+    @Autowired
+    SanPhamRepository sanPhamRepository;
+
 
     @Override
     public List<SanPhamChiTiet> findAllProductDetails() {
@@ -28,16 +33,13 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate) {
-//        String errorMessage;
-//        Message errorResponse;
-//
-//        if (productDetailsUpdate.getQuantity() == null) {
-//            errorMessage = "Nhập đầy đủ thông tin";
-//            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
-//            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
-//        }
+    public List<SanPhamChiTiet> findAllDetailsByIdProduct(Long id) {
+        List<SanPhamChiTiet> list = repository.findByProductID(id);
+        return list;
+    }
 
+    @Override
+    public ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate) {
         try {
             Optional<SanPhamChiTiet> optional = repository.findById(sanPhamChiTietUpdate.getId());
             if (optional.isPresent()){
@@ -65,8 +67,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
                 sanPhamChiTiet.setDeleted(true);
                 repository.save(sanPhamChiTiet);
-
-                List<SanPhamChiTiet> list = findAllProductDetails();
+                List<SanPhamChiTiet> list = findAllDetailsByIdProduct(id);
                 return ResponseEntity.ok(list);
             } else {
                 return ResponseEntity.notFound().build();

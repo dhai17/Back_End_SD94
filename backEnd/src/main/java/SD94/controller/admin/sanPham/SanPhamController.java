@@ -1,13 +1,16 @@
 package SD94.controller.admin.sanPham;
 
+import SD94.dto.ThemMoiSanPhamDTO;
 import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
 import SD94.service.service.HinhAnhService;
+import SD94.service.service.SanPhamChiTietService;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +48,9 @@ public class SanPhamController {
     @Autowired
     SanPhamService sanPhamService;
 
+    @Autowired
+    SanPhamChiTietService sanPhamChiTietService;
+
 
     @GetMapping("/danhSach")
     public ResponseEntity<List<SanPham>> getProduct() {
@@ -53,36 +59,28 @@ public class SanPhamController {
     }
 
 
-    @PostMapping("themMoi")
-    public List<SanPhamChiTiet> saveCreate(@RequestBody Map<String, Object> body) {
-        String name = (String) body.get("name");
-        String price = (String) body.get("price");
-        String origin = (String) body.get("origin");
-        Long id_metarial = Long.valueOf((String) body.get("id_metarial"));
-        Long id_line = Long.valueOf((String) body.get("id_line"));
-        String producer = (String) body.get("producer");
-        ArrayList<String> size = (ArrayList<String>) body.get("size");
-        ArrayList<String> color = (ArrayList<String>) body.get("color");
-        String quantity = (String) body.get("quantity");
-        String status = (String) body.get("status");
+    @PostMapping("/themMoi")
+    public List<SanPhamChiTiet> saveCreate(@RequestBody ThemMoiSanPhamDTO sp) {
+        String tenSanPham = sp.getTenSanPham();
+        Float gia = sp.getGia();
+        Long chatLieu_id = sp.getChatLieu_id();
+        Long loaiSanPham_id = sp.getLoaiSanPham_id();
+        Long nhaSanXuat_id = sp.getNhaSanXuat_id();
+        List<String> kichCo = sp.getKichCo();
+        List<Integer> mauSac = sp.getMauSac();
+        int soLuong = sp.getSoLuong();
 
-        Float priceFomat = Float.valueOf(price);
-        Long id_producer = Long.valueOf(producer);
-        Integer quantityF = Integer.valueOf(quantity);
-
-
-        Optional<ChatLieu> optionalProductMaterial = productMaterialRepository.findById(id_metarial);
-        Optional<LoaiSanPham> optionalProductLine = productLineRepository.findById(id_line);
-        Optional<NhaSanXuat> optionalProducer = producerRepository.findById(id_producer);
+        Optional<ChatLieu> optionalProductMaterial = productMaterialRepository.findById(chatLieu_id);
+        Optional<LoaiSanPham> optionalProductLine = productLineRepository.findById(loaiSanPham_id);
+        Optional<NhaSanXuat> optionalProducer = producerRepository.findById(nhaSanXuat_id);
 
         if (optionalProductMaterial.isPresent() && optionalProductLine.isPresent() && optionalProducer.isPresent()) {
             ChatLieu chatLieu = optionalProductMaterial.get();
             LoaiSanPham loaiSanPham = optionalProductLine.get();
             NhaSanXuat producerr = optionalProducer.get();
-
             SanPham sanPham = new SanPham();
-            sanPham.setTenSanPham(name);
-            sanPham.setGia(priceFomat);
+            sanPham.setTenSanPham(tenSanPham);
+            sanPham.setGia(gia);
             sanPham.setTrangThai(0);
             sanPham.setLoaiSanPham(loaiSanPham);
             sanPham.setNhaSanXuat(producerr);
@@ -90,11 +88,10 @@ public class SanPhamController {
             repository.save(sanPham);
 
             List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
-            for (Object idSize : size) {
+            for (Object idSize : kichCo) {
                 Long id_size = Long.valueOf(String.valueOf(idSize));
-
                 Optional<KichCo> optionalProductSize = productSizeRepository.findById(id_size);
-                for (Object id_colors : color) {
+                for (Object id_colors : mauSac) {
                     Long id_color = Long.valueOf(String.valueOf(id_colors));
                     Optional<MauSac> optionalProductColor = productColorRepository.findById(id_color);
                     if (optionalProductSize.isPresent() && optionalProductColor.isPresent()) {
@@ -104,7 +101,7 @@ public class SanPhamController {
                         sanPhamChiTiet.setSanPham(sanPham);
                         sanPhamChiTiet.setMauSac(productMauSac);
                         sanPhamChiTiet.setKichCo(productSize);
-                        sanPhamChiTiet.setSoLuong(quantityF);
+                        sanPhamChiTiet.setSoLuong(soLuong);
                         productDetailsRepository.save(sanPhamChiTiet);
                         sanPhamChiTietList.add(sanPhamChiTiet);
                     }
@@ -122,9 +119,8 @@ public class SanPhamController {
     }
 
     @DeleteMapping("/xoa-san-pham-chi-tiet/{id}")
-    public void deleteProductDetails(@RequestBody Map<String, Object> body) {
-        Long productId = Long.valueOf((String) body.get("productId"));
-        repository.deleteById(productId);
+    public ResponseEntity<List<SanPhamChiTiet>> deleteProductDetails(@PathVariable("id") Long id) {
+        return sanPhamChiTietService.deleteProductDetails(id);
     }
 
     @GetMapping("/chinhSua/{id}")

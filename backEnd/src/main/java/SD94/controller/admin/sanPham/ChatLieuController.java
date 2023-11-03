@@ -31,7 +31,7 @@ public class ChatLieuController {
         return chatLieuService.saveCreate(chatLieu);
     }
 
-    @PutMapping("/xoa/{id}")
+    @DeleteMapping("/xoa/{id}")
     public ResponseEntity<List<ChatLieu>> delete(@PathVariable("id") Long id) {
         return chatLieuService.deleteProductMaterial(id);
     }

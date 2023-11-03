@@ -1,4 +1,4 @@
-package SD94.controller.admin.khuyenMai;
+package SD94.controller.admin.KhuyenMai;
 
 import SD94.entity.khuyenMai.KhuyenMai;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;

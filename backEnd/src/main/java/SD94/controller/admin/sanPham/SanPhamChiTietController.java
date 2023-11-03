@@ -2,6 +2,7 @@ package SD94.controller.admin.sanPham;
 
 import SD94.dto.HoaDonChiTietDTO;
 import SD94.entity.sanPham.KichCo;
+import SD94.entity.sanPham.NhaSanXuat;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.sanPham.KichCoRepository;
 import SD94.repository.sanPham.MauSacRepository;
@@ -44,6 +45,12 @@ public class SanPhamChiTietController {
     @GetMapping("/danhSach")
     public ResponseEntity<List<SanPhamChiTiet>> getColor() {
         List<SanPhamChiTiet> list = productDetailsRepository.findAll();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/danhSach-Ctsp")
+    public ResponseEntity<List<SanPhamChiTiet>> getDetails(@PathVariable("id") Long id) {
+        List<SanPhamChiTiet> list = productDetailsRepository.findByProductID(id);
         return ResponseEntity.ok().body(list);
     }
 

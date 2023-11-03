@@ -30,7 +30,7 @@ public class LoaiSanPhamController {
         return loaiSanPhamService.saveCreate(loaiSanPham);
     }
 
-    @PutMapping("/xoa/{id}")
+    @DeleteMapping("/xoa/{id}")
     public ResponseEntity<List<LoaiSanPham>> delete(@PathVariable("id") Long id) {
         return loaiSanPhamService.deleteProductLine(id);
     }

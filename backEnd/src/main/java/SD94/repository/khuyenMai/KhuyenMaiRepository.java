@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai, Long> {
-    @Query(value = "SELECT * FROM  WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM khuyen_mai WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
     List<KhuyenMai> findAllDiscount();
 
     @Query(value = "select * from khuyen_mai where id = ? and is_deleted = false", nativeQuery = true)

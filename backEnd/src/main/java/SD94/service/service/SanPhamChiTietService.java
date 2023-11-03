@@ -11,6 +11,8 @@ public interface SanPhamChiTietService {
 
     List<SanPhamChiTiet> findAllProductDetails();
 
+    List<SanPhamChiTiet> findAllDetailsByIdProduct(Long id);
+
     ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate);
 
     ResponseEntity<List<SanPhamChiTiet>> deleteProductDetails(Long id);
