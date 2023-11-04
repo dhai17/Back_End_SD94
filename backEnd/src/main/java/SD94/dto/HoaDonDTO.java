@@ -3,6 +3,7 @@ package SD94.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class HoaDonDTO {
@@ -37,10 +38,6 @@ public class HoaDonDTO {
 
     private String lastModifiedBy;
 
-//    private KhachHang khachHang;;
-//
-//    private NhanVien nhanVien;
-//
-//    private KhuyenMai khuyenMai;
+    private List<Long> id_hoaDon;
 
 }
