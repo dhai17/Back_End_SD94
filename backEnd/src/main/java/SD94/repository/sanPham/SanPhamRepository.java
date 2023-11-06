@@ -26,5 +26,15 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Long> {
     @Query(value = "select * from san_pham where name = ?", nativeQuery = true)
     Optional<SanPham> findByName(String name);
 
+    @Query(value = "select * from san_pham where loaiSanPham_id = ?", nativeQuery = true)
+    List<SanPham> findByLoaiSanPham(long loaiSanPham_id);
 
+    @Query(value = "select * from san_pham where chatLieu_id = ?", nativeQuery = true)
+    List<SanPham> findByChatLieu(long chatLieu_id);
+
+    @Query(value = "select * from san_pham where nhaSanXuat_id = ?", nativeQuery = true)
+    List<SanPham> findByNSX(long nhaSanXuat_id);
+
+    @Query(value = "SELECT * FROM san_pham WHERE gia >= gia1 and gia <= gia2", nativeQuery = true)
+    List<SanPham> findTheoGia(Float gia1, Float gia2);
 }

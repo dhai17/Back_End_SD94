@@ -1,5 +1,6 @@
 package SD94.controller.admin.hoaDon.datHang;
 
+import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.service.service.HoaDonDatHangService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,13 @@ public class ChoXacNhanController {
         return ResponseEntity.ok().build();
     }
     @PutMapping("/xacNhanDon/daChon")
-    public ResponseEntity<Void> updateStatusSelect2(@RequestBody List<String> listID) {
-        hoaDonDatHangService.capNhatTrangThai_DaChon(listID, 2);
-        return ResponseEntity.ok().build();
+    public List<HoaDon> updateStatusSelect2(@RequestBody HoaDonDTO hoaDonDTO) {
+        return hoaDonDatHangService.capNhatTrangThai_DaChon(hoaDonDTO);
+    }
+
+        @PutMapping("/huyDon/daChon")
+    public List<HoaDon> updateStatusSelect5(@RequestBody HoaDonDTO hoaDonDTO) {
+        return hoaDonDatHangService.capNhatTrangThaiHuy_DaChon(hoaDonDTO);
     }
 
     @RequestMapping("/timKiem={search}")
