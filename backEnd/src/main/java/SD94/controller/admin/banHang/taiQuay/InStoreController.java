@@ -52,12 +52,12 @@ public class InStoreController {
         return ResponseEntity.ok().body(productColor);
     }
 
-    @RequestMapping("/api/getProduct")
-    public ResponseEntity<List<String>> getProduct(@RequestParam("product_id") String id) {
-        Long id_product = Long.valueOf(id);
-        List<String> product = sanPhamChiTietRepository.getProduct(id_product);
-        return ResponseEntity.ok().body(product);
-    }
+//    @RequestMapping("/api/getProduct")
+//    public ResponseEntity<List<String>> getProduct(@RequestParam("product_id") String id) {
+//        Long id_product = Long.valueOf(id);
+//        List<String> product = sanPhamChiTietRepository.getProduct(id_product);
+//        return ResponseEntity.ok().body(product);
+//    }
 
     @RequestMapping("/new-bill")
     public String newBill(){

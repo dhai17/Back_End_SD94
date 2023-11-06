@@ -36,13 +36,16 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     @Query(value = "select * from san_pham_chi_tiet where id_product = ? and id_color = ? and id_size = ?", nativeQuery = true)
     SanPhamChiTiet findByColorAndSize(long id_product, long id_color, long id_size);
 
-    @Query(value = "SELECT pc.color AS color_name, ps.shoe_size AS size_name\n" +
+    @Query(value = "SELECT pc.ten_mau_sac, ps.kich_co, pd.so_luong\n" +
             "FROM san_pham_chi_tiet pd\n" +
-            "         JOIN product_color pc ON pd.id_color = pc.id\n" +
-            "         JOIN product_size ps ON pd.id_size = ps.id\n" +
-            "WHERE pd.id_product = ?\n" +
-            "GROUP BY pc.color, ps.shoe_size;", nativeQuery = true)
-    List<String> getProduct(long id_product);
+            "JOIN mau_sac pc ON pd.mau_sac_id = pc.id\n" +
+            "JOIN kich_co ps ON pd.kich_co_id = ps.id\n" +
+            "WHERE pd.san_pham_id = :san_pham_id\n" +
+            "GROUP BY pc.ten_mau_sac, ps.kich_co, pd.so_luong;", nativeQuery = true)
+    List<String> getProductDe(@Param("san_pham_id") long san_pham_id);
+
+    @Query(value = "SELECT s FROM SanPhamChiTiet s WHERE s.sanPham.id = :san_pham_id")
+    List<SanPhamChiTiet> getProductD(@Param("san_pham_id") long san_pham_id);
 
     @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false AND san_pham_id = ?", nativeQuery = true)
     List<SanPhamChiTiet> findProductDetails();

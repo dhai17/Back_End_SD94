@@ -48,10 +48,10 @@ public class SanPhamChiTietController {
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/danhSach-Ctsp")
-    public ResponseEntity<List<SanPhamChiTiet>> getDetails(@PathVariable("id") Long id) {
-        List<SanPhamChiTiet> list = productDetailsRepository.findByProductID(id);
-        return ResponseEntity.ok().body(list);
+    @GetMapping("/dsCTSP")
+    public ResponseEntity<List<SanPhamChiTiet>> getProduct(@RequestParam("san_pham_id") Long id) {
+        List<SanPhamChiTiet> product = sanPhamChiTietRepository.getProductD(id);
+        return ResponseEntity.ok().body(product);
     }
 
     //Hien thi theo id
