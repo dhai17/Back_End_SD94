@@ -1,4 +1,5 @@
 package SD94.entity.security;
+import SD94.entity.khachHang.KhachHang;
 import SD94.entity.nhanVien.NhanVien;
 import lombok.*;
 
@@ -15,6 +16,9 @@ public class UserRole {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private NhanVien staff;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private KhachHang khachHang;
 
     @ManyToOne
     private Role role;
