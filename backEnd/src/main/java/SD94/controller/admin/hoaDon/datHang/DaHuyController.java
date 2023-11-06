@@ -21,7 +21,6 @@ public class DaHuyController {
 
     @RequestMapping("/timKiem={search}")
     public List<HoaDon> searchAllBill5(@PathVariable("search") String search) {
-        System.out.println(search);
         return hoaDonDatHangService.searchAllBill(5, search);
 
     }

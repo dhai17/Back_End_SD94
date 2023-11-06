@@ -1,6 +1,7 @@
 package SD94.service.impl;
 
 
+import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.TrangThai;
 import SD94.repository.hoaDon.HoaDonRepository;
@@ -59,24 +60,33 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Boolean>> capNhatTrangThai_DaChon(List<String> listId, long trang_thai_id) {
-        List<HoaDon> hoaDonList = new ArrayList<>();
-        Long id;
-        for (String  stId : listId) {
-            id = Long.valueOf(stId);
-            HoaDon hoaDon = hoaDonRepository.findByID(id);
-            hoaDonList.add(hoaDon);
-        }
-
-        for (HoaDon hoaDon : hoaDonList) {
-            Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id);
-            if (optionalTrangThai.isPresent()) {
+    public List<HoaDon> capNhatTrangThai_DaChon(HoaDonDTO hoaDonDTO) {
+        for (Long  id_hoaDon : hoaDonDTO.getId_hoaDon()) {
+            HoaDon hoaDon = hoaDonRepository.findByID(id_hoaDon);
+            Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(2L);
+            if(optionalTrangThai.isPresent()){
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
                 hoaDonRepository.save(hoaDon);
             }
         }
-        return ResponseEntity.ok().build();
+        List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByTrangThai(1L);
+        return hoaDonList;
+    }
+
+    @Override
+    public List<HoaDon> capNhatTrangThaiHuy_DaChon(HoaDonDTO hoaDonDTO) {
+        for (Long  id_hoaDon : hoaDonDTO.getId_hoaDon()) {
+            HoaDon hoaDon = hoaDonRepository.findByID(id_hoaDon);
+            Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(5L);
+            if(optionalTrangThai.isPresent()){
+                TrangThai trangThai = optionalTrangThai.get();
+                hoaDon.setTrangThai(trangThai);
+                hoaDonRepository.save(hoaDon);
+            }
+        }
+        List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByTrangThai(1L);
+        return hoaDonList;
     }
 
 
