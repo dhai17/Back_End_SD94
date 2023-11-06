@@ -8,8 +8,6 @@ import SD94.repository.hoaDon.LichSuHoaDonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -26,12 +24,10 @@ public class ChiTietHoaDonController {
     public ResponseEntity<ChiTietHoaDonDTO> listBill1(@PathVariable("id") long id) {
 
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(id);
-        List<LichSuHoaDon> lichSuHoaDons = lichSuHoaDonRepository.findTimeLineByHoaDonID(id, 1);
-
+        List<LichSuHoaDon> lichSuHoaDons = lichSuHoaDonRepository.getTimeLine(id);
         ChiTietHoaDonDTO chiTietHoaDonDTO = new ChiTietHoaDonDTO();
         chiTietHoaDonDTO.setHoaDonChiTiets(hoaDonChiTiets);
         chiTietHoaDonDTO.setLichSuHoaDons(lichSuHoaDons);
-
         return ResponseEntity.ok(chiTietHoaDonDTO);
     }
 }

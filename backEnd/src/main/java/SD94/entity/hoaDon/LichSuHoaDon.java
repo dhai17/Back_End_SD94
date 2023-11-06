@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Table(name = "LichSuHoaDon")
 public class LichSuHoaDon extends Base implements Serializable {
 
-    @Column(name = "thaoTac", columnDefinition = "nvarchar(256) not null unique")
+    @Column(name = "thaoTac", columnDefinition = "nvarchar(256) not null")
     private String thaoTac;
 
     @ManyToOne
