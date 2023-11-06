@@ -32,14 +32,17 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     @Query(value = "select * from san_pham_chi_tiet where id_product = ? and id_color = ? and id_size = ?", nativeQuery = true)
     SanPhamChiTiet findByColorAndSize(long id_product, long id_color, long id_size);
 
-    @Query(value = "SELECT pc.color AS color_name, ps.shoe_size AS size_name\n" +
+    @Query(value = "SELECT pc.ma_mau_sac AS color_name, ps.kich_co AS size_name\n" +
             "FROM san_pham_chi_tiet pd\n" +
-            "         JOIN product_color pc ON pd.id_color = pc.id\n" +
-            "         JOIN product_size ps ON pd.id_size = ps.id\n" +
-            "WHERE pd.id_product = ?\n" +
-            "GROUP BY pc.color, ps.shoe_size;", nativeQuery = true)
+            "         JOIN mau_sac pc ON pd.mau_sac_id = pc.id\n" +
+            "         JOIN kich_co ps ON pd.kich_co_id = ps.id\n" +
+            "WHERE pd.san_pham_id = ?\n" +
+            "GROUP BY pc.ma_mau_sac, ps.kich_co;", nativeQuery = true)
     List<String> getProduct(long id_product);
 
     @Query(value = "select tenAnh from hinh_anh where id_product = ? and anh_mac_dinh = true", nativeQuery = true)
     String getAnhMacDinh(long sanPham_id);
+
+    @Query(value = "select so_luong from san_pham_chi_tiet where mau_sac_id = ?1 and kich_co_id = ?2 and san_pham_id = ?3", nativeQuery = true)
+    Integer getSoLuongHienCp(long mau_sac_id, long kich_co_id, long san_pham_id);
 }
