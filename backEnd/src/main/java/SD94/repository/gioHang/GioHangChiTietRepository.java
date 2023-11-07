@@ -9,9 +9,9 @@ import java.util.List;
 
 @Repository
 public interface GioHangChiTietRepository extends JpaRepository<GioHangChiTiet, Long> {
-    @Query(value = "select * from gio_hang_chi_tiet where cart_id = ? and is_deleted = false", nativeQuery = true)
+    @Query(value = "select * from gio_hang_chi_tiet where gio_hang_id = ? and is_deleted = false", nativeQuery = true)
     List<GioHangChiTiet> findByCartID(long id);
 
-    @Query(value = "select * from gio_hang_chi_tiet where product_details_id = ?", nativeQuery = true)
+    @Query(value = "select * from gio_hang_chi_tiet where san_pham_chi_tiet_id = ?", nativeQuery = true)
     GioHangChiTiet findByProductDetailsID(long id);
 }

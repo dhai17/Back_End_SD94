@@ -1,9 +1,11 @@
 package SD94.controller.admin.khachHang;
 
+import SD94.entity.gioHang.GioHang;
 import SD94.entity.khachHang.DiaChi;
 import SD94.entity.khachHang.KhachHang;
 import SD94.entity.security.Role;
 import SD94.entity.security.UserRole;
+import SD94.repository.gioHang.GioHangRepository;
 import SD94.repository.khachHang.DiaChiRepository;
 import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.role.RoleRepository;
@@ -23,6 +25,7 @@ import java.util.*;
 @CrossOrigin("*")
 @RequestMapping("/khachHang")
 public class KhachHangController {
+
     @Autowired
     KhachHangService khachHangService;
 
@@ -32,14 +35,9 @@ public class KhachHangController {
     @Autowired
     DiaChiRepository addressRepository;
 
-    @Autowired
-    RoleRepository roleRepository;
 
     @Autowired
-    UserRoleRepository userRoleRepository;
-
-    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
+    GioHangRepository gioHangRepository;
 
     @GetMapping("/danhSach")
     public List<KhachHang> listCustomer() {
@@ -109,36 +107,6 @@ public class KhachHangController {
 
     @PostMapping("/register")
     public ResponseEntity Register(@RequestBody KhachHang create) {
-        KhachHang khachHangCheckEmail = customerRepository.findByEmail(create.getEmail());
-        KhachHang khachHangCheckSDT = customerRepository.findBySDT(create.getSoDienThoai());
-        if(khachHangCheckEmail != null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Trùng email");
-        } else if (khachHangCheckSDT != null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Trùng số điện thoại");
-        }else {
-            SimpleDateFormat inputDateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy");
-            inputDateFormat.setTimeZone(TimeZone.getTimeZone("ICT"));
-            SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            String ngaySinhFormatted = outputDateFormat.format(create.getNgaySinh());
-            KhachHang khachHang = new KhachHang();
-            khachHang.setHoTen(create.getHoTen());
-            khachHang.setNgaySinh(new Date(ngaySinhFormatted));
-            khachHang.setSoDienThoai(create.getSoDienThoai());
-            khachHang.setDiaChi(create.getDiaChi());
-            khachHang.setEmail(create.getEmail());
-            khachHang.setMatKhau(passwordEncoder.encode(create.getMatKhau()));
-            customerRepository.save(khachHang);
-
-            Role role = roleRepository.find("CUSTOMER");
-
-            Set<UserRole> userRoleSet = new HashSet<>();
-            UserRole userRole = new UserRole();
-            userRole.setRole(role);
-            userRole.setKhachHang(khachHang);
-            userRoleSet.add(userRole);
-
-            userRoleRepository.save(userRole);
-            return ResponseEntity.ok(HttpStatus.OK);
-        }
+        return khachHangService.Register(create);
     }
 }

@@ -15,5 +15,5 @@ public interface KhachHangService {
     List<KhachHang> searchAllCustomer(String search);
     List<KhachHang> searchDateCustomer(String searchDate);
 
-
+    ResponseEntity Register(KhachHang create);
 }
