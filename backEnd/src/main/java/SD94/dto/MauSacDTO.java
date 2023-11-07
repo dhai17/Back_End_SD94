@@ -9,16 +9,5 @@ public class MauSacDTO {
 
     private Long id;
 
-    private String code;
-
-    private String color;
-
-    private Date createdDate;
-
-    private String createdby;
-
-    private Date lastModifiedDate;
-
-    private String lastModifiedBy;
-
+    private String maMauSac;
 }

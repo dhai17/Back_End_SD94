@@ -1,12 +1,18 @@
 package SD94.config;
+import SD94.dto.UserDTO;
+import SD94.entity.khachHang.KhachHang;
 import SD94.entity.nhanVien.NhanVien;
 import SD94.entity.security.UserRole;
+import SD94.repository.khachHang.KhachHangRepository;
+import SD94.repository.nhanVien.NhanVienRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -21,6 +27,12 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
     private final SecretKey secretKey;
+
+    @Autowired
+    NhanVienRepository nhanVienRepository;
+
+    @Autowired
+    KhachHangRepository khachHangRepository;
 
     @Value("${app.jwtExpirationInMs}")
     private int jwtExpirationInMs;
@@ -62,12 +74,36 @@ public class JwtUtils {
 //                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
 //                .signWith(SignatureAlgorithm.HS512, secretKey).compact();
 //    }
-public String generateToken(NhanVien nhanVien) {
-    Map<String, Object> claims = new HashMap<>();
-    claims.put("hoTen", nhanVien.getHoTen());
-    claims.put("email", nhanVien.getEmail());
-    claims.put("role", getRolesAsString(nhanVien.getUserRoles()))   ; // Chuyển các Role thành chuỗi
-
+public String generateToken(UserDetails userDetails) {
+    Map<String, Object> claims = null;
+    UserDTO userDTO = null;
+    NhanVien nhanVien = this.nhanVienRepository.findByEmail(userDetails.getUsername());
+    if (nhanVien != null) {
+        userDTO = new UserDTO();
+        userDTO.setEmail(nhanVien.getEmail());
+        userDTO.setName(nhanVien.getHoTen());
+        userDTO.setMatKhau(nhanVien.getMatKhau());
+        userDTO.setRole(nhanVien.getUserRoles());
+        claims = new HashMap<>();
+        claims.put("hoTen", userDTO.getName());
+        claims.put("email", userDTO.getEmail());
+        claims.put("role", getRolesAsString(userDTO.getRole()));
+    } else {
+        KhachHang khachHang = khachHangRepository.findByEmail(userDetails.getUsername());
+        if (khachHang != null) {
+            userDTO = new UserDTO();
+            userDTO.setEmail(khachHang.getEmail());
+            userDTO.setName(khachHang.getHoTen());
+            userDTO.setMatKhau(khachHang.getMatKhau());
+            userDTO.setRole(khachHang.getUserRoles());
+            claims = new HashMap<>();
+            claims.put("hoTen", userDTO.getName());
+            claims.put("email", userDTO.getEmail());
+            claims.put("role", getRolesAsString(userDTO.getRole()));
+        } else {
+            throw new UsernameNotFoundException("Thông tin đăng nhập không hợp lệ!!");
+        }
+    }
     return createToken(claims);
 }
 

@@ -9,15 +9,6 @@ public class KichCoDTO {
 
     private long id;
 
-    private String shoeSize;
+    private String kichCo;
 
-    private Date createdDate;
-
-    private String createdby;
-
-    private Date lastModifiedDate;
-
-    private String lastModifiedBy;
-
-    private boolean isDeleted;
 }
