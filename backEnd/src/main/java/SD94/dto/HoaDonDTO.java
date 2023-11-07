@@ -10,34 +10,22 @@ public class HoaDonDTO {
 
     private Long id;
 
-    private String code;
+    private String maHoaDon;
 
-    private String note;
-
-    private int status;
+    private String ghiChu;
 
     private String email;
 
-    private String phoneNumber;
+    private String soDienThoai;
 
-    private int shippingMoney;
+    private int tienShip;
 
-    private int reducedMoney;
+    private int tongTienHoaDon;
 
-    private int totalOrderPrice;
-
-    private int totalInvoiceAmount;
-
-    private int invoiceType;
-
-    private Date createdDate;
-
-    private String createdby;
-
-    private Date lastModifiedDate;
-
-    private String lastModifiedBy;
+    private int tongTienDonHang;
 
     private List<Long> id_hoaDon;
+
+    private String email_user;
 
 }

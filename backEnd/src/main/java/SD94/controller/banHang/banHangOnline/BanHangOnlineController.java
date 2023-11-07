@@ -1,19 +1,26 @@
 package SD94.controller.banHang.banHangOnline;
 
 import SD94.dto.GioHangDTO;
+import SD94.dto.HoaDonDTO;
+import SD94.entity.gioHang.GioHang;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.hoaDon.TrangThai;
 import SD94.entity.gioHang.GioHangChiTiet;
+import SD94.entity.khachHang.KhachHang;
 import SD94.entity.khuyenMai.KhuyenMai;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.gioHang.GioHangChiTietRepository;
+import SD94.repository.gioHang.GioHangRepository;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
+import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.RoundingMode;
@@ -39,6 +46,12 @@ public class BanHangOnlineController {
 
     @Autowired
     KhuyenMaiRepository discountRepository;
+
+    @Autowired
+    KhachHangRepository khachHangRepository;
+
+    @Autowired
+    GioHangRepository gioHangRepository;
 
     private Long idBill;
 
@@ -72,13 +85,13 @@ public class BanHangOnlineController {
     }
 
     @GetMapping("/getHoaDon/{id}")
-    public ResponseEntity<HoaDon> getHoaDon(@PathVariable("id") long id_HoaDon){
+    public ResponseEntity<HoaDon> getHoaDon(@PathVariable("id") long id_HoaDon) {
         HoaDon hoaDon = billRepository.findByID(id_HoaDon);
         return ResponseEntity.ok(hoaDon);
     }
 
     @GetMapping("/getHoaDonChiTiet/{id}")
-    public List<HoaDonChiTiet> getHoaDonChiTiet(@PathVariable("id") long id_HoaDon){
+    public List<HoaDonChiTiet> getHoaDonChiTiet(@PathVariable("id") long id_HoaDon) {
         List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(id_HoaDon);
         return hoaDonChiTiets;
     }
@@ -163,6 +176,26 @@ public class BanHangOnlineController {
             }
         }
         return "done";
+    }
+
+    @Transactional
+    @PostMapping("/datHang")
+    public ResponseEntity datHang(@RequestBody HoaDonDTO dto) {
+        HoaDon hoaDon = billRepository.findByID(dto.getId());
+        KhachHang khachHang = khachHangRepository.findByEmail(dto.getEmail_user());
+        GioHang gioHang = gioHangRepository.findbyCustomerID(khachHang.getId());
+        List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(hoaDon.getId());
+        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+            cartDetailsRepository.deleteGioHangChiTiet(hoaDonChiTiet.getSanPhamChiTiet().getId());
+        }
+        hoaDon.setGhiChu(dto.getGhiChu());
+        hoaDon.setTongTienHoaDon(dto.getTongTienHoaDon());
+        hoaDon.setTongTienDonHang(dto.getTongTienDonHang());
+        hoaDon.setEmailNguoiNhan(dto.getEmail());
+        hoaDon.setSDTNguoiNhan(dto.getSoDienThoai());
+        hoaDon.setTienShip(dto.getTienShip());
+        billRepository.save(hoaDon);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }

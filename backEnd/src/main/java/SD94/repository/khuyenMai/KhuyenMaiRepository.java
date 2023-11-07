@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai, Long> {
 
     @Modifying
-    @Query(value = "select * from khuyen_mai where is_deleted= false", nativeQuery = true)
+    @Query(value = "select * from khuyen_mai where is_deleted= false order by id desc", nativeQuery = true)
     List<KhuyenMai> findAllDiscount();
 
     @Query(value = "select * from khuyen_mai where id = ? and is_deleted = false", nativeQuery = true)
