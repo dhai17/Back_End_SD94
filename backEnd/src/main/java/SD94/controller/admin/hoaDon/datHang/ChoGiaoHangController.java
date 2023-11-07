@@ -1,5 +1,6 @@
 package SD94.controller.admin.hoaDon.datHang;
 
+import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.service.service.HoaDonDatHangService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,14 @@ public class ChoGiaoHangController {
 
     @DeleteMapping("/capNhatTrangThai/dangGiaoHang-tatCa")
     public ResponseEntity<Map<String, Boolean>> updateStatusAll3() {
-        hoaDonDatHangService.capNhatTrangThai_TatCa(2,3);
+        hoaDonDatHangService.capNhatTrangThai_TatCa(2,3,"Xác nhận giao đơn hàng");
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/giaoDonHang/daChon")
+    public List<HoaDon> updateStatusSelect2(@RequestBody HoaDonDTO hoaDonDTO) {
+        return hoaDonDatHangService.capNhatTrangThai_DaChon(hoaDonDTO, 3,"Xác nhận giao đơn hàng");
+    }
     @RequestMapping("/timKiem={search}")
     public List<HoaDon> searchAllBill2(@PathVariable("search") String search) {
         return hoaDonDatHangService.searchAllBill(2, search);

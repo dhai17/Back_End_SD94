@@ -52,14 +52,14 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id, long trang_thai_id_sau) {
+    public ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id, long trang_thai_id_sau, String thaoTac) {
         List<HoaDon> list = hoaDonRepository.findHoaDonByTrangThai(trang_thai_id);
         for (HoaDon hoaDon : list) {
             Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id_sau);
             if (optionalTrangThai.isPresent()) {
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
-                createTimeLine("Xác nhận đơn", trang_thai_id_sau, hoaDon.getId(), 1);
+                createTimeLine(thaoTac, trang_thai_id_sau, hoaDon.getId(), 1);
                 hoaDonRepository.save(hoaDon);
             }
         }
@@ -67,18 +67,18 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public List<HoaDon> capNhatTrangThai_DaChon(HoaDonDTO hoaDonDTO) {
+    public List<HoaDon> capNhatTrangThai_DaChon(HoaDonDTO hoaDonDTO, long trang_thai_id, String thaoTac) {
         for (Long id_hoaDon : hoaDonDTO.getId_hoaDon()) {
             HoaDon hoaDon = hoaDonRepository.findByID(id_hoaDon);
-            Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(2L);
+            Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id);
             if (optionalTrangThai.isPresent()) {
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
-                createTimeLine("Xác nhận đơn", 2L, id_hoaDon, 1);
+                createTimeLine(thaoTac, trang_thai_id, id_hoaDon, 1);
                 hoaDonRepository.save(hoaDon);
             }
         }
-        List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByTrangThai(1L);
+        List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByTrangThai(trang_thai_id-1);
         return hoaDonList;
     }
 

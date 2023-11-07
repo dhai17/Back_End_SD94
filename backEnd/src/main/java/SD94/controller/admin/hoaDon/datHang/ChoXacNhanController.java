@@ -41,12 +41,12 @@ public class ChoXacNhanController {
 
     @DeleteMapping("/xacNhanDon/tatCa")
     public ResponseEntity<Map<String, Boolean>> updateStatusAll2() {
-        hoaDonDatHangService.capNhatTrangThai_TatCa(1,2);
+        hoaDonDatHangService.capNhatTrangThai_TatCa(1,2,"Xác nhận đơn");
         return ResponseEntity.ok().build();
     }
     @PutMapping("/xacNhanDon/daChon")
     public List<HoaDon> updateStatusSelect2(@RequestBody HoaDonDTO hoaDonDTO) {
-        return hoaDonDatHangService.capNhatTrangThai_DaChon(hoaDonDTO);
+        return hoaDonDatHangService.capNhatTrangThai_DaChon(hoaDonDTO, 2,"Xác nhận đơn");
     }
 
         @PutMapping("/huyDon/daChon")
