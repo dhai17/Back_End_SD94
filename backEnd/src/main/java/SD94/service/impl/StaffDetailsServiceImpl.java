@@ -27,6 +27,7 @@ public class StaffDetailsServiceImpl implements UserDetailsService {
             dto.setEmail(nhanVien.getEmail());
             dto.setMatKhau(nhanVien.getMatKhau());
             dto.setRole(nhanVien.getUserRoles());
+            dto.setSoDienThoai(nhanVien.getSoDienThoai());
             return dto;
         }
 
@@ -37,6 +38,7 @@ public class StaffDetailsServiceImpl implements UserDetailsService {
             dto.setEmail(khachHang.getEmail());
             dto.setMatKhau(khachHang.getMatKhau());
             dto.setRole(khachHang.getUserRoles());
+            dto.setSoDienThoai(khachHang.getSoDienThoai());
             return dto;
         }
 

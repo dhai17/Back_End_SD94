@@ -59,7 +59,6 @@ public class SD94Application implements CommandLineRunner {
         nhanVien = nhanVienRepository.findByEmail("admin@gmail.com");
         if (nhanVien != null) {
             String account = nhanVien.getEmail();
-            System.out.println(account);
         } else {
             nhanVien = new NhanVien();
             nhanVien.setDiaChi("Hà Nội");
@@ -77,7 +76,6 @@ public class SD94Application implements CommandLineRunner {
             userRoleSet.add(userRole);
 
             NhanVien user = nhanVienService.createStaffV1(nhanVien, userRoleSet);
-            System.out.println(user.getUsername());
         }
     }
 }

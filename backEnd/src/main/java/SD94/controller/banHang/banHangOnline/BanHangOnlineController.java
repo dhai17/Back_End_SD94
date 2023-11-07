@@ -1,5 +1,6 @@
-package SD94.controller.admin.banHang.banHangOnline;
+package SD94.controller.banHang.banHangOnline;
 
+import SD94.dto.GioHangDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.hoaDon.TrangThai;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -40,15 +42,19 @@ public class BanHangOnlineController {
 
     private Long idBill;
 
-    @PostMapping("/datHang")
-    public ResponseEntity<Long> checkout(@RequestParam("id_cart_details") long[] id_cart_details,
-                                         @RequestParam("total") int total) {
+    @PostMapping("/checkOut")
+    public ResponseEntity<Long> checkout(@RequestBody GioHangDTO dto) {
         HoaDon hoaDon = new HoaDon();
         hoaDon.setCreatedDate(new Date());
-        hoaDon.setCreatedby("abc");
+        hoaDon.setCreatedby("hduong");
         billRepository.save(hoaDon);
 
-        for (long id : id_cart_details) {
+        hoaDon.setMaHoaDon("HD" + hoaDon.getId());
+        hoaDon.setTongTienHoaDon(dto.getTongTien());
+        hoaDon.setTongTienDonHang(dto.getTongTien());
+        billRepository.save(hoaDon);
+
+        for (long id : dto.getId_gioHangChiTiet()) {
             Optional<GioHangChiTiet> optionalcart = cartDetailsRepository.findById(id);
             if (optionalcart.isPresent()) {
                 GioHangChiTiet gioHangChiTiet = optionalcart.get();
@@ -56,14 +62,25 @@ public class BanHangOnlineController {
                 hoaDonChiTiet.setSanPhamChiTiet(gioHangChiTiet.getSanPhamChiTiet());
                 hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
                 hoaDonChiTiet.setDonGia(gioHangChiTiet.getDonGia());
-                hoaDonChiTiet.setThanhTien(total);
+                hoaDonChiTiet.setThanhTien(gioHangChiTiet.getThanhTien().setScale(0, RoundingMode.HALF_UP).intValue());
                 hoaDonChiTiet.setHoaDon(hoaDon);
                 billDetailsRepository.save(hoaDonChiTiet);
             }
         }
-
         idBill = hoaDon.getId();
         return ResponseEntity.ok(idBill);
+    }
+
+    @GetMapping("/getHoaDon/{id}")
+    public ResponseEntity<HoaDon> getHoaDon(@PathVariable("id") long id_HoaDon){
+        HoaDon hoaDon = billRepository.findByID(id_HoaDon);
+        return ResponseEntity.ok(hoaDon);
+    }
+
+    @GetMapping("/getHoaDonChiTiet/{id}")
+    public List<HoaDonChiTiet> getHoaDonChiTiet(@PathVariable("id") long id_HoaDon){
+        List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(id_HoaDon);
+        return hoaDonChiTiets;
     }
 
     @GetMapping("/check-out")
@@ -80,24 +97,24 @@ public class BanHangOnlineController {
 
     @PostMapping("/add/discount")
     public ResponseEntity<String> addDiscount(@RequestParam("id_bill") long id_bill,
-                              @RequestParam("id_discount") long id_discount,
-                              @RequestParam("total") int total) {
+                                              @RequestParam("id_discount") long id_discount,
+                                              @RequestParam("total") int total) {
         KhuyenMai khuyenMai = discountRepository.findByID(id_discount);
         Optional<HoaDon> optionalBill = billRepository.findById(id_bill);
-        if (optionalBill.isPresent()){
+        if (optionalBill.isPresent()) {
             HoaDon hoaDon = optionalBill.get();
             int phanTramGiam = khuyenMai.getPhanTramGiam();
             int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
             int tongTienBill = total;
 
-            int tongTienSauGiam = (tongTienBill * phanTramGiam)/100;
-            if(tongTienSauGiam > tienGiamToiDa){
+            int tongTienSauGiam = (tongTienBill * phanTramGiam) / 100;
+            if (tongTienSauGiam > tienGiamToiDa) {
                 tongTienSauGiam = tongTienBill - tienGiamToiDa;
                 hoaDon.setTongTienHoaDon(tongTienSauGiam);
                 hoaDon.setKhuyenMai(khuyenMai);
                 billRepository.save(hoaDon);
                 return ResponseEntity.badRequest().body(Collections.singletonList("Tien giam lon hon tien giam toi da").toString());
-            }else {
+            } else {
                 hoaDon.setTongTienHoaDon(tongTienSauGiam);
                 hoaDon.setKhuyenMai(khuyenMai);
                 billRepository.save(hoaDon);
