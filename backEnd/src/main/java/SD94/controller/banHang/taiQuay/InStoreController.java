@@ -1,4 +1,4 @@
-package SD94.controller.admin.banHang.taiQuay;
+package SD94.controller.banHang.taiQuay;
 
 import SD94.dto.KichCoDTO;
 import SD94.dto.MauSacDTO;

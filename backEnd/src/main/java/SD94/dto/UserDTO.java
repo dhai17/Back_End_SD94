@@ -19,6 +19,10 @@ public class UserDTO implements UserDetails {
 
     private String name;
 
+    private String soDienThoai;
+
+    private String diaChi;
+
     @JsonIgnore
     private Set<UserRole> role = new HashSet<>();
 
