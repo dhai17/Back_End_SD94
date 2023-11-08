@@ -3,44 +3,29 @@ package SD94.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class HoaDonDTO {
 
     private Long id;
 
-    private String code;
+    private String maHoaDon;
 
-    private String note;
-
-    private int status;
+    private String ghiChu;
 
     private String email;
 
-    private String phoneNumber;
+    private String soDienThoai;
 
-    private int shippingMoney;
+    private int tienShip;
 
-    private int reducedMoney;
+    private int tongTienHoaDon;
 
-    private int totalOrderPrice;
+    private int tongTienDonHang;
 
-    private int totalInvoiceAmount;
+    private List<Long> id_hoaDon;
 
-    private int invoiceType;
-
-    private Date createdDate;
-
-    private String createdby;
-
-    private Date lastModifiedDate;
-
-    private String lastModifiedBy;
-
-//    private KhachHang khachHang;;
-//
-//    private NhanVien nhanVien;
-//
-//    private KhuyenMai khuyenMai;
+    private String email_user;
 
 }

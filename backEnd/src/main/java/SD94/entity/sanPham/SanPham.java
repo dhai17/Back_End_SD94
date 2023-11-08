@@ -21,6 +21,9 @@ public class SanPham extends Base implements Serializable {
     @Column(name = "tenSanPham", columnDefinition = "nvarchar(256) null")
     private String tenSanPham;
 
+    @Column(name = "mota", columnDefinition = "nvarchar(256) null")
+    private String moTa;
+
     @Column(name = "gia", columnDefinition = "nvarchar(256) null")
     private Float gia;
 

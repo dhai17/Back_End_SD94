@@ -26,6 +26,9 @@ public interface MauSacRepository extends JpaRepository<MauSac, Long> {
     @Query(value = "select * from mau_sac where name = ?", nativeQuery = true)
     Optional<MauSac> findByName(String name);
 
-    @Query(value = "SELECT pc.code AS color_name FROM product_details pd JOIN mau_sac pc ON pd.id_color = pc.id WHERE pd.id_product = ? GROUP BY pd.id_color;", nativeQuery = true)
+    @Query(value = "SELECT pc.ma_mau_sac AS color_name FROM san_pham_chi_tiet pd JOIN mau_sac pc ON pd.mau_sac_id = pc.id WHERE pd.san_pham_id = ? GROUP BY pd.mau_sac_id;", nativeQuery = true)
     List<String> getColor(long id);
+
+    @Query(value = "select * from mau_sac where ma_mau_sac = ?", nativeQuery = true)
+    MauSac findByMaMauSac(String maMauSac);
 }

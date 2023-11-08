@@ -2,9 +2,11 @@ package SD94.controller.customer.gioHang;
 
 import SD94.entity.gioHang.GioHang;
 import SD94.entity.gioHang.GioHangChiTiet;
+import SD94.entity.khachHang.KhachHang;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.gioHang.GioHangChiTietRepository;
 import SD94.repository.gioHang.GioHangRepository;
+import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/gioHang")
 public class GioHangController {
     @Autowired
     GioHangRepository cartRepository;
@@ -25,39 +27,21 @@ public class GioHangController {
     @Autowired
     GioHangChiTietRepository cartDetailsRepository;
 
-    @RequestMapping("/list")
-    public List<GioHangChiTiet> listCart(@RequestParam("customer_id") Long customer_id) {
-        GioHang gioHang = cartRepository.findbyCustomerID(customer_id);
+    @Autowired
+    KhachHangRepository khachHangRepository;
+
+    @RequestMapping("/danhSach/{email}")
+    public List<GioHangChiTiet> listCart(@PathVariable("email") String email) {
+        KhachHang khachHang = khachHangRepository.findByEmail(email);
+        GioHang gioHang = cartRepository.findbyCustomerID(khachHang.getId());
         long idCart = gioHang.getId();
         List<GioHangChiTiet> cartList = cartDetailsRepository.findByCartID(idCart);
         return cartList;
     }
 
-    @PostMapping("/add")
-    public String addToCart(@RequestParam("product_details_id") long product_details_id,
-                            @RequestParam("customer_id") long customer_id,
-                            @RequestParam("quantity") Integer quantity) {
-        GioHang gioHang = cartRepository.findbyCustomerID(customer_id);
-        SanPhamChiTiet sanPhamChiTiet = productDetailsRepository.findByID(product_details_id);
-        Float priceFloat = sanPhamChiTiet.getSanPham().getGia();
-        int price = Integer.valueOf(String.valueOf(priceFloat));
-        Integer total = price * quantity;
-        BigDecimal totalcart = BigDecimal.valueOf(total);
-
-        GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
-        gioHangChiTiet.setGioHang(gioHang);
-        gioHangChiTiet.setDeleted(false);
-        gioHangChiTiet.setSoLuong(quantity);
-        gioHangChiTiet.setDonGia(price);
-        gioHangChiTiet.setThanhTien(totalcart);
-        cartDetailsRepository.save(gioHangChiTiet);
-        return "done";
-    }
-
-    @PostMapping("/delete/cartDetails")
+    @PostMapping("/xoa/gioHangChiTiet")
     public List<GioHangChiTiet> deletedCartDetails(@RequestBody GioHangChiTiet request) {
         Long id_cart_details = request.getId();
-//        int total = request.getUnitPrice();
 
         Optional<GioHangChiTiet> shoppingCart = cartDetailsRepository.findById(id_cart_details);
         long id_cart = 0;
@@ -72,7 +56,7 @@ public class GioHangController {
         return cartList;
     }
 
-    @PostMapping("/update/quantity/product")
+    @PostMapping("/sua/soLuong/sanPham")
     public List<GioHangChiTiet> updateSoLuong(@RequestBody GioHangChiTiet request) {
         Long id_cart_details = request.getId();
         int quantity = request.getSoLuong();

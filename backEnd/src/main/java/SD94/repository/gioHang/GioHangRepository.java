@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GioHangRepository extends JpaRepository<GioHang, Long> {
     @Query(value = "select * from gio_hang where khach_hang_id = ?", nativeQuery = true)
-    GioHang findbyCustomerID(long id);
+    GioHang findbyCustomerID(long khach_hang_id);
 }
