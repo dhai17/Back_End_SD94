@@ -26,7 +26,7 @@ public class ChoXacNhanController {
     public List<HoaDon> updateStatus2(@RequestBody HoaDon hoaDon) {
         Long id = hoaDon.getId();
         hoaDonDatHangService.capNhatTrangThai(2, id);
-        hoaDonDatHangService.createTimeLine("Xác nhận đơn", 2, id, 1);
+        hoaDonDatHangService.createTimeLine("Xác nhận đơn", 2, id, "a");
         return hoaDonDatHangService.findHoaDonByTrangThai(1);
     }
 
@@ -35,7 +35,7 @@ public class ChoXacNhanController {
         String id_bill = body.get("id_bill");
         Long id = Long.valueOf(id_bill);
         hoaDonDatHangService.capNhatTrangThai(5, id);
-        hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, 1);
+        hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, "a");
         return ResponseEntity.ok().build();
     }
 

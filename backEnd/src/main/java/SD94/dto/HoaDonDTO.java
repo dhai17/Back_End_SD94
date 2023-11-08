@@ -28,4 +28,7 @@ public class HoaDonDTO {
 
     private String email_user;
 
+    private String diaChi;
+
+    private String tenMaGiamGia;
 }

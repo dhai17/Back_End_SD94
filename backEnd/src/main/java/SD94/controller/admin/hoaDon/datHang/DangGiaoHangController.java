@@ -26,7 +26,7 @@ public class DangGiaoHangController {
         String id_bill = body.get("id_bill");
         Long id = Long.valueOf(id_bill);
         hoaDonDatHangService.capNhatTrangThai(4, id);
-        hoaDonDatHangService.createTimeLine("Xác nhận đã giao hàng", 4, id, 1);
+        hoaDonDatHangService.createTimeLine("Xác nhận đã giao hàng", 4, id, "a");
         return ResponseEntity.ok().build();
     }
     @PostMapping("/capNhatTrangThai/huyDon5")
@@ -34,7 +34,7 @@ public class DangGiaoHangController {
         String id_bill = body.get("id_bill");
         Long id = Long.valueOf(id_bill);
         hoaDonDatHangService.capNhatTrangThai(5, id);
-        hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, 1);
+        hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, "a");
         return ResponseEntity.ok().build();
     }
 
