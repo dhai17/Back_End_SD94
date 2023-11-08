@@ -14,13 +14,13 @@ public interface HoaDonDatHangService {
 
     ResponseEntity<Map<String, Boolean>> capNhatTrangThai(long trang_thai_id, long id_bill);
 
-    ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id, long trang_thai_id_sau, String thaoTac, long nhan_vien_id);
-    List<HoaDon> capNhatTrangThai_DaChon(HoaDonDTO hoaDonDTO, long trang_thai_id, String thaoTac, long nhan_vien_id);
-    List<HoaDon> capNhatTrangThaiHuy_DaChon(HoaDonDTO hoaDonDTO , long nhan_vien_id);
+    ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id, long trang_thai_id_sau, String thaoTac, String nguoiThaoTac);
+    List<HoaDon> capNhatTrangThai_DaChon(HoaDonDTO hoaDonDTO, long trang_thai_id, String thaoTac, String nguoiThaoTac);
+    List<HoaDon> capNhatTrangThaiHuy_DaChon(HoaDonDTO hoaDonDTO, String nguoiThaoTac);
 
     List<HoaDon> searchAllBill(long trang_thai_id, String search);
 
     List<HoaDon> searchDateBill(long trang_thai_id, String searchDate);
 
-    ResponseEntity createTimeLine(String thaoTac, long trangThai_id, long hoaDon_id, long nhanVien_id);
+    ResponseEntity createTimeLine(String thaoTac, long trangThai_id, long hoaDon_id, String nguoiThaoTac);
 }

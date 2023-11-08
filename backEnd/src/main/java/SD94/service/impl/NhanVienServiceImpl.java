@@ -4,25 +4,23 @@ import SD94.controller.message.Message;
 import SD94.entity.nhanVien.NhanVien;
 import SD94.entity.security.UserRole;
 import SD94.helper.UserFoundException;
-import SD94.repository.role.RoleRepository;
 import SD94.repository.nhanVien.NhanVienRepository;
+import SD94.repository.role.RoleRepository;
 import SD94.service.service.NhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
-import java.net.PasswordAuthentication;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.List;
 
 @Service
 public class NhanVienServiceImpl implements NhanVienService {
@@ -94,7 +92,7 @@ public class NhanVienServiceImpl implements NhanVienService {
             staff.setEmail(staffCreate.getEmail());
             staff.setDiaChi(staffCreate.getDiaChi());
             staff.setNgaySinh(staffCreate.getNgaySinh());
-            staff.setMatKhau("12345");
+            staff.setMatKhau("123123");
             staff.setSoDienThoai(staffCreate.getSoDienThoai());
             staffRepository.save(staff);
             return ResponseEntity.ok(staff);
@@ -114,19 +112,19 @@ public class NhanVienServiceImpl implements NhanVienService {
 
         if (staffEdit.getHoTen() == null || staffEdit.getGioiTinh() == null ||
                 staffEdit.getDiaChi() == null || staffEdit.getSoDienThoai() == null ||
-                staffEdit.getNgaySinh() == null || staffEdit.getEmail() == null ||
-                staffEdit.getPassword() == null) {
+                staffEdit.getNgaySinh() == null || staffEdit.getEmail() == null
+        ) {
             errorMessage = "Nhập đầy đủ thông tin";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
         }
 
         //SDT
-//        if (staffEdit.getSoDienThoai().()!=10) {
-//            errorMessage = "Phone number must have 10 digits";
-//            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
-//            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
-//        }
+        if (staffEdit.getSoDienThoai().length() !=10) {
+            errorMessage = "Số điện thoại phải đủ 10 số";
+            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
+        }
         //email
         String email = staffEdit.getEmail();
         //dinh dang email
@@ -157,7 +155,7 @@ public class NhanVienServiceImpl implements NhanVienService {
                 staff.setEmail(staffEdit.getEmail());
                 staff.setDiaChi(staffEdit.getDiaChi());
                 staff.setNgaySinh(staffEdit.getNgaySinh());
-                staff.setMatKhau(bCryptPasswordEncoder.encode(staffEdit.getPassword()));
+//                staff.setMatKhau(bCryptPasswordEncoder.encode(staffEdit.getMatKhau()));
                 staff.setSoDienThoai(staffEdit.getSoDienThoai());
                 staff.setGioiTinh(staffEdit.getGioiTinh());
                 staffRepository.save(staff);

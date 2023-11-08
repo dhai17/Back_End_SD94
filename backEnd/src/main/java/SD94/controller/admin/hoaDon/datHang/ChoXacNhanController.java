@@ -30,42 +30,43 @@ public class ChoXacNhanController {
     @PostMapping("/capNhatTrangThai/daXacNhan")
     public List<HoaDon> updateStatus2(@RequestBody HoaDonDTO hoaDonDTO) {
         Long id = hoaDonDTO.getId();
-        String email = hoaDonDTO.getCheckOut_email();
+        String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
         hoaDonDatHangService.capNhatTrangThai(2, id);
-        hoaDonDatHangService.createTimeLine("Xác nhận đơn", 2, id,nhanVien.getId());
+        hoaDonDatHangService.createTimeLine("Xác nhận đơn", 2, id,nhanVien.getHoTen());
+
         return hoaDonDatHangService.findHoaDonByTrangThai(1);
     }
 
     @PostMapping("/capNhatTrangThai/huyDon")
     public ResponseEntity<Map<String, Boolean>> updateStatus5(@RequestBody HoaDonDTO hoaDonDTO) {
         Long id = hoaDonDTO.getId();
-        String email = hoaDonDTO.getCheckOut_email();
+        String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
         hoaDonDatHangService.capNhatTrangThai(5, id);
-        hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, nhanVien.getId());
+        hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, nhanVien.getHoTen());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/xacNhanDon/tatCa")
     public ResponseEntity<Map<String, Boolean>> updateStatusAll2(@RequestBody HoaDonDTO hoaDonDTO) {
-        String email = hoaDonDTO.getCheckOut_email();
+        String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
-        hoaDonDatHangService.capNhatTrangThai_TatCa(1,2,"Xác nhận đơn",nhanVien.getId());
+        hoaDonDatHangService.capNhatTrangThai_TatCa(1,2,"Xác nhận đơn",nhanVien.getHoTen());
         return ResponseEntity.ok().build();
     }
     @PutMapping("/xacNhanDon/daChon")
     public List<HoaDon> updateStatusSelect2(@RequestBody HoaDonDTO hoaDonDTO) {
-        String email = hoaDonDTO.getCheckOut_email();
+        String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
-        return hoaDonDatHangService.capNhatTrangThai_DaChon(hoaDonDTO, 2,"Xác nhận đơn",nhanVien.getId());
+        return hoaDonDatHangService.capNhatTrangThai_DaChon(hoaDonDTO, 2,"Xác nhận đơn",nhanVien.getHoTen());
     }
 
         @PutMapping("/huyDon/daChon")
     public List<HoaDon> updateStatusSelect5(@RequestBody HoaDonDTO hoaDonDTO) {
-            String email = hoaDonDTO.getCheckOut_email();
+            String email = hoaDonDTO.getEmail_user();
             NhanVien nhanVien = nhanVienRepository.findByEmail(email);
-        return hoaDonDatHangService.capNhatTrangThaiHuy_DaChon(hoaDonDTO, nhanVien.getId());
+        return hoaDonDatHangService.capNhatTrangThaiHuy_DaChon(hoaDonDTO, nhanVien.getHoTen());
     }
 
     @RequestMapping("/timKiem={search}")

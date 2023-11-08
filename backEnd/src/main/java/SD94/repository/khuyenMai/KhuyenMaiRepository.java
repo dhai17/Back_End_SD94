@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai, Long> {
 
     @Modifying
-    @Query(value = "select * from khuyen_mai where is_deleted= false", nativeQuery = true)
+    @Query(value = "select * from khuyen_mai where is_deleted= false order by id desc", nativeQuery = true)
     List<KhuyenMai> findAllDiscount();
 
     @Query(value = "select * from khuyen_mai where id = ? and is_deleted = false", nativeQuery = true)
@@ -32,4 +32,7 @@ public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai, Long> {
     @Modifying
     @Query(value = "update khuyen_mai set trang_thai = ?1 where id = ?2", nativeQuery = true)
     void updateStatusDiscount(int status, long id);
+
+    @Query(value = "select * from khuyen_mai where ten_Khuyen_Mai = ?", nativeQuery = true)
+    KhuyenMai findByNameKM(String ten_Khuyen_Mai);
 }

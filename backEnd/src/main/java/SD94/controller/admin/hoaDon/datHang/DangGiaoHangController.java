@@ -30,19 +30,20 @@ public class DangGiaoHangController {
     @PostMapping("/capNhatTrangThai/daGiaoHang")
     public List<HoaDon> updateStatus4(@RequestBody HoaDonDTO hoaDonDTO) {
         Long id = hoaDonDTO.getId();
-        String email = hoaDonDTO.getCheckOut_email();
+        String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
         hoaDonDatHangService.capNhatTrangThai(4, id);
-        hoaDonDatHangService.createTimeLine("Xác nhận đã giao hàng", 4, id,nhanVien.getId());
+        hoaDonDatHangService.createTimeLine("Xác nhận đã giao hàng", 4, id,nhanVien.getHoTen());
         return hoaDonDatHangService.findHoaDonByTrangThai(3);
+
     }
     @PostMapping("/capNhatTrangThai/huyDon5")
     public ResponseEntity<Map<String, Boolean>> updateStatus5(@RequestBody HoaDonDTO hoaDonDTO) {
         Long id = hoaDonDTO.getId();
-        String email = hoaDonDTO.getCheckOut_email();
+        String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
         hoaDonDatHangService.capNhatTrangThai(5, id);
-        hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, nhanVien.getId());
+        hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, nhanVien.getHoTen());
         return ResponseEntity.ok().build();
     }
 
