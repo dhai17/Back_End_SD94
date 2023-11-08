@@ -1,31 +1,29 @@
 package SD94.controller.banHang.taiQuay;
 
-import SD94.dto.KichCoDTO;
-import SD94.dto.MauSacDTO;
+import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.hoaDon.TrangThai;
-import SD94.entity.sanPham.KichCo;
-import SD94.entity.sanPham.MauSac;
+import SD94.entity.nhanVien.NhanVien;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
+import SD94.repository.hoaDon.TrangThaiRepository;
+import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.repository.sanPham.KichCoRepository;
 import SD94.repository.sanPham.MauSacRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-public class InStoreController {
+@RequestMapping("/api/banHang/taiQuay")
+public class BanHangTaiQuayController {
     @Autowired
     MauSacRepository mauSacRepository;
 
@@ -40,6 +38,57 @@ public class InStoreController {
 
     @Autowired
     HoaDonChiTietRepository billDetailsRepository;
+
+    @Autowired
+    NhanVienRepository nhanVienRepository;
+
+    @Autowired
+    TrangThaiRepository trangThaiRepository;
+
+    @GetMapping("/danhSachHoaDon")
+    public List<HoaDon> danhSachHoaDonCho() {
+        List<HoaDon> hoaDonList = billRepository.getDanhSachHoaDonCho();
+        return hoaDonList;
+    }
+
+    @GetMapping("/getHoaDonChitiet/{id}")
+    public List<HoaDonChiTiet> getHoaDonChiTiet(@PathVariable("id") long id) {
+        List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(id);
+        return hoaDonChiTiets;
+    }
+
+    @PostMapping("/taoHoaDon")
+    public ResponseEntity<Long> taoHoaDon(@RequestBody HoaDonDTO hoaDonDTO) {
+        NhanVien nhanVien = nhanVienRepository.findByEmail(hoaDonDTO.getEmail_user());
+        TrangThai trangThai = trangThaiRepository.findByID(6L);
+        HoaDon hoaDon = new HoaDon();
+        hoaDon.setTrangThai(trangThai);
+        hoaDon.setLoaiHoaDon(1);
+        hoaDon.setCreatedby(nhanVien.getHoTen());
+        hoaDon.setCreatedDate(new Date());
+        billRepository.save(hoaDon);
+
+        hoaDon.setMaHoaDon("HD" + hoaDon.getId());
+        billRepository.save(hoaDon);
+        return ResponseEntity.ok(hoaDon.getId());
+    }
+
+    @GetMapping("/getHoaDon/{id}")
+    public HoaDon getHoaDon(@PathVariable("id") long id){
+        HoaDon hoaDon = billRepository.findByID(id);
+        return hoaDon;
+    }
+
+    @PostMapping("/xoaHoaDon")
+    public List<HoaDon> xoaHoaDon(@RequestBody HoaDonDTO hoaDonDTO) {
+        HoaDon hoaDon = billRepository.findByID(hoaDonDTO.getId());
+        TrangThai trangThai = trangThaiRepository.findByID(8L);
+        hoaDon.setTrangThai(trangThai);
+        billRepository.save(hoaDon);
+
+        List<HoaDon> hoaDon2 = billRepository.getDanhSachHoaDonCho();
+        return hoaDon2;
+    }
 
     @RequestMapping("/api/getSize")
     public ResponseEntity<List<String>> getSize(@RequestParam("product_id") String id) {
@@ -63,7 +112,7 @@ public class InStoreController {
     }
 
     @RequestMapping("/new-bill")
-    public String newBill(){
+    public String newBill() {
         HoaDon hoaDon = new HoaDon();
         hoaDon.setMaHoaDon("HD034");
         hoaDon.setCreatedby("hduong");
@@ -121,10 +170,10 @@ public class InStoreController {
 
     @PostMapping("/xoa-san-pham")
     public String xoaSanPham(@RequestParam("id_bill") long id_bill,
-                             @RequestParam("id_bill_details") long id_bill_details){
+                             @RequestParam("id_bill_details") long id_bill_details) {
         Optional<HoaDonChiTiet> detailedInvoice = billDetailsRepository.findById(id_bill_details);
         Optional<HoaDon> optionalBill = billRepository.findById(id_bill);
-        if(detailedInvoice.isPresent() && optionalBill.isPresent()){
+        if (detailedInvoice.isPresent() && optionalBill.isPresent()) {
             HoaDonChiTiet details = detailedInvoice.get();
             HoaDon hoaDon = optionalBill.get();
 
