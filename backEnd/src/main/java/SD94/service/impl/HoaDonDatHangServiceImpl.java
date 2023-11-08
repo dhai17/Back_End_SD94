@@ -59,7 +59,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             if (optionalTrangThai.isPresent()) {
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
-                createTimeLine(thaoTac, trang_thai_id_sau, hoaDon.getId(), 1);
+                createTimeLine(thaoTac, trang_thai_id_sau, hoaDon.getId(), "a");
                 hoaDonRepository.save(hoaDon);
             }
         }
@@ -74,7 +74,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             if (optionalTrangThai.isPresent()) {
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
-                createTimeLine(thaoTac, trang_thai_id, id_hoaDon, 1);
+                createTimeLine(thaoTac, trang_thai_id, id_hoaDon, "a");
                 hoaDonRepository.save(hoaDon);
             }
         }
@@ -90,7 +90,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             if (optionalTrangThai.isPresent()) {
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
-                createTimeLine("Huỷ đơn", 5L, id_hoaDon, 1);
+                createTimeLine("Huỷ đơn", 5L, id_hoaDon, "a");
                 hoaDonRepository.save(hoaDon);
             }
         }
@@ -113,17 +113,16 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public ResponseEntity createTimeLine(String thaoTac, long trangThai_id, long hoaDon_id, long nhanVien_id) {
+    public ResponseEntity createTimeLine(String thaoTac, long trangThai_id, long hoaDon_id, String nguoiThaoTac) {
         HoaDon hoaDon = hoaDonRepository.findByID(hoaDon_id);
         TrangThai trangThai = trangThaiRepository.findByID(trangThai_id);
-        NhanVien nhanVien = nhanVienRepository.findByID(nhanVien_id);
+
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setThaoTac(thaoTac);
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setTrangThai(trangThai);
-        lichSuHoaDon.setNhanVien(nhanVien);
         lichSuHoaDon.setCreatedDate(new Date());
-        lichSuHoaDon.setCreatedby(nhanVien.getHoTen());
+        lichSuHoaDon.setNguoiThaoTac(nguoiThaoTac);
         lichSuHoaDonRepository.save(lichSuHoaDon);
         return ResponseEntity.ok(HttpStatus.OK);
     }

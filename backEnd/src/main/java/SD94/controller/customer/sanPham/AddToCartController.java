@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/customer/cart")
@@ -51,23 +52,33 @@ public class AddToCartController {
     SanPhamChiTietRepository sanPhamChiTietRepository;
 
     @PostMapping("/addToCart")
-    public ResponseEntity addToCart(@RequestBody GioHangDTO dto){
+    public ResponseEntity addToCart(@RequestBody GioHangDTO dto) {
         MauSac mauSac = mauSacRepository.findByMaMauSac(dto.getMaMauSac());
         KichCo kichCo = kichCoRepository.findByKichCo(dto.getKichCo());
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.getSanPhamChiTiet(mauSac.getId(), kichCo.getId(), dto.getSan_pham_id());
         KhachHang khachHang = khachHangRepository.findByEmail(dto.getEmail());
         SanPham sanPham = sanPhamRepository.findByID(dto.getSan_pham_id());
         GioHang gioHang = gioHangRepository.findbyCustomerID(khachHang.getId());
+        Optional<GioHangChiTiet> optionalGioHangChiTiet = gioHangChiTietRepository.checkGioHangChiTiet(sanPhamChiTiet.getId(), gioHang.getId());
 
-        float thanhTien = dto.getSoLuong() * sanPham.getGia();
+        if (optionalGioHangChiTiet.isPresent()) {
+            GioHangChiTiet gioHangChiTiet = optionalGioHangChiTiet.get();
+            int soLuongMoi = gioHangChiTiet.getSoLuong() + dto.getSoLuong();
+            float thanhTienMoi = sanPham.getGia() * soLuongMoi;
+            gioHangChiTiet.setSoLuong(soLuongMoi);
+            gioHangChiTiet.setThanhTien(BigDecimal.valueOf(thanhTienMoi));
+            gioHangChiTietRepository.save(gioHangChiTiet);
+        } else {
+            float thanhTien = dto.getSoLuong() * sanPham.getGia();
 
-        GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
-        gioHangChiTiet.setGioHang(gioHang);
-        gioHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-        gioHangChiTiet.setDonGia(dto.getDonGia());
-        gioHangChiTiet.setSoLuong(dto.getSoLuong());
-        gioHangChiTiet.setThanhTien(BigDecimal.valueOf(thanhTien));
-        gioHangChiTietRepository.save(gioHangChiTiet);
+            GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
+            gioHangChiTiet.setGioHang(gioHang);
+            gioHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+            gioHangChiTiet.setDonGia(dto.getDonGia());
+            gioHangChiTiet.setSoLuong(dto.getSoLuong());
+            gioHangChiTiet.setThanhTien(BigDecimal.valueOf(thanhTien));
+            gioHangChiTietRepository.save(gioHangChiTiet);
+        }
 
         return ResponseEntity.ok(HttpStatus.OK);
     }

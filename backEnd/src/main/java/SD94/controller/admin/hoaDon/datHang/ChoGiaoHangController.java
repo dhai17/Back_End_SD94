@@ -27,7 +27,7 @@ public class ChoGiaoHangController {
         String id_bill = body.get("id_bill");
         Long id = Long.valueOf(id_bill);
         hoaDonDatHangService.capNhatTrangThai(3, id);
-        hoaDonDatHangService.createTimeLine("Xác nhận giao đơn hàng", 3, id, 1);
+        hoaDonDatHangService.createTimeLine("Xác nhận giao đơn hàng", 3, id, "a");
         return ResponseEntity.ok().build();
     }
 
