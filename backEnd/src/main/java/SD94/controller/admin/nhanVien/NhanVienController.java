@@ -48,12 +48,12 @@ public class NhanVienController {
     }
 
 
-    @RequestMapping("/timKiem={search}")
+    @RequestMapping("/timKiem/{search}")
     public List<NhanVien> searchAllStaff(@PathVariable("search") String search) {
         return nhanVienService.searchAllStaff(search);
     }
 
-    @RequestMapping("/timKiemNgay={searchDate}")
+    @RequestMapping("/timKiemNgay/{searchDate}")
     public List<NhanVien> searchDateStaff(@PathVariable("searchDate") String searchDate) {
         return nhanVienService.searchDateStaff(searchDate);
     }
