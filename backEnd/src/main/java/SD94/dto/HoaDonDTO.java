@@ -39,5 +39,6 @@ public class HoaDonDTO {
     private String lastModifiedBy;
 
     private List<Long> id_hoaDon;
+    private String checkOut_email;
 
 }

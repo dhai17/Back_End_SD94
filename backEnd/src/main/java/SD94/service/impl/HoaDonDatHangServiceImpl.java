@@ -52,14 +52,14 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id, long trang_thai_id_sau, String thaoTac) {
+    public ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id, long trang_thai_id_sau, String thaoTac, long nhan_vien_id) {
         List<HoaDon> list = hoaDonRepository.findHoaDonByTrangThai(trang_thai_id);
         for (HoaDon hoaDon : list) {
             Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id_sau);
             if (optionalTrangThai.isPresent()) {
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
-                createTimeLine(thaoTac, trang_thai_id_sau, hoaDon.getId(), 1);
+                createTimeLine(thaoTac, trang_thai_id_sau, hoaDon.getId(), nhan_vien_id);
                 hoaDonRepository.save(hoaDon);
             }
         }
@@ -67,14 +67,14 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public List<HoaDon> capNhatTrangThai_DaChon(HoaDonDTO hoaDonDTO, long trang_thai_id, String thaoTac) {
+    public List<HoaDon> capNhatTrangThai_DaChon(HoaDonDTO hoaDonDTO, long trang_thai_id, String thaoTac, long nhan_vien_id) {
         for (Long id_hoaDon : hoaDonDTO.getId_hoaDon()) {
             HoaDon hoaDon = hoaDonRepository.findByID(id_hoaDon);
             Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id);
             if (optionalTrangThai.isPresent()) {
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
-                createTimeLine(thaoTac, trang_thai_id, id_hoaDon, 1);
+                createTimeLine(thaoTac, trang_thai_id, id_hoaDon, nhan_vien_id);
                 hoaDonRepository.save(hoaDon);
             }
         }
@@ -83,14 +83,14 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public List<HoaDon> capNhatTrangThaiHuy_DaChon(HoaDonDTO hoaDonDTO) {
+    public List<HoaDon> capNhatTrangThaiHuy_DaChon(HoaDonDTO hoaDonDTO, long nhan_vien_id) {
         for (Long id_hoaDon : hoaDonDTO.getId_hoaDon()) {
             HoaDon hoaDon = hoaDonRepository.findByID(id_hoaDon);
             Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(5L);
             if (optionalTrangThai.isPresent()) {
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
-                createTimeLine("Huỷ đơn", 5L, id_hoaDon, 1);
+                createTimeLine("Huỷ đơn", 5L, id_hoaDon, nhan_vien_id);
                 hoaDonRepository.save(hoaDon);
             }
         }
