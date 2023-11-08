@@ -75,7 +75,6 @@ public class VnpayService {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VnpayConflig.vnp_PayUrl + "?" + queryUrl;
 
-        System.out.println(paymentUrl);
         return paymentUrl;
     }
 }

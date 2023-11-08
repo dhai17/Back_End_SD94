@@ -20,7 +20,7 @@ import java.io.Serializable;
 @Table(name = "HoaDon")
 public class HoaDon extends Base implements Serializable {
 
-    @Column(name = "maHoaDon", columnDefinition = "nvarchar(256) not null unique")
+    @Column(name = "maHoaDon", columnDefinition = "nvarchar(256) null")
     private String maHoaDon;
 
     @Column(name = "ghiChu", columnDefinition = "nvarchar(50) null")

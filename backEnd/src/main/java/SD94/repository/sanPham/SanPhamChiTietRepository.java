@@ -36,20 +36,25 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     @Query(value = "select * from san_pham_chi_tiet where id_product = ? and id_color = ? and id_size = ?", nativeQuery = true)
     SanPhamChiTiet findByColorAndSize(long id_product, long id_color, long id_size);
 
-    @Query(value = "SELECT pc.ten_mau_sac, ps.kich_co, pd.so_luong\n" +
-            "FROM san_pham_chi_tiet pd\n" +
-            "JOIN mau_sac pc ON pd.mau_sac_id = pc.id\n" +
-            "JOIN kich_co ps ON pd.kich_co_id = ps.id\n" +
-            "WHERE pd.san_pham_id = :san_pham_id\n" +
-            "GROUP BY pc.ten_mau_sac, ps.kich_co, pd.so_luong;", nativeQuery = true)
-    List<String> getProduct(@Param("san_pham_id") long san_pham_id);
-
     @Query(value = "SELECT s FROM SanPhamChiTiet s WHERE s.sanPham.id = :san_pham_id")
     List<SanPhamChiTiet> getProductD(@Param("san_pham_id") long san_pham_id);
 
     @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false AND san_pham_id = ?", nativeQuery = true)
     List<SanPhamChiTiet> findProductDetails();
+    @Query(value = "SELECT pc.ma_mau_sac AS color_name, ps.kich_co AS size_name\n" +
+            "FROM san_pham_chi_tiet pd\n" +
+            "         JOIN mau_sac pc ON pd.mau_sac_id = pc.id\n" +
+            "         JOIN kich_co ps ON pd.kich_co_id = ps.id\n" +
+            "WHERE pd.san_pham_id = ?\n" +
+            "GROUP BY pc.ma_mau_sac, ps.kich_co;", nativeQuery = true)
+    List<String> getProduct(long id_product);
 
     @Query(value = "select tenAnh from hinh_anh where id_product = ? and anh_mac_dinh = true", nativeQuery = true)
     String getAnhMacDinh(long sanPham_id);
+
+    @Query(value = "select so_luong from san_pham_chi_tiet where mau_sac_id = ?1 and kich_co_id = ?2 and san_pham_id = ?3", nativeQuery = true)
+    Integer getSoLuongHienCp(long mau_sac_id, long kich_co_id, long san_pham_id);
+
+    @Query(value = "select * from san_pham_chi_tiet where mau_sac_id = ?1 and kich_co_id = ?2 and san_pham_id = ?3", nativeQuery = true)
+    SanPhamChiTiet getSanPhamChiTiet(long mau_sac_id, long kich_co_id, long san_pham_id);
 }

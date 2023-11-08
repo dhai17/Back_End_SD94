@@ -13,8 +13,11 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roleId;
+
     private String roleName;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "role")
     private Set<UserRole> userRoles = new HashSet<>();
 

@@ -23,6 +23,9 @@ public interface KichCoRepository extends JpaRepository<KichCo, Long> {
     @Query(value = "select * from kich_co where name = ?", nativeQuery = true)
     Optional<KichCo> findByName(String name);
 
-    @Query(value = "SELECT pc.kich_co AS ten_kich_co FROM san_pham_chi_tiet pd JOIN kich_co pc ON pd.kich_co_id = pc.id WHERE pd.san_pham_id = ? GROUP BY pd.kich_co_id\n", nativeQuery = true)
+    @Query(value = "SELECT pc.kich_co AS ten_kich_co FROM san_pham_chi_tiet pd JOIN kich_co pc ON pd.kich_co_id = pc.id WHERE pd.san_pham_id = ? GROUP BY pd.kich_co_id", nativeQuery = true)
     List<String> getKichCo(long id_product);
+
+    @Query(value = "select * from kich_co where kich_co = ?", nativeQuery = true)
+    KichCo findByKichCo(String kichCo);
 }

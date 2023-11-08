@@ -26,6 +26,7 @@ public class ChoXacNhanController {
     public List<HoaDon> updateStatus2(@RequestBody HoaDon hoaDon) {
         Long id = hoaDon.getId();
         hoaDonDatHangService.capNhatTrangThai(2, id);
+        hoaDonDatHangService.createTimeLine("Xác nhận đơn", 2, id, 1);
         return hoaDonDatHangService.findHoaDonByTrangThai(1);
     }
 
@@ -34,17 +35,18 @@ public class ChoXacNhanController {
         String id_bill = body.get("id_bill");
         Long id = Long.valueOf(id_bill);
         hoaDonDatHangService.capNhatTrangThai(5, id);
+        hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, 1);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/xacNhanDon/tatCa")
     public ResponseEntity<Map<String, Boolean>> updateStatusAll2() {
-        hoaDonDatHangService.capNhatTrangThai_TatCa(1,2);
+        hoaDonDatHangService.capNhatTrangThai_TatCa(1,2,"Xác nhận đơn");
         return ResponseEntity.ok().build();
     }
     @PutMapping("/xacNhanDon/daChon")
     public List<HoaDon> updateStatusSelect2(@RequestBody HoaDonDTO hoaDonDTO) {
-        return hoaDonDatHangService.capNhatTrangThai_DaChon(hoaDonDTO);
+        return hoaDonDatHangService.capNhatTrangThai_DaChon(hoaDonDTO, 2,"Xác nhận đơn");
     }
 
         @PutMapping("/huyDon/daChon")

@@ -1,8 +1,12 @@
-package SD94.controller.admin.banHang.taiQuay;
+package SD94.controller.banHang.taiQuay;
 
+import SD94.dto.KichCoDTO;
+import SD94.dto.MauSacDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.hoaDon.TrangThai;
+import SD94.entity.sanPham.KichCo;
+import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
