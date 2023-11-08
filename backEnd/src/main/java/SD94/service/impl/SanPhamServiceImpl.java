@@ -54,20 +54,15 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public ResponseEntity<SanPham> saveEdit(SanPhamDTO sanPhamDTO) {
         try {
-            Optional<SanPhamChiTiet> chiTietOptional = sanPhamChiTietRepository.findById(sanPhamDTO.getId());
             Optional<SanPham> optional = repository.findById(sanPhamDTO.getId());
-            if (optional.isPresent() && chiTietOptional.isPresent()){
+            if (optional.isPresent()){
                 SanPham sanPham = optional.get();
-                SanPhamChiTiet sanPhamChiTiet = chiTietOptional.get();
                 sanPham.setTenSanPham(sanPhamDTO.getTenSanPham());
                 sanPham.setGia(sanPhamDTO.getGia());
-                sanPham.setTrangThai(sanPhamDTO.getTrangThai());
+                sanPham.setTrangThai(0);
                 sanPham.setNhaSanXuat(sanPhamDTO.getNhaSanXuat());
                 sanPham.setLoaiSanPham(sanPhamDTO.getLoaiSanPham());
                 sanPham.setChatLieu(sanPhamDTO.getChatLieu());
-                sanPhamChiTiet.setSoLuong(sanPhamDTO.getSoLuong());
-                sanPhamChiTiet.setMauSac((MauSac) sanPhamDTO.getMauSac());
-                sanPhamChiTiet.setKichCo((KichCo) sanPhamDTO.getKichCo());
                 repository.save(sanPham);
                 return ResponseEntity.ok(sanPham);
             } else {

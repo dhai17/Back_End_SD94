@@ -42,7 +42,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
             "JOIN kich_co ps ON pd.kich_co_id = ps.id\n" +
             "WHERE pd.san_pham_id = :san_pham_id\n" +
             "GROUP BY pc.ten_mau_sac, ps.kich_co, pd.so_luong;", nativeQuery = true)
-    List<String> getProductDe(@Param("san_pham_id") long san_pham_id);
+    List<String> getProduct(@Param("san_pham_id") long san_pham_id);
 
     @Query(value = "SELECT s FROM SanPhamChiTiet s WHERE s.sanPham.id = :san_pham_id")
     List<SanPhamChiTiet> getProductD(@Param("san_pham_id") long san_pham_id);
