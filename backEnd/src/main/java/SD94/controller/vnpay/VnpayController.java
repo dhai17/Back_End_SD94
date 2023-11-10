@@ -67,6 +67,12 @@ public class VnpayController {
         return vnpayService.createPayment(hoaDonDTO);
     }
 
+    @PostMapping("/payment/MuaNgay/create")
+    public ResponseEntity<VnpayDTO> MuaNgaycreateUrl(@RequestBody HoaDonDTO hoaDonDTO){
+        dto = hoaDonDTO;
+        return vnpayService.createPaymentMuaNgay(hoaDonDTO);
+    }
+
     @Transactional
     @RequestMapping("/payment/return")
     public ResponseEntity<String> returnPayment(HttpServletRequest request){
@@ -100,6 +106,43 @@ public class VnpayController {
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());
+        if(paymentStatus == 1){
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Success.html"));
+            return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        }else {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Error.html"));
+            return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        }
+    }
+
+    @Transactional
+    @RequestMapping("/payment/MuaNgay/return")
+    public ResponseEntity<String> returnPaymentMuaNgay(HttpServletRequest request){
+        int paymentStatus = VnpayConflig.orderReturn(request);
+        HoaDon hoaDon = hoaDonRepository.findByID(dto.getId());
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
+            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+        }
+
+        TrangThai trangThai = trangThaiRepository.findByID(1L);
+
+        hoaDon.setGhiChu(dto.getGhiChu());
+        hoaDon.setTongTienHoaDon(dto.getTongTienHoaDon());
+        hoaDon.setTongTienDonHang(dto.getTongTienDonHang());
+        hoaDon.setEmailNguoiNhan(dto.getEmail());
+        hoaDon.setSDTNguoiNhan(dto.getSoDienThoai());
+        hoaDon.setTienShip(dto.getTienShip());
+        hoaDon.setDiaChiGiaoHang(dto.getDiaChi());
+        hoaDon.setTrangThai(trangThai);
+        hoaDon.setCreatedby(dto.getNguoiTao());
+        hoaDonRepository.save(hoaDon);
+
+        hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), dto.getNguoiTao());
         if(paymentStatus == 1){
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Success.html"));

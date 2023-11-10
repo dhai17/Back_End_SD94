@@ -100,7 +100,7 @@ public class KhachHangServceImpl implements KhachHangService {
             khachHang.setEmail(khachHangCreate.getEmail());
             khachHang.setNgaySinh(khachHangCreate.getNgaySinh());
             khachHang.setDiaChi(khachHangCreate.getDiaChi());
-            khachHang.setMatKhau(khachHangCreate.getMatKhau());
+            khachHang.setMatKhau(passwordEncoder.encode(khachHangCreate.getMatKhau()));
             customerRepository.save(khachHang);
 
             GioHang gioHang = new GioHang();
