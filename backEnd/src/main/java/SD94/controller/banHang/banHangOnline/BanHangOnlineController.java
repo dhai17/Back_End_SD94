@@ -20,12 +20,14 @@ import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.HoaDonDatHangService;
+import SD94.service.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Date;
@@ -61,6 +63,9 @@ public class BanHangOnlineController {
 
     @Autowired
     HoaDonDatHangService hoaDonDatHangService;
+
+    @Autowired
+    MailService mailService;
 
     private Long idBill;
 
@@ -174,7 +179,14 @@ public class BanHangOnlineController {
         hoaDon.setDiaChiGiaoHang(dto.getDiaChi());
         hoaDon.setTrangThai(trangThai);
         hoaDon.setKhachHang(khachHang);
+        hoaDon.setNguoiNhan(khachHang.getHoTen());
         billRepository.save(hoaDon);
+
+        try {
+            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());
         return ResponseEntity.ok(HttpStatus.OK);

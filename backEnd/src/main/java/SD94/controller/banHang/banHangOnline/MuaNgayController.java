@@ -157,6 +157,7 @@ public class MuaNgayController {
         hoaDon.setTienShip(dto.getTienShip());
         hoaDon.setDiaChiGiaoHang(dto.getDiaChi());
         hoaDon.setTrangThai(trangThai);
+        hoaDon.setNguoiNhan(dto.getNguoiTao());
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), dto.getNguoiTao());

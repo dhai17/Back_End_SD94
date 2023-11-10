@@ -103,6 +103,7 @@ public class VnpayController {
         hoaDon.setDiaChiGiaoHang(dto.getDiaChi());
         hoaDon.setTrangThai(trangThai);
         hoaDon.setKhachHang(khachHang);
+        hoaDon.setNguoiNhan(khachHang.getHoTen());
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());
@@ -140,6 +141,7 @@ public class VnpayController {
         hoaDon.setDiaChiGiaoHang(dto.getDiaChi());
         hoaDon.setTrangThai(trangThai);
         hoaDon.setCreatedby(dto.getNguoiTao());
+        hoaDon.setNguoiNhan(dto.getNguoiTao());
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), dto.getNguoiTao());

@@ -208,7 +208,7 @@ public class InHoaDonService {
             byte[] pdfBytes = createPdfFromHtml(htmlContentBuilder);
 
             // Lưu file PDF vào thư mục dự án
-            String filePath = "C:\\Users\\LE DUONG\\Documents\\SD94\\Back_End_SD94\\hoa_don_" + hoaDonId + ".pdf";
+            String filePath = "D:\\DATN_SD94\\Back_End_SD94\\backEnd\\hoa_don_" + hoaDonId + ".pdf";
             try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
                 fileOutputStream.write(pdfBytes);
             } catch (IOException e) {
