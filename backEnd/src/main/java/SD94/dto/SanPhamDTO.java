@@ -44,4 +44,5 @@ public class SanPhamDTO {
 
     private int soLuong;
 
+    private long anh_id;
 }
