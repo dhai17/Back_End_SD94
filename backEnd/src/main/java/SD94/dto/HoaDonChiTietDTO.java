@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class HoaDonChiTietDTO {
+    private Long id;
 
     private Long idProduct;
 

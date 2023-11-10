@@ -19,7 +19,7 @@ import java.util.Date;
 public abstract class Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "createdDate", updatable = false)
     @CreatedDate

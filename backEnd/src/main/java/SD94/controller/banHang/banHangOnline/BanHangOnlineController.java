@@ -2,6 +2,7 @@ package SD94.controller.banHang.banHangOnline;
 
 import SD94.dto.GioHangDTO;
 import SD94.dto.HoaDonDTO;
+import SD94.dto.KhachHangDTO;
 import SD94.entity.gioHang.GioHang;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
@@ -122,17 +123,17 @@ public class BanHangOnlineController {
         HoaDon hoaDon = billRepository.findByID(hoaDonDTO.getId());
         int phanTramGiam = khuyenMai.getPhanTramGiam();
         int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
-        int tongTienBill = hoaDon.getTongTienDonHang();
+        int tongTienBill = hoaDon.getTongTienHoaDon();
 
         int tongTienSauGiamCheck = (tongTienBill * phanTramGiam) / 100;
         if (tongTienSauGiamCheck > tienGiamToiDa) {
-            int tongTienSauGiam = hoaDon.getTongTienDonHang() - khuyenMai.getTienGiamToiDa();
-            hoaDon.setTienGiam(hoaDon.getTongTienDonHang() - tongTienSauGiam);
+            int tongTienSauGiam = hoaDon.getTongTienHoaDon() - khuyenMai.getTienGiamToiDa();
+            hoaDon.setTienGiam(hoaDon.getTongTienHoaDon() - tongTienSauGiam);
             hoaDon.setTongTienDonHang(tongTienSauGiam);
             hoaDon.setKhuyenMai(khuyenMai);
             billRepository.save(hoaDon);
         } else {
-            int tongTien = hoaDon.getTongTienDonHang() - tongTienSauGiamCheck;
+            int tongTien = hoaDon.getTongTienHoaDon() - tongTienSauGiamCheck;
             System.out.println(tongTien);
             hoaDon.setTongTienDonHang(tongTien);
             hoaDon.setTienGiam(tongTienSauGiamCheck);

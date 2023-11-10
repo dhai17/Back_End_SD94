@@ -63,19 +63,6 @@ public class GioHangController {
         Optional<GioHangChiTiet> shoppingCart = cartDetailsRepository.findById(id_cart_details);
         if (shoppingCart.isPresent()) {
             GioHangChiTiet gioHangChiTiet = shoppingCart.get();
-//            int soLuongSanPhamHienCo = cartDetails.getProductDetails().getQuantity();
-//            Float priceFloat = cartDetails.getProductDetails().getProduct().getPrice();
-//            int price = Integer.valueOf(String.valueOf(priceFloat));
-//            Integer total = price * quantity;
-//            BigDecimal totalcart = BigDecimal.valueOf(total);
-
-//            if (quantity > soLuongSanPhamHienCo) {
-//                return (List<DetailedShoppingCart>) ResponseEntity.badRequest().body(Collections.singletonList("Số lượng nhập vào lớn hơn số lượng hiện có").toString());
-//            } else {
-//                cartDetails.setQuanTity(quantity);
-//                cartDetails.setIntoMoney(totalcart);
-//                cartDetailsRepository.save(cartDetails);
-//            }
             gioHangChiTiet.setSoLuong(quantity);
             gioHangChiTiet.setThanhTien(BigDecimal.valueOf(2502));
             cartDetailsRepository.save(gioHangChiTiet);

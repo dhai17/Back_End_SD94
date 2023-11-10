@@ -14,6 +14,7 @@ import java.util.Random;
 public class VnpayConflig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_Returnurl = "http://127.0.0.1:8080/payment/return?";
+    public static String vnp_ReturnurlMuaNgay = "http://127.0.0.1:8080/payment/MuaNgay/return?";
     public static String vnp_TmnCode = "JR46KTRL";
     public static String vnp_HashSecret = "XATJYHRKXDDVMNMIXGWZQEXJWQJQUQXO";
     public static String vnp_apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
@@ -21,6 +22,11 @@ public class VnpayConflig {
     public static String get_Return_url (long amonut, String id_bill){
         vnp_Returnurl = vnp_Returnurl + "amout=" + amonut + "&id_user=" + id_bill;
         return vnp_Returnurl;
+    }
+
+    public static String get_Return_urlMuaNgay (long amonut, String id_bill){
+        vnp_ReturnurlMuaNgay = vnp_ReturnurlMuaNgay + "amout=" + amonut + "&id_user=" + id_bill;
+        return vnp_ReturnurlMuaNgay;
     }
 
     public static String hmacSHA512(final String key, final String data) {
