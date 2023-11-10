@@ -32,7 +32,7 @@ public class KichCoController {
         return kichCoService.saveCreate(KichCo);
     }
 
-    @PutMapping("/xoa/{id}")
+    @DeleteMapping("/xoa/{id}")
     public ResponseEntity<List<KichCo>> delete(@PathVariable("id") Long id) {
         return kichCoService.deleteProductSize(id);
     }

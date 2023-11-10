@@ -21,9 +21,8 @@ public class NhaSanXuatController {
     NhaSanXuatService nhaSanXuatService;
 
     @GetMapping("/danhSach")
-    public ResponseEntity<List<NhaSanXuat>> getProducer() {
-        List<NhaSanXuat> list = repository.findAll();
-        return ResponseEntity.ok().body(list);
+    public List<NhaSanXuat> getProducer() {
+        return nhaSanXuatService.findAllProducer();
     }
 
     @PostMapping("/themMoi")
@@ -31,7 +30,7 @@ public class NhaSanXuatController {
         return nhaSanXuatService.saveCreate(nhaSanXuat);
     }
 
-    @PutMapping("/xoa/{id}")
+    @DeleteMapping("/xoa/{id}")
     public ResponseEntity<List<NhaSanXuat>> delete(@PathVariable("id") Long id) {
         return nhaSanXuatService.deleteProducer(id);
     }

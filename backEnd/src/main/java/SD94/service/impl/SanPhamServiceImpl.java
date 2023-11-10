@@ -52,17 +52,17 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public ResponseEntity<SanPham> saveEdit(SanPham sanPhamUpdate) {
+    public ResponseEntity<SanPham> saveEdit(SanPhamDTO sanPhamDTO) {
         try {
-            Optional<SanPham> optional = repository.findById(sanPhamUpdate.getId());
+            Optional<SanPham> optional = repository.findById(sanPhamDTO.getId());
             if (optional.isPresent()){
                 SanPham sanPham = optional.get();
-                sanPham.setTenSanPham(sanPhamUpdate.getTenSanPham());
-                sanPham.setGia(sanPhamUpdate.getGia());
-                sanPham.setTrangThai(sanPhamUpdate.getTrangThai());
-                sanPham.setNhaSanXuat(sanPhamUpdate.getNhaSanXuat());
-                sanPham.setLoaiSanPham(sanPhamUpdate.getLoaiSanPham());
-                sanPham.setChatLieu(sanPhamUpdate.getChatLieu());
+                sanPham.setTenSanPham(sanPhamDTO.getTenSanPham());
+                sanPham.setGia(sanPhamDTO.getGia());
+                sanPham.setTrangThai(0);
+                sanPham.setNhaSanXuat(sanPhamDTO.getNhaSanXuat());
+                sanPham.setLoaiSanPham(sanPhamDTO.getLoaiSanPham());
+                sanPham.setChatLieu(sanPhamDTO.getChatLieu());
                 repository.save(sanPham);
                 return ResponseEntity.ok(sanPham);
             } else {
@@ -80,8 +80,8 @@ public class SanPhamServiceImpl implements SanPhamService {
             if (optional.isPresent()){
                 SanPham sanPham = optional.get();
                 sanPham.setDeleted(true);
+                sanPham.setTrangThai(1);
                 repository.save(sanPham);
-
                 List<SanPham> list = findAllProduct();
                 return ResponseEntity.ok(list);
             } else {
@@ -89,46 +89,6 @@ public class SanPhamServiceImpl implements SanPhamService {
             }
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
-
-    @Override
-    public ResponseEntity<SanPham> saveCreate(SanPham sanPhamCreate) {
-        try {
-            if (sanPhamCreate.getChatLieu() != null) {
-                Optional<ChatLieu> optionalProductMaterial = chatLieuRepository.findById(sanPhamCreate.getChatLieu().getId());
-                if (optionalProductMaterial.isPresent()) {
-                    ChatLieu chatLieu = optionalProductMaterial.get();
-                    sanPhamCreate.setChatLieu(chatLieu);
-                } else {
-                    return new ResponseEntity(new Message("Invalid Product Material", TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
-                }
-            }
-
-            if (sanPhamCreate.getLoaiSanPham() != null) {
-                Optional<LoaiSanPham> optionalProductLine = loaiSanPhamRepository.findById(sanPhamCreate.getLoaiSanPham().getId());
-                if (optionalProductLine.isPresent()) {
-                    LoaiSanPham line = optionalProductLine.get();
-                    sanPhamCreate.setLoaiSanPham(line);
-                } else {
-                    return new ResponseEntity(new Message("Invalid Product Line", TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
-                }
-            }
-
-            if (sanPhamCreate.getNhaSanXuat() != null) {
-                Optional<NhaSanXuat> optionalProducer = nhaSanXuatRepository.findById(sanPhamCreate.getNhaSanXuat().getId());
-                if (optionalProducer.isPresent()) {
-                    NhaSanXuat nhaSanXuat = optionalProducer.get();
-                    sanPhamCreate.setNhaSanXuat(nhaSanXuat);
-                } else {
-                    return new ResponseEntity(new Message("Invalid Producer", TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
-                }
-            }
-
-            repository.save(sanPhamCreate);
-            return ResponseEntity.ok(sanPhamCreate);
-        } catch (Exception e) {
-            return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
     }
 

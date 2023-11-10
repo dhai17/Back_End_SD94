@@ -3,6 +3,7 @@ package SD94.repository.sanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -11,6 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, Long> {
+    @Query(value = "select spct from SanPhamChiTiet spct where spct.sanPham.id=:idsp and spct.isDeleted=false")
+    List<SanPhamChiTiet> findSpctByIdSp(@Param("idsp")Long idsp);
+
     @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
     List<SanPhamChiTiet> findAll();
 
@@ -32,6 +36,11 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     @Query(value = "select * from san_pham_chi_tiet where id_product = ? and id_color = ? and id_size = ?", nativeQuery = true)
     SanPhamChiTiet findByColorAndSize(long id_product, long id_color, long id_size);
 
+    @Query(value = "SELECT s FROM SanPhamChiTiet s WHERE s.sanPham.id = :san_pham_id")
+    List<SanPhamChiTiet> getProductD(@Param("san_pham_id") long san_pham_id);
+
+    @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false AND san_pham_id = ?", nativeQuery = true)
+    List<SanPhamChiTiet> findProductDetails();
     @Query(value = "SELECT pc.ma_mau_sac AS color_name, ps.kich_co AS size_name\n" +
             "FROM san_pham_chi_tiet pd\n" +
             "         JOIN mau_sac pc ON pd.mau_sac_id = pc.id\n" +

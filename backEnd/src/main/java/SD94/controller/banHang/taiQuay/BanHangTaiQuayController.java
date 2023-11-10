@@ -178,19 +178,6 @@ public class BanHangTaiQuayController {
     }
 
 
-    @RequestMapping("/payment")
-    public String thanhtoanHoaDonTaiQuay(@RequestParam("id_bill") long id_bill) {
-        Optional<HoaDon> optionalBill = billRepository.findById(id_bill);
-        if (optionalBill.isPresent()) {
-            HoaDon hoaDon = optionalBill.get();
-            TrangThai trangThai = new TrangThai();
-            trangThai.setId(7L);
-            hoaDon.setTrangThai(trangThai);
-            billRepository.save(hoaDon);
-        }
-
-        return "Payment bill done";
-    }
 
     @PostMapping("/xoa-san-pham")
     public String xoaSanPham(@RequestParam("id_bill") long id_bill,

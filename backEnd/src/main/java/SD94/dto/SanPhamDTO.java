@@ -59,4 +59,5 @@ public class SanPhamDTO {
 
     private long id_hoaDon;
 
+    private long anh_id;
 }

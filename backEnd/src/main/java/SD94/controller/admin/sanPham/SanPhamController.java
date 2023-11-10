@@ -1,20 +1,14 @@
 package SD94.controller.admin.sanPham;
 
-import SD94.dto.HinhAnhDTO;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
-import SD94.service.service.HinhAnhService;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -27,7 +21,6 @@ public class SanPhamController {
     @Autowired
     SanPhamService sanPhamService;
 
-    //Lấy danh sách
     @GetMapping("/danhSach")
     public ResponseEntity<List<SanPham>> getProduct() {
         List<SanPham> list = sanPhamRepository.findAll();
@@ -38,7 +31,6 @@ public class SanPhamController {
     public List<Object> chiTietSanPham(@RequestParam long id_SanPham) {
         return sanPhamService.chiTietSanPham(id_SanPham);
     }
-
 
     //Tạo mới và gen ra sản phẩm chi tiết
     @PostMapping("/TaoSanPham")
@@ -62,7 +54,7 @@ public class SanPhamController {
     }
 
     @PutMapping("/luuChinhSua")
-    public ResponseEntity<SanPham> saveUpdate(@RequestBody SanPham sanPham) {
+    public ResponseEntity<SanPham> saveUpdate(@RequestBody SanPhamDTO sanPham) {
         return sanPhamService.saveEdit(sanPham);
     }
 
@@ -75,4 +67,5 @@ public class SanPhamController {
     public List<SanPham> searchDate(@PathVariable("searchDate") String search) {
         return sanPhamService.searchDateProduct(search);
     }
+
 }

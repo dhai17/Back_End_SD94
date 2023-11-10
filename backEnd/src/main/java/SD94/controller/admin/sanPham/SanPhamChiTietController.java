@@ -2,9 +2,7 @@ package SD94.controller.admin.sanPham;
 
 import SD94.dto.HinhAnhDTO;
 import SD94.dto.HoaDonChiTietDTO;
-import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.KichCo;
-import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.KichCoRepository;
@@ -13,7 +11,6 @@ import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.SanPhamChiTietService;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +46,12 @@ public class SanPhamChiTietController {
     public ResponseEntity<List<SanPhamChiTiet>> getColor() {
         List<SanPhamChiTiet> list = productDetailsRepository.findAll();
         return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/dsCTSP")
+    public ResponseEntity<List<SanPhamChiTiet>> getProduct(@RequestParam("san_pham_id") Long id) {
+        List<SanPhamChiTiet> product = sanPhamChiTietRepository.getProductD(id);
+        return ResponseEntity.ok().body(product);
     }
 
     //Hien thi theo id
@@ -90,8 +93,6 @@ public class SanPhamChiTietController {
         return sanPhamChiTietService.searchDateProductDetails(search);
     }
 
-
-    //Hduong25
     @GetMapping("/get/SanPhamChiTiet")
     public SanPhamChiTiet getSPCT(@RequestParam long id_SPCT) {
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(id_SPCT);
