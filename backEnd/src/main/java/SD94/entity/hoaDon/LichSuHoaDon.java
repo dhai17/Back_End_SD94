@@ -25,9 +25,8 @@ public class LichSuHoaDon extends Base implements Serializable {
     @JoinColumn(name = "trangThai_id", referencedColumnName = "id")
     private TrangThai trangThai;
 
-    @ManyToOne
-    @JoinColumn(name = "nhanVien_id", referencedColumnName = "id")
-    private NhanVien nhanVien;
+    @Column(name = "nguoiThaoTac", columnDefinition = "nvarchar(256)  null")
+    private String nguoiThaoTac;
 
     @ManyToOne
     @JoinColumn(name = "hoaDon_id", referencedColumnName = "id")
