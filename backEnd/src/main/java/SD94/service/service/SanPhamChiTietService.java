@@ -31,4 +31,5 @@ public interface SanPhamChiTietService {
 
     ResponseEntity themAnhMacDinh(HinhAnhDTO hinhAnhDTO);
 
+
 }

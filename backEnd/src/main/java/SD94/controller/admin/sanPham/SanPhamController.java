@@ -34,7 +34,7 @@ public class SanPhamController {
 
     //Tạo mới và gen ra sản phẩm chi tiết
     @PostMapping("/TaoSanPham")
-    public List<SanPhamChiTiet> saveCreate(@RequestBody SanPhamDTO sanPhamDTO) {
+    public ResponseEntity<?> saveCreate(@RequestBody SanPhamDTO sanPhamDTO) {
         return sanPhamService.taoSanPham(sanPhamDTO);
     }
 

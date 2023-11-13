@@ -21,8 +21,10 @@ public interface SanPhamService {
 
     List<SanPham> searchDateProduct(String searchDate);
 
-    List<SanPhamChiTiet> taoSanPham(SanPhamDTO sanPhamDTO);
+    ResponseEntity<?> taoSanPham(SanPhamDTO sanPhamDTO);
 
     List<Object> chiTietSanPham(long id_SanPham);
+
+    List<SanPhamChiTiet> spct_list();
 
 }

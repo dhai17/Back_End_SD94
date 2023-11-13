@@ -14,9 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SanPhamServiceImpl implements SanPhamService {
@@ -45,6 +44,8 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Autowired
     SanPhamChiTietRepository sanPhamChiTietRepository;
 
+    Long id_product;
+
     @Override
     public List<SanPham> findAllProduct() {
         List<SanPham> list = repository.findAll();
@@ -55,7 +56,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     public ResponseEntity<SanPham> saveEdit(SanPhamDTO sanPhamDTO) {
         try {
             Optional<SanPham> optional = repository.findById(sanPhamDTO.getId());
-            if (optional.isPresent()){
+            if (optional.isPresent()) {
                 SanPham sanPham = optional.get();
                 sanPham.setTenSanPham(sanPhamDTO.getTenSanPham());
                 sanPham.setGia(sanPhamDTO.getGia());
@@ -68,7 +69,7 @@ public class SanPhamServiceImpl implements SanPhamService {
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
     }
@@ -77,7 +78,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     public ResponseEntity<List<SanPham>> deleteProduct(Long id) {
         try {
             Optional<SanPham> optional = repository.findById(id);
-            if (optional.isPresent()){
+            if (optional.isPresent()) {
                 SanPham sanPham = optional.get();
                 sanPham.setDeleted(true);
                 sanPham.setTrangThai(1);
@@ -87,7 +88,7 @@ public class SanPhamServiceImpl implements SanPhamService {
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -106,7 +107,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public List<SanPhamChiTiet> taoSanPham(SanPhamDTO sanPhamDTO) {
+    public ResponseEntity<?> taoSanPham(SanPhamDTO sanPhamDTO) {
         ChatLieu chatLieu = chatLieuRepository.findByID(sanPhamDTO.getChatLieu_id());
         LoaiSanPham loaiSanPham = loaiSanPhamRepository.findByID(sanPhamDTO.getLoaiSanPham_id());
         NhaSanXuat nhaSanXuat = nhaSanXuatRepository.findByID(sanPhamDTO.getNhaSanXuat_id());
@@ -119,6 +120,8 @@ public class SanPhamServiceImpl implements SanPhamService {
         sanPham.setNhaSanXuat(nhaSanXuat);
         sanPham.setChatLieu(chatLieu);
         repository.save(sanPham);
+
+        id_product = sanPham.getId();
 
         List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
         for (Long kichCo_id : sanPhamDTO.getKichCo()) {
@@ -134,8 +137,12 @@ public class SanPhamServiceImpl implements SanPhamService {
                 sanPhamChiTietList.add(sanPhamChiTiet);
             }
         }
-        return sanPhamChiTietList;
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", sanPhamChiTietList);
+        response.put("id_product", sanPham.getId());
+        return ResponseEntity.ok().body(response);
     }
+
 
     @Override
     public List<Object> chiTietSanPham(long id_SanPham) {
@@ -145,6 +152,12 @@ public class SanPhamServiceImpl implements SanPhamService {
         respone.add(sanPham);
         respone.add(sanPhamChiTiets);
         return respone;
+    }
+
+    @Override
+    public List<SanPhamChiTiet> spct_list() {
+        List<SanPhamChiTiet> list = sanPhamChiTietRepository.findSpctByIdSp(id_product);
+        return list;
     }
 
 }

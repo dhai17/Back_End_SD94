@@ -54,6 +54,12 @@ public class SanPhamChiTietController {
         return ResponseEntity.ok().body(product);
     }
 
+    @GetMapping("/themAnh/{id}")
+    public ResponseEntity<?> getHinhAnh(@PathVariable("id") long id) {
+        List<SanPhamChiTiet> product = sanPhamChiTietRepository.findByProductID(id);
+        return ResponseEntity.ok().body(product);
+    }
+
     //Hien thi theo id
     @GetMapping("/chinhSua/{id}")
     public SanPhamChiTiet editProductDetails(@PathVariable("id") Long id){
@@ -106,11 +112,8 @@ public class SanPhamChiTietController {
 
     @PostMapping("/themAnhSanPham")
     public ResponseEntity themAnhSanPham(@RequestBody HinhAnhDTO hinhAnhDTO) {
-        return sanPhamChiTietService.themAnhSanPham(hinhAnhDTO);
+        System.out.println(hinhAnhDTO);
+        return null;
     }
 
-    @PutMapping("/ThemAnhMacDinh")
-    public ResponseEntity themAnhMacDinh(@RequestBody HinhAnhDTO hinhAnhDTO) {
-        return sanPhamChiTietService.themAnhMacDinh(hinhAnhDTO);
-    }
 }

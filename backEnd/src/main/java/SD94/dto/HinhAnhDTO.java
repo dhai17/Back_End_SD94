@@ -4,19 +4,13 @@ import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class HinhAnhDTO {
 
-    private long id;
+    private long id_spct;
 
-    private String img;
-
-    private String name;
-
-    private MauSac mauSac;
-
-    private SanPhamChiTiet sanPhamChiTiet;
-
-    private long id_SPCT;
+    private List<String> ten_anh;
 
 }
