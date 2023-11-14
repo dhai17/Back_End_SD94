@@ -29,10 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.math.RoundingMode;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/banHang/online")
@@ -70,32 +67,38 @@ public class BanHangOnlineController {
     private Long idBill;
 
     @PostMapping("/checkOut")
-    public ResponseEntity<Long> checkout(@RequestBody GioHangDTO dto) {
-        HoaDon hoaDon = new HoaDon();
-        hoaDon.setCreatedDate(new Date());
-        hoaDon.setCreatedby("hduong");
-        billRepository.save(hoaDon);
+    public ResponseEntity<?> checkout(@RequestBody GioHangDTO dto) {
+        if (dto.getId_gioHangChiTiet() == null  || dto.getTongTien() == 0) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Bạn chưa chọn sản phẩm muốn đặt");
+            return ResponseEntity.badRequest().body(response);
+        } else {
+            HoaDon hoaDon = new HoaDon();
+            hoaDon.setCreatedDate(new Date());
+            hoaDon.setCreatedby("hduong");
+            billRepository.save(hoaDon);
 
-        hoaDon.setMaHoaDon("HD" + hoaDon.getId());
-        hoaDon.setTongTienHoaDon(dto.getTongTien());
-        hoaDon.setTongTienDonHang(dto.getTongTien());
-        billRepository.save(hoaDon);
+            hoaDon.setMaHoaDon("HD" + hoaDon.getId());
+            hoaDon.setTongTienHoaDon(dto.getTongTien());
+            hoaDon.setTongTienDonHang(dto.getTongTien());
+            billRepository.save(hoaDon);
 
-        for (long id : dto.getId_gioHangChiTiet()) {
-            Optional<GioHangChiTiet> optionalcart = cartDetailsRepository.findById(id);
-            if (optionalcart.isPresent()) {
-                GioHangChiTiet gioHangChiTiet = optionalcart.get();
-                HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-                hoaDonChiTiet.setSanPhamChiTiet(gioHangChiTiet.getSanPhamChiTiet());
-                hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
-                hoaDonChiTiet.setDonGia(gioHangChiTiet.getDonGia());
-                hoaDonChiTiet.setThanhTien(gioHangChiTiet.getThanhTien().setScale(0, RoundingMode.HALF_UP).intValue());
-                hoaDonChiTiet.setHoaDon(hoaDon);
-                billDetailsRepository.save(hoaDonChiTiet);
+            for (long id : dto.getId_gioHangChiTiet()) {
+                Optional<GioHangChiTiet> optionalcart = cartDetailsRepository.findById(id);
+                if (optionalcart.isPresent()) {
+                    GioHangChiTiet gioHangChiTiet = optionalcart.get();
+                    HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+                    hoaDonChiTiet.setSanPhamChiTiet(gioHangChiTiet.getSanPhamChiTiet());
+                    hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
+                    hoaDonChiTiet.setDonGia(gioHangChiTiet.getDonGia());
+                    hoaDonChiTiet.setThanhTien(gioHangChiTiet.getThanhTien().setScale(0, RoundingMode.HALF_UP).intValue());
+                    hoaDonChiTiet.setHoaDon(hoaDon);
+                    billDetailsRepository.save(hoaDonChiTiet);
+                }
             }
+            idBill = hoaDon.getId();
+            return ResponseEntity.ok(idBill);
         }
-        idBill = hoaDon.getId();
-        return ResponseEntity.ok(idBill);
     }
 
     @GetMapping("/getHoaDon/{id}")
