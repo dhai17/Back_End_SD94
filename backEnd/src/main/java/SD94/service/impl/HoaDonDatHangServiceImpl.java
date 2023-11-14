@@ -3,9 +3,11 @@ package SD94.service.impl;
 
 import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
+import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.hoaDon.LichSuHoaDon;
 import SD94.entity.hoaDon.TrangThai;
 import SD94.entity.nhanVien.NhanVien;
+import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.hoaDon.LichSuHoaDonRepository;
 import SD94.repository.hoaDon.TrangThaiRepository;
@@ -32,6 +34,9 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
 
     @Autowired
     NhanVienRepository nhanVienRepository;
+
+    @Autowired
+    HoaDonChiTietRepository hoaDonChiTietRepository;
 
     @Override
     public List<HoaDon> findHoaDonByTrangThai(long trang_thai_id) {
@@ -125,5 +130,79 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         lichSuHoaDon.setNguoiThaoTac(nguoiThaoTac);
         lichSuHoaDonRepository.save(lichSuHoaDon);
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> CTChoXacNhan(long id_hoa_don) {
+        HoaDon hoaDon = hoaDonRepository.findByID(id_hoa_don);
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        LichSuHoaDon timeLine_ChoXacNhan = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 1L);
+        Map<String, Object> response = new HashMap<>();
+        response.put("list_HDCT", hoaDonChiTiets);
+        response.put("hoaDon", hoaDon);
+        response.put("timeLine", timeLine_ChoXacNhan);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Override
+    public ResponseEntity<?> CTChoGiaoHang(long id_hoa_don) {
+        HoaDon hoaDon = hoaDonRepository.findByID(id_hoa_don);
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        LichSuHoaDon timeLine_ChoXacNhan = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 1L);
+        LichSuHoaDon timeLine_ChoGiaoHang = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 2L);
+        Map<String, Object> response = new HashMap<>();
+        response.put("list_HDCT", hoaDonChiTiets);
+        response.put("hoaDon", hoaDon);
+        response.put("timeLine_ChoXacNhan", timeLine_ChoXacNhan);
+        response.put("timeLine_ChoGiaoHang", timeLine_ChoGiaoHang);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Override
+    public ResponseEntity<?> CTDangGiaoHang(long id_hoa_don) {
+        HoaDon hoaDon = hoaDonRepository.findByID(id_hoa_don);
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        LichSuHoaDon timeLine_ChoXacNhan = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 1L);
+        LichSuHoaDon timeLine_ChoGiaoHang = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 2L);
+        LichSuHoaDon timeLine_DangGiaoHang = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 3L);
+        Map<String, Object> response = new HashMap<>();
+        response.put("list_HDCT", hoaDonChiTiets);
+        response.put("hoaDon", hoaDon);
+        response.put("timeLine_ChoXacNhan", timeLine_ChoXacNhan);
+        response.put("timeLine_ChoGiaoHang", timeLine_ChoGiaoHang);
+        response.put("timeLine_DangGiaoHang", timeLine_DangGiaoHang);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Override
+    public ResponseEntity<?> CTDaGiaoHang(long id_hoa_don) {
+        HoaDon hoaDon = hoaDonRepository.findByID(id_hoa_don);
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        LichSuHoaDon timeLine_ChoXacNhan = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 1L);
+        LichSuHoaDon timeLine_ChoGiaoHang = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 2L);
+        LichSuHoaDon timeLine_DangGiaoHang = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 3L);
+        LichSuHoaDon timeLine_DaGiaoHang = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 4L);
+        Map<String, Object> response = new HashMap<>();
+        response.put("list_HDCT", hoaDonChiTiets);
+        response.put("hoaDon", hoaDon);
+        response.put("timeLine_ChoXacNhan", timeLine_ChoXacNhan);
+        response.put("timeLine_ChoGiaoHang", timeLine_ChoGiaoHang);
+        response.put("timeLine_DangGiaoHang", timeLine_DangGiaoHang);
+        response.put("timeLine_DaGiaoHang", timeLine_DaGiaoHang);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Override
+    public ResponseEntity<?> CTDaHuy(long id_hoa_don) {
+        HoaDon hoaDon = hoaDonRepository.findByID(id_hoa_don);
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        LichSuHoaDon timeLine_ChoXacNhan = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 1L);
+        LichSuHoaDon timeLine_DaHuy = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 5L);
+        Map<String, Object> response = new HashMap<>();
+        response.put("list_HDCT", hoaDonChiTiets);
+        response.put("hoaDon", hoaDon);
+        response.put("timeLine_ChoXacNhan", timeLine_ChoXacNhan);
+        response.put("timeLine_DaHuy", timeLine_DaHuy);
+        return ResponseEntity.ok().body(response);
     }
 }
