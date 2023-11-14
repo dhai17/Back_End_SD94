@@ -12,6 +12,6 @@ public interface LichSuHoaDonRepository extends JpaRepository<LichSuHoaDon, Long
     @Query(value = "select * from lich_su_hoa_don where hoa_don_id = ?  group by id", nativeQuery = true)
     List<LichSuHoaDon> findTimeLineByHoaDonID(long id_hoa_don);
 
-    @Query(value = "select * from lich_su_hoa_don where hoa_don_id = ? order by id desc", nativeQuery = true)
-    List<LichSuHoaDon> getTimeLine( long id_hoaDon);
+    @Query(value = "select * from lich_su_hoa_don where hoa_don_id = ?1 and trang_thai_id = ?2 order by id desc limit 1", nativeQuery = true)
+    LichSuHoaDon getTimeLine( long id_hoaDon, long trang_thai_id);
 }

@@ -2,6 +2,7 @@ package SD94.controller.admin.hoaDon.datHang;
 
 import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
+import SD94.entity.khachHang.KhachHang;
 import SD94.entity.nhanVien.NhanVien;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.service.service.HoaDonDatHangService;
@@ -33,7 +34,7 @@ public class ChoXacNhanController {
         String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
         hoaDonDatHangService.capNhatTrangThai(2, id);
-        hoaDonDatHangService.createTimeLine("Xác nhận đơn", 2, id,nhanVien.getHoTen());
+        hoaDonDatHangService.createTimeLine("Xác nhận đơn", 2, id, nhanVien.getHoTen());
 
         return hoaDonDatHangService.findHoaDonByTrangThai(1);
     }

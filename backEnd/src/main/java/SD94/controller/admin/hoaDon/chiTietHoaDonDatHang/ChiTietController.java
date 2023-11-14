@@ -20,9 +20,10 @@ public class ChiTietController {
     @Autowired
     LichSuHoaDonRepository lichSuHoaDonRepository;
 
-    @GetMapping("/getTimeLine/ChoXacNhan")
-    public List<LichSuHoaDon> getTimeLineChoXacNhan(@RequestParam long id_hoaDon){
-        List<LichSuHoaDon> lichSuHoaDon = lichSuHoaDonRepository.getTimeLine( id_hoaDon);
-        return lichSuHoaDon;
-    }
+//    @GetMapping("/getTimeLine/ChoXacNhan")
+//    public LichSuHoaDon getTimeLineChoXacNhan(@RequestParam long id_hoaDon){
+//
+//        List<LichSuHoaDon> lichSuHoaDon = lichSuHoaDonRepository.getTimeLine( id_hoaDon);
+//        return lichSuHoaDon;
+//    }
 }
