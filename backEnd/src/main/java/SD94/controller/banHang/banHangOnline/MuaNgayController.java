@@ -2,28 +2,13 @@ package SD94.controller.banHang.banHangOnline;
 
 import SD94.dto.HoaDonDTO;
 import SD94.dto.SanPhamDTO;
-import SD94.entity.gioHang.GioHang;
-import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
-import SD94.entity.hoaDon.TrangThai;
-import SD94.entity.khachHang.KhachHang;
-import SD94.entity.khuyenMai.KhuyenMai;
-import SD94.entity.sanPham.KichCo;
-import SD94.entity.sanPham.MauSac;
-import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
-import SD94.repository.hoaDon.TrangThaiRepository;
-import SD94.repository.khuyenMai.KhuyenMaiRepository;
-import SD94.repository.sanPham.KichCoRepository;
-import SD94.repository.sanPham.MauSacRepository;
-import SD94.repository.sanPham.SanPhamChiTietRepository;
-import SD94.service.service.HoaDonDatHangService;
+import SD94.service.service.MuaNgayService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -31,35 +16,18 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/muaNgay")
 public class MuaNgayController {
+    @Autowired
+    MuaNgayService muaNgayService;
 
     @Autowired
     HoaDonRepository hoaDonRepository;
 
     @Autowired
-    MauSacRepository mauSacRepository;
-
-    @Autowired
-    KichCoRepository kichCoRepository;
-
-    @Autowired
-    SanPhamChiTietRepository sanPhamChiTietRepository;
-
-    @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
-
-    @Autowired
-    KhuyenMaiRepository khuyenMaiRepository;
-
-    @Autowired
-    TrangThaiRepository trangThaiRepository;
-
-    @Autowired
-    HoaDonDatHangService hoaDonDatHangService;
-
-    private Long idBill;
 
     @PostMapping("/check-out")
     public ResponseEntity<?> muaNgayCheckOut(@RequestBody SanPhamDTO dto) {
+<<<<<<< HEAD
 
         if (dto.getMaMauSac() == null || dto.getKichCoDaChon() == null || dto.getSan_pham_id() == null) {
             Map<String, Object> response = new HashMap<>();
@@ -96,6 +64,9 @@ public class MuaNgayController {
         }
 
 
+=======
+        return ResponseEntity.ok(muaNgayService.muaNgayCheckOut(dto));
+>>>>>>> 8cf12f31e6c7d90f041eecd9c0dde5e03c3aec11
     }
 
     @GetMapping("/getHoaDon/{id}")
@@ -112,46 +83,18 @@ public class MuaNgayController {
 
     @GetMapping("/check-out")
     public ResponseEntity<HoaDon> getBill() {
-        if (idBill != null) {
-            Optional<HoaDon> optionalBill = hoaDonRepository.findById(idBill);
-            if (optionalBill.isPresent()) {
-                HoaDon hoaDon = optionalBill.get();
-                return ResponseEntity.ok(hoaDon);
-            }
-        }
-        return ResponseEntity.notFound().build();
+        return muaNgayService.getBill();
     }
 
     @PostMapping("/add/khuyenMai")
     public HoaDon addDiscount(@RequestBody HoaDonDTO hoaDonDTO) {
-        KhuyenMai khuyenMai = khuyenMaiRepository.findByNameKM(hoaDonDTO.getTenMaGiamGia());
-        HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
-        int phanTramGiam = khuyenMai.getPhanTramGiam();
-        int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
-        int tongTienBill = hoaDon.getTongTienDonHang();
-
-        int tongTienSauGiamCheck = (tongTienBill * phanTramGiam) / 100;
-        if (tongTienSauGiamCheck > tienGiamToiDa) {
-            int tongTienSauGiam = hoaDon.getTongTienDonHang() - khuyenMai.getTienGiamToiDa();
-            hoaDon.setTienGiam(hoaDon.getTongTienDonHang() - tongTienSauGiam);
-            hoaDon.setTongTienDonHang(tongTienSauGiam);
-            hoaDon.setKhuyenMai(khuyenMai);
-            hoaDonRepository.save(hoaDon);
-        } else {
-            int tongTien = hoaDon.getTongTienDonHang() - tongTienSauGiamCheck;
-            hoaDon.setTongTienDonHang(tongTien);
-            hoaDon.setTienGiam(tongTienSauGiamCheck);
-            hoaDon.setKhuyenMai(khuyenMai);
-            hoaDonRepository.save(hoaDon);
-        }
-
-        HoaDon hoaDon2 = hoaDonRepository.findByID(hoaDonDTO.getId());
-        return hoaDon2;
+        HoaDon hoaDon = muaNgayService.addDiscount(hoaDonDTO);
+        return hoaDon;
     }
 
-    @Transactional
     @PostMapping("/datHang")
     public ResponseEntity datHang(@RequestBody HoaDonDTO dto) {
+<<<<<<< HEAD
         HoaDon hoaDon = hoaDonRepository.findByID(dto.getId());
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
@@ -176,6 +119,9 @@ public class MuaNgayController {
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), dto.getNguoiTao());
         return ResponseEntity.ok(HttpStatus.OK);
+=======
+        return muaNgayService.datHang(dto);
+>>>>>>> 8cf12f31e6c7d90f041eecd9c0dde5e03c3aec11
     }
 
 }

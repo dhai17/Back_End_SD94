@@ -6,10 +6,12 @@ import SD94.entity.security.UserRole;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.repository.role.RoleRepository;
 import SD94.service.service.NhanVienService;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -32,6 +34,14 @@ public class SD94Application implements CommandLineRunner {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public static void main(String[] args) {
+        Dotenv dotenv = Dotenv.configure().load();
+        String databaseUrl = dotenv.get("DB_URL");
+        String databaseUsername = dotenv.get("USER_DB");
+        String databasePassword = dotenv.get("PASSWORD_DB");
+
+        System.setProperty("spring.datasource.url", databaseUrl);
+        System.setProperty("spring.datasource.username", databaseUsername);
+        System.setProperty("spring.datasource.password", databasePassword);
         SpringApplication.run(SD94Application.class, args);
     }
 
