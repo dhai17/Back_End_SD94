@@ -2,6 +2,7 @@ package SD94.controller.admin.sanPham;
 
 import SD94.dto.HinhAnhDTO;
 import SD94.dto.HoaDonChiTietDTO;
+import SD94.dto.SanPhamChiTietDTO;
 import SD94.entity.sanPham.KichCo;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.sanPham.HinhAnhRepository;
@@ -68,7 +69,7 @@ public class SanPhamChiTietController {
 
     //Sửa và lưu
     @PutMapping("/luuChinhSua")
-    public ResponseEntity<SanPhamChiTiet> saveUpdate(@RequestBody SanPhamChiTiet sanPhamChiTiet){
+    public ResponseEntity<SanPhamChiTiet> saveUpdate(@RequestBody SanPhamChiTietDTO sanPhamChiTiet){
         return sanPhamChiTietService.saveEdit(sanPhamChiTiet);
     }
 

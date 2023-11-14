@@ -1,6 +1,7 @@
 package SD94.service.service;
 
 import SD94.dto.HinhAnhDTO;
+import SD94.dto.SanPhamChiTietDTO;
 import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public interface SanPhamChiTietService {
 
     List<SanPhamChiTiet> findProductDetails();
 
-    ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate);
+    ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTietDTO sanPhamChiTietDTO);
 
     ResponseEntity<List<SanPhamChiTiet>> deleteProductDetails(Long id);
 

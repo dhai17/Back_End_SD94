@@ -2,13 +2,12 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.dto.HinhAnhDTO;
+import SD94.dto.SanPhamChiTietDTO;
 import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
-import SD94.repository.sanPham.HinhAnhRepository;
-import SD94.repository.sanPham.SanPhamChiTietRepository;
-import SD94.repository.sanPham.SanPhamRepository;
+import SD94.repository.sanPham.*;
 import SD94.service.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +31,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Autowired
     SanPhamRepository sanPhamRepository;
 
+    @Autowired
+    MauSacRepository mauSacRepository;
+
+    @Autowired
+    KichCoRepository kichCoRepository;
 
     @Override
     public List<SanPhamChiTiet> findAllProductDetails() {
@@ -46,16 +50,18 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate) {
+    public ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTietDTO sanPhamChiTietDTO) {
         try {
-            Optional<SanPhamChiTiet> optional = repository.findById(sanPhamChiTietUpdate.getId());
+            Optional<SanPhamChiTiet> optional = repository.findById(sanPhamChiTietDTO.getId());
             if (optional.isPresent()){
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
-                sanPhamChiTiet.setSoLuong(sanPhamChiTietUpdate.getSoLuong());
+                sanPhamChiTiet.setSoLuong(sanPhamChiTietDTO.getQuantity());
                 sanPhamChiTiet.setTrangThai(0);
-                sanPhamChiTiet.setSanPham(sanPhamChiTietUpdate.getSanPham());
-                sanPhamChiTiet.setMauSac(sanPhamChiTietUpdate.getMauSac());
-                sanPhamChiTiet.setKichCo(sanPhamChiTietUpdate.getKichCo());
+                Long id = sanPhamChiTietDTO.getKichCo_id();
+                sanPhamChiTiet.setKichCo(kichCoRepository.findByID(id));
+                Long idMs = sanPhamChiTietDTO.getMauSac_id();
+                sanPhamChiTiet.setMauSac(mauSacRepository.findByID(idMs));
+                sanPhamChiTiet.setSanPham(sanPhamChiTietDTO.getSanPham());
                 repository.save(sanPhamChiTiet);
                 return ResponseEntity.ok(sanPhamChiTiet);
             } else {
