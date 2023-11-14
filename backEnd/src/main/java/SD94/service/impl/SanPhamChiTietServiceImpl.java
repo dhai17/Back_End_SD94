@@ -120,22 +120,24 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public ResponseEntity themAnhSanPham(HinhAnhDTO hinhAnhDTO) {
-        SanPhamChiTiet sanPhamChiTiet = repository.findByID(hinhAnhDTO.getId_SPCT());
-        MauSac mauSac = sanPhamChiTiet.getMauSac();
-        HinhAnh hinhAnh = new HinhAnh();
-        hinhAnh.setTenAnh(hinhAnhDTO.getName());
-        hinhAnh.setSanPhamChiTiet(sanPhamChiTiet);
-        hinhAnh.setMauSac(mauSac);
-        hinhAnh.setAnhMacDinh(false);
-        hinhAnhRepository.save(hinhAnh);
+//        SanPhamChiTiet sanPhamChiTiet = repository.findByID(hinhAnhDTO.getId_SPCT());
+//        MauSac mauSac = sanPhamChiTiet.getMauSac();
+//        HinhAnh hinhAnh = new HinhAnh();
+//        hinhAnh.setTenAnh(hinhAnhDTO.getName());
+//        hinhAnh.setSanPhamChiTiet(sanPhamChiTiet);
+//        hinhAnh.setMauSac(mauSac);
+//        hinhAnh.setAnhMacDinh(false);
+//        hinhAnhRepository.save(hinhAnh);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity themAnhMacDinh(HinhAnhDTO hinhAnhDTO) {
-        HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId());
-        hinhAnh.setAnhMacDinh(true);
-        hinhAnhRepository.save(hinhAnh);
+//        HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId());
+//        hinhAnh.setAnhMacDinh(true);
+//        hinhAnhRepository.save(hinhAnh);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+
 }
