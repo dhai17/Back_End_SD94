@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 public class HinhAnhDTO {
+    private long id_hinh_anh;
 
     private long id_spct;
 
