@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface MuaNgayService {
     //Mua ngay
-    ResponseEntity<?> muaNgayCheckOut(SanPhamDTO dto);
+    Long muaNgayCheckOut(SanPhamDTO dto);
 
     ResponseEntity<HoaDon> getBill();
 

@@ -19,6 +19,7 @@ import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.MuaNgayService;
 import SD94.service.service.HoaDonDatHangService;
 import SD94.validator.DataIsEmpty;
+import SD94.validator.SanPhamValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,37 +56,31 @@ public class MuaNgayServiceImpl implements MuaNgayService {
 
     private Long idBill;
 
-    static DataIsEmpty checkDataIsEmpty;
 
+    @Transactional
     @Override
-    public ResponseEntity<?> muaNgayCheckOut(SanPhamDTO dto) {
-        if(checkDataIsEmpty.isEmpty(dto.getMaMauSac()) == true || checkDataIsEmpty.isEmpty(dto.getKichCoDaChon()) == true || checkDataIsEmpty.isEmpty(dto.getSan_pham_id()) == true){
-            Map<String, Object> response = new HashMap<>();
-            response.put("mess", "Trong du lieu");
-            return ResponseEntity.badRequest().body(response);
-        }else {
-            MauSac mauSac = mauSacRepository.findByMaMauSac(dto.getMaMauSac());
-            KichCo kichCo = kichCoRepository.findByKichCo(dto.getKichCoDaChon());
-            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.getSanPhamChiTiet(mauSac.getId(), kichCo.getId(), dto.getSan_pham_id());
-            int tongTien = dto.getDonGia() * dto.getSoLuong();
-            HoaDon hoaDon = new HoaDon();
-            hoaDon.setCreatedDate(new Date());
-            hoaDon.setTongTienDonHang(tongTien);
-            hoaDon.setTongTienHoaDon(tongTien);
-            hoaDonRepository.save(hoaDon);
-            hoaDon.setMaHoaDon("HD" + hoaDon.getId());
-            hoaDonRepository.save(hoaDon);
+    public Long muaNgayCheckOut(SanPhamDTO dto) {
+        MauSac mauSac = mauSacRepository.findByMaMauSac(dto.getMaMauSac());
+        KichCo kichCo = kichCoRepository.findByKichCo(dto.getKichCoDaChon());
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.getSanPhamChiTiet(mauSac.getId(), kichCo.getId(), dto.getSan_pham_id());
+        int tongTien = dto.getDonGia() * dto.getSoLuong();
+        HoaDon hoaDon = new HoaDon();
+        hoaDon.setCreatedDate(new Date());
+        hoaDon.setTongTienDonHang(tongTien);
+        hoaDon.setTongTienHoaDon(tongTien);
+        hoaDonRepository.save(hoaDon);
+        hoaDon.setMaHoaDon("HD" + hoaDon.getId());
+        hoaDonRepository.save(hoaDon);
 
-            HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-            hoaDonChiTiet.setDonGia(Math.round(sanPhamChiTiet.getSanPham().getGia()));
-            hoaDonChiTiet.setHoaDon(hoaDon);
-            hoaDonChiTiet.setThanhTien(tongTien);
-            hoaDonChiTiet.setSoLuong(dto.getSoLuong());
-            hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-            hoaDonChiTietRepository.save(hoaDonChiTiet);
-            idBill = hoaDon.getId();
-            return ResponseEntity.ok(hoaDon.getId());
-        }
+        HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+        hoaDonChiTiet.setDonGia(Math.round(sanPhamChiTiet.getSanPham().getGia()));
+        hoaDonChiTiet.setHoaDon(hoaDon);
+        hoaDonChiTiet.setThanhTien(tongTien);
+        hoaDonChiTiet.setSoLuong(dto.getSoLuong());
+        hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+        hoaDonChiTietRepository.save(hoaDonChiTiet);
+        idBill = hoaDon.getId();
+        return hoaDon.getId();
     }
 
     @Override
