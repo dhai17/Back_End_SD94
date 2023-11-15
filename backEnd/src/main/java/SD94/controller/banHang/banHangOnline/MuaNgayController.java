@@ -35,6 +35,7 @@ public class MuaNgayController {
             Long id_hoaDon = muaNgayService.muaNgayCheckOut(dto);
             return ResponseEntity.ok(id_hoaDon);
         }
+
     }
 
 
@@ -64,6 +65,7 @@ public class MuaNgayController {
     @PostMapping("/datHang")
     public ResponseEntity datHang(@RequestBody HoaDonDTO dto) {
         return muaNgayService.datHang(dto);
+
     }
 
 }
