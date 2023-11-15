@@ -53,6 +53,7 @@ public class AddToCartController {
 
     @PostMapping("/addToCart")
     public ResponseEntity addToCart(@RequestBody GioHangDTO dto) {
+
         MauSac mauSac = mauSacRepository.findByMaMauSac(dto.getMaMauSac());
         KichCo kichCo = kichCoRepository.findByKichCo(dto.getKichCo());
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.getSanPhamChiTiet(mauSac.getId(), kichCo.getId(), dto.getSan_pham_id());

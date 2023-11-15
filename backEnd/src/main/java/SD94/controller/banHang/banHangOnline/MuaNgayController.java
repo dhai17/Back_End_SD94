@@ -7,6 +7,7 @@ import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.service.service.MuaNgayService;
+import SD94.validator.DataIsEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +26,19 @@ public class MuaNgayController {
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
 
+    static DataIsEmpty checkDataIsEmpty;
+
+
     @PostMapping("/check-out")
     public ResponseEntity<?> muaNgayCheckOut(@RequestBody SanPhamDTO dto) {
-
-        return ResponseEntity.ok(muaNgayService.muaNgayCheckOut(dto));
-
+        if (checkDataIsEmpty.isEmpty(dto.getMaMauSac()) == true || checkDataIsEmpty.isEmpty(dto.getKichCoDaChon()) == true || checkDataIsEmpty.isEmpty(dto.getSan_pham_id()) == true) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("mess", "Trống dữ liệu");
+            return ResponseEntity.badRequest().body(response);
+        } else {
+            Long id_bill = muaNgayService.muaNgayCheckOut(dto);
+            return ResponseEntity.ok(id_bill);
+        }
     }
 
     @GetMapping("/getHoaDon/{id}")

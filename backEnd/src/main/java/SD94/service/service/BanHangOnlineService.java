@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public interface BanHangOnlineService {
-    ResponseEntity<Long> checkout(GioHangDTO dto);
+    Long checkout(GioHangDTO dto);
 
     ResponseEntity<HoaDon> getHoaDon(long id_hoa_don);
 
@@ -19,7 +19,7 @@ public interface BanHangOnlineService {
 
     ResponseEntity<HoaDon> getBill();
 
-    HoaDon addDiscount(HoaDonDTO hoaDonDTO);
+    ResponseEntity<?> addDiscount(HoaDonDTO hoaDonDTO);
 
     ResponseEntity datHang(HoaDonDTO dto);
 
