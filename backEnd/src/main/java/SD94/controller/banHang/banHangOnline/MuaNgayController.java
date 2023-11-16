@@ -37,7 +37,6 @@ public class MuaNgayController {
         }
     }
 
-
     @GetMapping("/getHoaDon/{id}")
     public ResponseEntity<HoaDon> getHoaDonMuaNgay(@PathVariable("id") long id_HoaDon) {
         HoaDon hoaDon = hoaDonRepository.findByID(id_HoaDon);
