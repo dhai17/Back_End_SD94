@@ -57,9 +57,10 @@ public class SanPhamDTO {
 
     private int tongTien;
 
-    private long id_hoaDon;
+    private Long id_hoaDon;
 
-    private long anh_id;
 
     private Integer soLuongHienCo;
+
+    private Long anh_id;
 }
