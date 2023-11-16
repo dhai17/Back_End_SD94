@@ -43,7 +43,6 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
     @Autowired
     SanPhamChiTietRepository sanPhamChiTietRepository;
 
-
     @Autowired
     NhanVienRepository nhanVienRepository;
 

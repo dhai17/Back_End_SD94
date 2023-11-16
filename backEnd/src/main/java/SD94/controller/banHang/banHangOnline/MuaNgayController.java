@@ -7,6 +7,7 @@ import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.service.service.MuaNgayService;
+
 import SD94.validator.SanPhamValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ public class MuaNgayController {
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
 
+
     @PostMapping("/check-out")
     public ResponseEntity<?> muaNgayCheckOut(@RequestBody SanPhamDTO dto) {
         ResponseEntity<?> response = SanPhamValidate.checkOut(dto);
@@ -35,7 +37,6 @@ public class MuaNgayController {
             Long id_hoaDon = muaNgayService.muaNgayCheckOut(dto);
             return ResponseEntity.ok(id_hoaDon);
         }
-
     }
 
     @GetMapping("/getHoaDon/{id}")
