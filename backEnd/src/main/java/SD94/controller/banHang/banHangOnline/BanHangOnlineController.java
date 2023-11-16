@@ -8,13 +8,12 @@ import SD94.entity.hoaDon.HoaDonChiTiet;
 
 import SD94.service.service.BanHangOnlineService;
 
-import SD94.validator.DataIsEmpty;
+import SD94.validator.DatHangValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.*;
 
@@ -25,18 +24,10 @@ public class BanHangOnlineController {
     @Autowired
     BanHangOnlineService banHangOnlineService;
 
-    static DataIsEmpty checkDataIsEmpty;
-
     @PostMapping("/checkOut")
     public ResponseEntity<?> checkout(@RequestBody GioHangDTO dto) {
-        if (checkDataIsEmpty.isEmpty(dto.getId_gioHangChiTiet()) == true || checkDataIsEmpty.isEmpty(dto.getTongTien()) == true) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("mess", "Vui lòng chọn sản phẩm để đặt hàng");
-            return ResponseEntity.badRequest().body(response);
-        } else {
-            Long id_hoaDon = banHangOnlineService.checkout(dto);
-            return ResponseEntity.ok(id_hoaDon);
-        }
+        Long id_hoaDon = banHangOnlineService.checkout(dto);
+        return ResponseEntity.ok(id_hoaDon);
     }
 
     @GetMapping("/getHoaDon/{id}")
@@ -60,11 +51,10 @@ public class BanHangOnlineController {
     }
 
     @PostMapping("/datHang")
-    public ResponseEntity datHang(@RequestBody HoaDonDTO dto) {
-        if (dto.getNguoiTao().isEmpty() || dto.getEmail().isEmpty() || dto.getSoDienThoai().isEmpty() || dto.getTienShip() == 0) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("mess", "Vui lòng nhập đủ thông tin để đặt hàng");
-            return ResponseEntity.badRequest().body(response);
+    public ResponseEntity<?> datHang(@RequestBody HoaDonDTO dto) {
+        ResponseEntity<?> response = DatHangValidate.datHang(dto);
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return response;
         } else {
             return banHangOnlineService.datHang(dto);
         }

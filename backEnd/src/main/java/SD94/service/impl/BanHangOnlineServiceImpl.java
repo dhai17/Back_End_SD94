@@ -21,6 +21,7 @@ import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.BanHangOnlineService;
 import SD94.service.service.HoaDonDatHangService;
 import SD94.service.service.MailService;
+import SD94.validator.DatHangValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -122,18 +123,18 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
     @Override
     public ResponseEntity<?> addDiscount(HoaDonDTO hoaDonDTO) {
         KhuyenMai khuyenMai = discountRepository.findByNameKM(hoaDonDTO.getTenMaGiamGia());
-        if(khuyenMai == null){
+        if (khuyenMai == null) {
             Map<String, Object> response = new HashMap<>();
             response.put("mess", "Khuyen mai khong ton tai");
             return ResponseEntity.badRequest().body(response);
         }
         long now = new Date().getTime();
         long a = khuyenMai.getNgayKetThuc().getTime();
-        if(a < now){
+        if (a < now) {
             Map<String, Object> response = new HashMap<>();
             response.put("mess", "Khuyen mai da het han");
             return ResponseEntity.badRequest().body(response);
-        }else {
+        } else {
             HoaDon hoaDon = billRepository.findByID(hoaDonDTO.getId());
             int phanTramGiam = khuyenMai.getPhanTramGiam();
             int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
@@ -161,6 +162,7 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
     @Transactional
     @Override
     public ResponseEntity datHang(HoaDonDTO dto) {
+
         HoaDon hoaDon = billRepository.findByID(dto.getId());
         KhachHang khachHang = khachHangRepository.findByEmail(dto.getEmail_user());
         GioHang gioHang = gioHangRepository.findbyCustomerID(khachHang.getId());
@@ -199,4 +201,5 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
 }

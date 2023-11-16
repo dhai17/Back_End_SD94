@@ -63,4 +63,6 @@ public class SanPhamDTO {
     private Integer soLuongHienCo;
 
     private Long anh_id;
+
+    private String anh_san_pham;
 }

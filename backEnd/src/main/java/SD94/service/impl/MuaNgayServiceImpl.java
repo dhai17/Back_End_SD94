@@ -18,8 +18,6 @@ import SD94.repository.sanPham.MauSacRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.MuaNgayService;
 import SD94.service.service.HoaDonDatHangService;
-import SD94.validator.DataIsEmpty;
-import SD94.validator.SanPhamValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

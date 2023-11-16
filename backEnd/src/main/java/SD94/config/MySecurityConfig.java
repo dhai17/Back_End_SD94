@@ -58,13 +58,13 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login", "/payment/create", "/payment/return", "/khachHang/register"
                         , "/customer/cart/addToCart", "/customer/sanPham/danhSach", "/customer/sanPham/loc/gia"
                         , "/customer/sanPham/loc/gia", "/customer/sanPham/loc/loai_san_pham", "/customer/sanPham/loc/chat_lieu"
-                        , "/customer/sanPham/loc/nha_san_xuat", "/customer/sanPham/getSanPham/id={id}", "/customer/sanPham/api/getSize/{id}",
+                        , "/customer/sanPham/loc/nha_san_xuat", "/customer/sanPham/getSanPham/id={id}", "/customer/sanPham/getAnhSanPham/{id}", "/customer/sanPham/api/getSize/{id}",
                         "/customer/sanPham/api/getColor/{id}", "/customer/sanPham/api/getSoLuong", "/api/banHang/online/checkOut",
                         "/api/banHang/online/getHoaDon/{id}", "/api/banHang/online/getHoaDonChiTiet/{id}", "/api/banHang/online/check-out",
                         "/api/banHang/online/add/khuyenMai", "/api/banHang/online/datHang", "/api/muaNgay/check-out",
                         "/api/muaNgay/getHoaDon/{id}", "/api/muaNgay/getHoaDonChiTiet/{id}",
                         "/api/muaNgay/check-out", "/api/muaNgay/add/khuyenMai",
-                        "/api/muaNgay/datHang", "/payment/MuaNgay/create", "/payment/MuaNgay/return"
+                        "/api/muaNgay/datHang", "/payment/MuaNgay/create", "/payment/MuaNgay/return", "/customer/sanPham/getAnhMacDinhSanPham/{id}", "/customer/sanPham/getAnhByMauSac"
                 ).permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated()

@@ -28,7 +28,6 @@ public class GioHangValidate {
     }
 
         public static ResponseEntity<?> addToCartCheck(GioHangDTO GioHangDTO) {
-            System.out.println(GioHangDTO);
             Map<String, String> errors = new HashMap<>();
             checkMaMauSac(GioHangDTO.getMaMauSac(), errors);
             checkKichCoDaChon(GioHangDTO.getKichCo(), errors);
