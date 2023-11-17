@@ -33,4 +33,6 @@ public class HoaDonDTO {
     private String tenMaGiamGia;
 
     private String nguoiTao;
+
+    private String nguoi_thao_tac;
 }

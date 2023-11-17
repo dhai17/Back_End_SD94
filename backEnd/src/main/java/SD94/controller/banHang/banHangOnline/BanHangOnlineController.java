@@ -4,18 +4,15 @@ import SD94.dto.GioHangDTO;
 import SD94.dto.HoaDonDTO;
 
 import SD94.entity.hoaDon.HoaDon;
-import SD94.entity.hoaDon.HoaDonChiTiet;
 
 import SD94.service.service.BanHangOnlineService;
 
-import SD94.validator.DatHangValidate;
+import SD94.validator.DatHangCheckoutValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
 
 @RestController
 @RequestMapping("/api/banHang/online")
@@ -52,7 +49,7 @@ public class BanHangOnlineController {
 
     @PostMapping("/datHang")
     public ResponseEntity<?> datHang(@RequestBody HoaDonDTO dto) {
-        ResponseEntity<?> response = DatHangValidate.datHangcheckout(dto);
+        ResponseEntity<?> response = DatHangCheckoutValidate.datHangcheckout(dto);
         if (!response.getStatusCode().is2xxSuccessful()) {
             return response;
         } else {
