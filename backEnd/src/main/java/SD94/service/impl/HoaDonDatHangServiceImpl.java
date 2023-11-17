@@ -147,7 +147,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
             SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
             HoaDon hoaDon2 = hoaDonChiTiet.getHoaDon();
-            String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+            String anh_san_pham = hinhAnhRepository.getAnhSPByMauSacAndSPID(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
 
             HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
             hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
@@ -180,7 +180,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
             SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
             HoaDon hoaDon2 = hoaDonChiTiet.getHoaDon();
-            String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+            String anh_san_pham = hinhAnhRepository.getAnhSPByMauSacAndSPID(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
 
             HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
             hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
@@ -215,7 +215,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
             SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
             HoaDon hoaDon2 = hoaDonChiTiet.getHoaDon();
-            String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+            String anh_san_pham = hinhAnhRepository.getAnhSPByMauSacAndSPID(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
 
             HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
             hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
@@ -252,7 +252,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
             SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
             HoaDon hoaDon2 = hoaDonChiTiet.getHoaDon();
-            String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+            String anh_san_pham = hinhAnhRepository.getAnhSPByMauSacAndSPID(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
 
             HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
             hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
@@ -288,7 +288,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
             SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
             HoaDon hoaDon2 = hoaDonChiTiet.getHoaDon();
-            String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+            String anh_san_pham = hinhAnhRepository.getAnhSPByMauSacAndSPID(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
 
             HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
             hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
@@ -309,6 +309,35 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         response.put("hoaDon", hoaDon);
         response.put("timeLine_ChoXacNhan", timeLine_ChoXacNhan);
         response.put("timeLine_DaHuy", timeLine_DaHuy);
+        return ResponseEntity.ok().body(response);
+    }
+    @Override
+    public ResponseEntity<?> TaiQuay(long id_hoa_don) {
+        HoaDon hoaDon = hoaDonRepository.findByID(id_hoa_don);
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        List<HoaDonChiTietDTO> dto = new ArrayList<>();
+        for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            HoaDon hoaDon2 = hoaDonChiTiet.getHoaDon();
+            String anh_san_pham = hinhAnhRepository.getAnhSPByMauSacAndSPID(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+
+            HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
+            hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
+            hoaDonChiTietDTO.setIdProduct(sanPhamChiTiet.getSanPham().getId());
+            hoaDonChiTietDTO.setIdColor(sanPhamChiTiet.getMauSac().getId());
+            hoaDonChiTietDTO.setIdSize(sanPhamChiTiet.getKichCo().getId());
+            hoaDonChiTietDTO.setSoLuong(hoaDonChiTiet.getSoLuong());
+            hoaDonChiTietDTO.setDonGia(hoaDonChiTiet.getDonGia());
+            hoaDonChiTietDTO.setThanhTien(hoaDonChiTiet.getThanhTien());
+            hoaDonChiTietDTO.setHoaDon(hoaDon2);
+            hoaDonChiTietDTO.setSanPhamChiTiet(sanPhamChiTiet);
+            hoaDonChiTietDTO.setAnhSanPham(anh_san_pham);
+
+            dto.add(hoaDonChiTietDTO);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("list_HDCT", dto);
+        response.put("hoaDon", hoaDon);
         return ResponseEntity.ok().body(response);
     }
 }

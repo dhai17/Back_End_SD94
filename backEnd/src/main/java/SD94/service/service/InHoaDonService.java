@@ -159,7 +159,7 @@ public class InHoaDonService {
                 } else if (tienGiamHoaDon.compareTo(tienGiamToiDa) >= 0) {
                     formattedTienGiam = numberFormat.format(tienGiamHoaDon);
                 } else {
-                    formattedTienGiam = tienGiamHoaDon + "%";
+                    formattedTienGiam = tienGiamHoaDon + "VNĐ";
                 }
             }
 
