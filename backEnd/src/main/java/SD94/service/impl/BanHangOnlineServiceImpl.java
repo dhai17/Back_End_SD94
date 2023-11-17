@@ -21,6 +21,7 @@ import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.BanHangOnlineService;
 import SD94.service.service.HoaDonDatHangService;
 import SD94.service.service.MailService;
+import SD94.validator.DatHangValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.math.RoundingMode;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BanHangOnlineServiceImpl implements BanHangOnlineService {
@@ -69,7 +68,7 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
 
 
     @Override
-    public ResponseEntity<Long> checkout(GioHangDTO dto) {
+    public Long checkout(GioHangDTO dto) {
         HoaDon hoaDon = new HoaDon();
         hoaDon.setCreatedDate(new Date());
         hoaDon.setCreatedby("hduong");
@@ -94,7 +93,7 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
             }
         }
         idBill = hoaDon.getId();
-        return ResponseEntity.ok(idBill);
+        return hoaDon.getId();
     }
 
     @Override
@@ -122,36 +121,48 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
     }
 
     @Override
-    public HoaDon addDiscount(HoaDonDTO hoaDonDTO) {
+    public ResponseEntity<?> addDiscount(HoaDonDTO hoaDonDTO) {
         KhuyenMai khuyenMai = discountRepository.findByNameKM(hoaDonDTO.getTenMaGiamGia());
-        HoaDon hoaDon = billRepository.findByID(hoaDonDTO.getId());
-        int phanTramGiam = khuyenMai.getPhanTramGiam();
-        int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
-        int tongTienBill = hoaDon.getTongTienHoaDon();
-
-        int tongTienSauGiamCheck = (tongTienBill * phanTramGiam) / 100;
-        if (tongTienSauGiamCheck > tienGiamToiDa) {
-            int tongTienSauGiam = hoaDon.getTongTienHoaDon() - khuyenMai.getTienGiamToiDa();
-            hoaDon.setTienGiam(hoaDon.getTongTienHoaDon() - tongTienSauGiam);
-            hoaDon.setTongTienDonHang(tongTienSauGiam);
-            hoaDon.setKhuyenMai(khuyenMai);
-            billRepository.save(hoaDon);
-        } else {
-            int tongTien = hoaDon.getTongTienHoaDon() - tongTienSauGiamCheck;
-            System.out.println(tongTien);
-            hoaDon.setTongTienDonHang(tongTien);
-            hoaDon.setTienGiam(tongTienSauGiamCheck);
-            hoaDon.setKhuyenMai(khuyenMai);
-            billRepository.save(hoaDon);
+        if (khuyenMai == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("mess", "Khuyen mai khong ton tai");
+            return ResponseEntity.badRequest().body(response);
         }
+        long now = new Date().getTime();
+        long a = khuyenMai.getNgayKetThuc().getTime();
+        if (a < now) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("mess", "Khuyen mai da het han");
+            return ResponseEntity.badRequest().body(response);
+        } else {
+            HoaDon hoaDon = billRepository.findByID(hoaDonDTO.getId());
+            int phanTramGiam = khuyenMai.getPhanTramGiam();
+            int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
+            int tongTienBill = hoaDon.getTongTienHoaDon();
 
-        HoaDon hoaDon2 = billRepository.findByID(hoaDonDTO.getId());
-        return hoaDon2;
+            int tongTienSauGiamCheck = (tongTienBill * phanTramGiam) / 100;
+            if (tongTienSauGiamCheck > tienGiamToiDa) {
+                int tongTienSauGiam = hoaDon.getTongTienHoaDon() - khuyenMai.getTienGiamToiDa();
+                hoaDon.setTienGiam(hoaDon.getTongTienHoaDon() - tongTienSauGiam);
+                hoaDon.setTongTienDonHang(tongTienSauGiam);
+                hoaDon.setKhuyenMai(khuyenMai);
+                billRepository.save(hoaDon);
+            } else {
+                int tongTien = hoaDon.getTongTienHoaDon() - tongTienSauGiamCheck;
+                hoaDon.setTongTienDonHang(tongTien);
+                hoaDon.setTienGiam(tongTienSauGiamCheck);
+                hoaDon.setKhuyenMai(khuyenMai);
+                billRepository.save(hoaDon);
+            }
+            HoaDon hoaDon2 = billRepository.findByID(hoaDonDTO.getId());
+            return ResponseEntity.ok(hoaDon2);
+        }
     }
 
     @Transactional
     @Override
     public ResponseEntity datHang(HoaDonDTO dto) {
+
         HoaDon hoaDon = billRepository.findByID(dto.getId());
         KhachHang khachHang = khachHangRepository.findByEmail(dto.getEmail_user());
         GioHang gioHang = gioHangRepository.findbyCustomerID(khachHang.getId());
@@ -190,4 +201,5 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
 }

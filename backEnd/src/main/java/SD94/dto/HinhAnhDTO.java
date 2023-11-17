@@ -14,4 +14,9 @@ public class HinhAnhDTO {
 
     private List<String> ten_anh;
 
+    private Long id_SP;
+
+    private String maMauSac;
+
+
 }

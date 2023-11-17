@@ -40,4 +40,15 @@ public interface HinhAnhRepository extends JpaRepository<HinhAnh, Long> {
     @Modifying
     @Query(value = "delete from hinh_anh where id = ?", nativeQuery = true)
     void xoaAnh(long id);
+
+    @Query(value = "select name from hinh_anh where id_product = ? and anh_mac_dinh = true", nativeQuery = true)
+    String getTenAnhSanPham_HienThiDanhSach(long sanPham_id);
+
+    @Query(value = "select name from hinh_anh where id_product = ?1 and id_color = ?2 LIMIT 1", nativeQuery = true)
+    String getAnhSPByMauSacAndSPID(long sanPham_id, long mau_sac_id);
+
+    @Query(value = "select * from hinh_anh where id_product = ?", nativeQuery = true)
+    List<HinhAnh> getHinhAnhByProductID(long sanPham_id);
+
+
 }

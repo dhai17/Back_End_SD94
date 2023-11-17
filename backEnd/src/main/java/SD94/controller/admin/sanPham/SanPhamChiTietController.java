@@ -125,7 +125,7 @@ public class SanPhamChiTietController {
         HinhAnh hinhAnh = null;
         for(String tenAnh: hinhAnhDTO.getTen_anh()){
             hinhAnh = new HinhAnh();
-            hinhAnh.setSanPhamChiTiet(sanPhamChiTiet);
+            hinhAnh.setSanPham(sanPhamChiTiet.getSanPham());
             hinhAnh.setTenAnh(tenAnh);
             hinhAnh.setMauSac(sanPhamChiTiet.getMauSac());
             hinhAnh.setAnhMacDinh(false);
