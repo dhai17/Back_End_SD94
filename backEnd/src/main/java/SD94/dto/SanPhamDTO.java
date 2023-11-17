@@ -42,6 +42,27 @@ public class SanPhamDTO {
 
     private long nhaSanXuat_id;
 
+    //Dùng để add to cart bên phía customer
+    private String maMauSac;
+
+    private String kichCoDaChon;
+
+    private Long san_pham_id;
+
+    private int soLuongDaChon;
+
+    private int donGia;
+
     private int soLuong;
 
+    private int tongTien;
+
+    private Long id_hoaDon;
+
+
+    private Integer soLuongHienCo;
+
+    private Long anh_id;
+
+    private String anh_san_pham;
 }

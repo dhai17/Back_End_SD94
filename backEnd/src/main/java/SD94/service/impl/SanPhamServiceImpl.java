@@ -4,7 +4,7 @@ import SD94.controller.message.Message;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
-import SD94.service.service.HinhAnhService;
+//import SD94.service.service.HinhAnhService;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -14,18 +14,17 @@ import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SanPhamServiceImpl implements SanPhamService {
 
     @Autowired
     SanPhamRepository repository;
-
-    @Autowired
-    HinhAnhService hinhAnhService;
+//
+//    @Autowired
+//    HinhAnhService hinhAnhService;
 
     @Autowired
     ChatLieuRepository chatLieuRepository;
@@ -45,6 +44,8 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Autowired
     SanPhamChiTietRepository sanPhamChiTietRepository;
 
+    Long id_product;
+
     @Override
     public List<SanPham> findAllProduct() {
         List<SanPham> list = repository.findAll();
@@ -52,23 +53,23 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public ResponseEntity<SanPham> saveEdit(SanPham sanPhamUpdate) {
+    public ResponseEntity<SanPham> saveEdit(SanPhamDTO sanPhamDTO) {
         try {
-            Optional<SanPham> optional = repository.findById(sanPhamUpdate.getId());
-            if (optional.isPresent()){
+            Optional<SanPham> optional = repository.findById(sanPhamDTO.getId());
+            if (optional.isPresent()) {
                 SanPham sanPham = optional.get();
-                sanPham.setTenSanPham(sanPhamUpdate.getTenSanPham());
-                sanPham.setGia(sanPhamUpdate.getGia());
-                sanPham.setTrangThai(sanPhamUpdate.getTrangThai());
-                sanPham.setNhaSanXuat(sanPhamUpdate.getNhaSanXuat());
-                sanPham.setLoaiSanPham(sanPhamUpdate.getLoaiSanPham());
-                sanPham.setChatLieu(sanPhamUpdate.getChatLieu());
+                sanPham.setTenSanPham(sanPhamDTO.getTenSanPham());
+                sanPham.setGia(sanPhamDTO.getGia());
+                sanPham.setTrangThai(0);
+                sanPham.setNhaSanXuat(sanPhamDTO.getNhaSanXuat());
+                sanPham.setLoaiSanPham(sanPhamDTO.getLoaiSanPham());
+                sanPham.setChatLieu(sanPhamDTO.getChatLieu());
                 repository.save(sanPham);
                 return ResponseEntity.ok(sanPham);
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
     }
@@ -77,58 +78,18 @@ public class SanPhamServiceImpl implements SanPhamService {
     public ResponseEntity<List<SanPham>> deleteProduct(Long id) {
         try {
             Optional<SanPham> optional = repository.findById(id);
-            if (optional.isPresent()){
+            if (optional.isPresent()) {
                 SanPham sanPham = optional.get();
                 sanPham.setDeleted(true);
+                sanPham.setTrangThai(1);
                 repository.save(sanPham);
-
                 List<SanPham> list = findAllProduct();
                 return ResponseEntity.ok(list);
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
-
-    @Override
-    public ResponseEntity<SanPham> saveCreate(SanPham sanPhamCreate) {
-        try {
-            if (sanPhamCreate.getChatLieu() != null) {
-                Optional<ChatLieu> optionalProductMaterial = chatLieuRepository.findById(sanPhamCreate.getChatLieu().getId());
-                if (optionalProductMaterial.isPresent()) {
-                    ChatLieu chatLieu = optionalProductMaterial.get();
-                    sanPhamCreate.setChatLieu(chatLieu);
-                } else {
-                    return new ResponseEntity(new Message("Invalid Product Material", TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
-                }
-            }
-
-            if (sanPhamCreate.getLoaiSanPham() != null) {
-                Optional<LoaiSanPham> optionalProductLine = loaiSanPhamRepository.findById(sanPhamCreate.getLoaiSanPham().getId());
-                if (optionalProductLine.isPresent()) {
-                    LoaiSanPham line = optionalProductLine.get();
-                    sanPhamCreate.setLoaiSanPham(line);
-                } else {
-                    return new ResponseEntity(new Message("Invalid Product Line", TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
-                }
-            }
-
-            if (sanPhamCreate.getNhaSanXuat() != null) {
-                Optional<NhaSanXuat> optionalProducer = nhaSanXuatRepository.findById(sanPhamCreate.getNhaSanXuat().getId());
-                if (optionalProducer.isPresent()) {
-                    NhaSanXuat nhaSanXuat = optionalProducer.get();
-                    sanPhamCreate.setNhaSanXuat(nhaSanXuat);
-                } else {
-                    return new ResponseEntity(new Message("Invalid Producer", TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
-                }
-            }
-
-            repository.save(sanPhamCreate);
-            return ResponseEntity.ok(sanPhamCreate);
         } catch (Exception e) {
-            return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
@@ -146,7 +107,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public List<SanPhamChiTiet> taoSanPham(SanPhamDTO sanPhamDTO) {
+    public ResponseEntity<?> taoSanPham(SanPhamDTO sanPhamDTO) {
         ChatLieu chatLieu = chatLieuRepository.findByID(sanPhamDTO.getChatLieu_id());
         LoaiSanPham loaiSanPham = loaiSanPhamRepository.findByID(sanPhamDTO.getLoaiSanPham_id());
         NhaSanXuat nhaSanXuat = nhaSanXuatRepository.findByID(sanPhamDTO.getNhaSanXuat_id());
@@ -159,6 +120,8 @@ public class SanPhamServiceImpl implements SanPhamService {
         sanPham.setNhaSanXuat(nhaSanXuat);
         sanPham.setChatLieu(chatLieu);
         repository.save(sanPham);
+
+        id_product = sanPham.getId();
 
         List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
         for (Long kichCo_id : sanPhamDTO.getKichCo()) {
@@ -174,8 +137,12 @@ public class SanPhamServiceImpl implements SanPhamService {
                 sanPhamChiTietList.add(sanPhamChiTiet);
             }
         }
-        return sanPhamChiTietList;
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", sanPhamChiTietList);
+        response.put("id_product", sanPham.getId());
+        return ResponseEntity.ok().body(response);
     }
+
 
     @Override
     public List<Object> chiTietSanPham(long id_SanPham) {
@@ -185,6 +152,12 @@ public class SanPhamServiceImpl implements SanPhamService {
         respone.add(sanPham);
         respone.add(sanPhamChiTiets);
         return respone;
+    }
+
+    @Override
+    public List<SanPhamChiTiet> spct_list() {
+        List<SanPhamChiTiet> list = sanPhamChiTietRepository.findSpctByIdSp(id_product);
+        return list;
     }
 
 }

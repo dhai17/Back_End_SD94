@@ -1,197 +1,140 @@
 package SD94.controller.banHang.taiQuay;
 
-import SD94.dto.HoaDonDTO;
+import SD94.dto.*;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
-import SD94.entity.hoaDon.TrangThai;
-import SD94.entity.nhanVien.NhanVien;
+import SD94.entity.khachHang.KhachHang;
+import SD94.entity.khuyenMai.KhuyenMai;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
-import SD94.repository.hoaDon.TrangThaiRepository;
-import SD94.repository.nhanVien.NhanVienRepository;
-import SD94.repository.sanPham.KichCoRepository;
-import SD94.repository.sanPham.MauSacRepository;
-import SD94.repository.sanPham.SanPhamChiTietRepository;
+import SD94.repository.khachHang.KhachHangRepository;
+import SD94.repository.khuyenMai.KhuyenMaiRepository;
+import SD94.repository.sanPham.HinhAnhRepository;
+import SD94.service.service.BanHangTaiQuayService;
+import SD94.service.service.InHoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/banHang/taiQuay")
 public class BanHangTaiQuayController {
     @Autowired
-    MauSacRepository mauSacRepository;
+    BanHangTaiQuayService banHangTaiQuayService;
 
     @Autowired
-    KichCoRepository productSizeRepository;
+    InHoaDonService inHoaDonService;
 
     @Autowired
-    SanPhamChiTietRepository sanPhamChiTietRepository;
+    HoaDonRepository hoaDonRepository;
 
     @Autowired
-    HoaDonRepository billRepository;
+    HoaDonChiTietRepository hoaDonChiTietRepository;
 
     @Autowired
-    HoaDonChiTietRepository billDetailsRepository;
+    KhachHangRepository khachHangRepository;
 
     @Autowired
-    NhanVienRepository nhanVienRepository;
+    KhuyenMaiRepository khuyenMaiRepository;
 
     @Autowired
-    TrangThaiRepository trangThaiRepository;
+    HinhAnhRepository hinhAnhRepository;
 
     @GetMapping("/danhSachHoaDon")
     public List<HoaDon> danhSachHoaDonCho() {
-        List<HoaDon> hoaDonList = billRepository.getDanhSachHoaDonCho();
+        List<HoaDon> hoaDonList = hoaDonRepository.getDanhSachHoaDonCho();
         return hoaDonList;
     }
 
     @GetMapping("/getHoaDonChitiet/{id}")
-    public List<HoaDonChiTiet> getHoaDonChiTiet(@PathVariable("id") long id) {
-        List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(id);
-        return hoaDonChiTiets;
+    public ResponseEntity<?> getHoaDonChiTiet(@PathVariable("id") long id) {
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(id);
+        List<HoaDonChiTietDTO> dto = new ArrayList<>();
+        for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
+            String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+
+            HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
+            hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
+            hoaDonChiTietDTO.setIdProduct(sanPhamChiTiet.getSanPham().getId());
+            hoaDonChiTietDTO.setIdColor(sanPhamChiTiet.getMauSac().getId());
+            hoaDonChiTietDTO.setIdSize(sanPhamChiTiet.getKichCo().getId());
+            hoaDonChiTietDTO.setSoLuong(hoaDonChiTiet.getSoLuong());
+            hoaDonChiTietDTO.setDonGia(hoaDonChiTiet.getDonGia());
+            hoaDonChiTietDTO.setThanhTien(hoaDonChiTiet.getThanhTien());
+            hoaDonChiTietDTO.setHoaDon(hoaDon);
+            hoaDonChiTietDTO.setSanPhamChiTiet(sanPhamChiTiet);
+            hoaDonChiTietDTO.setAnhSanPham(anh_san_pham);
+
+            dto.add(hoaDonChiTietDTO);
+        }
+        return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping("/taoHoaDon")
-    public ResponseEntity<Long> taoHoaDon(@RequestBody HoaDonDTO hoaDonDTO) {
-        NhanVien nhanVien = nhanVienRepository.findByEmail(hoaDonDTO.getEmail_user());
-        TrangThai trangThai = trangThaiRepository.findByID(6L);
-        HoaDon hoaDon = new HoaDon();
-        hoaDon.setTrangThai(trangThai);
-        hoaDon.setLoaiHoaDon(1);
-        hoaDon.setCreatedby(nhanVien.getHoTen());
-        hoaDon.setCreatedDate(new Date());
-        billRepository.save(hoaDon);
+    public ResponseEntity<?> taoHoaDon(@RequestBody HoaDonDTO hoaDonDTO) {
+        return banHangTaiQuayService.taoHoaDon(hoaDonDTO);
+    }
 
-        hoaDon.setMaHoaDon("HD" + hoaDon.getId());
-        billRepository.save(hoaDon);
-        return ResponseEntity.ok(hoaDon.getId());
+    @PostMapping("/themSanPham")
+    public ResponseEntity themSanPham(@RequestBody SanPhamDTO dto) {
+        return banHangTaiQuayService.themSanPham(dto);
     }
 
     @GetMapping("/getHoaDon/{id}")
-    public HoaDon getHoaDon(@PathVariable("id") long id){
-        HoaDon hoaDon = billRepository.findByID(id);
+    public HoaDon getHoaDon(@PathVariable("id") long id) {
+        HoaDon hoaDon = hoaDonRepository.findByID(id);
         return hoaDon;
     }
 
     @PostMapping("/xoaHoaDon")
     public List<HoaDon> xoaHoaDon(@RequestBody HoaDonDTO hoaDonDTO) {
-        HoaDon hoaDon = billRepository.findByID(hoaDonDTO.getId());
-        TrangThai trangThai = trangThaiRepository.findByID(8L);
-        hoaDon.setTrangThai(trangThai);
-        billRepository.save(hoaDon);
-
-        List<HoaDon> hoaDon2 = billRepository.getDanhSachHoaDonCho();
-        return hoaDon2;
+        return banHangTaiQuayService.xoaHoaDon(hoaDonDTO);
     }
 
-    @RequestMapping("/api/getSize")
-    public ResponseEntity<List<String>> getSize(@RequestParam("product_id") String id) {
-        Long id_product = Long.valueOf(id);
-        List<String> productSizes = productSizeRepository.getKichCo(id_product);
-        return ResponseEntity.ok().body(productSizes);
+    @GetMapping("/khachHang/list")
+    public ResponseEntity<List<KhachHang>> listKhachHang() {
+        List<KhachHang> khachHangs = khachHangRepository.findAll();
+        return ResponseEntity.ok(khachHangs);
     }
 
-    @RequestMapping("/api/getColor")
-    public ResponseEntity<List<String>> getColor(@RequestParam("product_id") String id) {
-        Long id_product = Long.valueOf(id);
-        List<String> productColor = mauSacRepository.getColor(id_product);
-        return ResponseEntity.ok().body(productColor);
+    @GetMapping("/khuyenMai/list")
+    public ResponseEntity<List<KhuyenMai>> listKhuyenMai() {
+        List<KhuyenMai> khuyenMais = khuyenMaiRepository.findAll();
+        return ResponseEntity.ok(khuyenMais);
     }
 
-    @RequestMapping("/api/getProduct")
-    public ResponseEntity<List<String>> getProduct(@RequestParam("product_id") String id) {
-        Long id_product = Long.valueOf(id);
-        List<String> product = sanPhamChiTietRepository.getProduct(id_product);
-        return ResponseEntity.ok().body(product);
+    @PostMapping("/add/khuyenMai")
+    public HoaDon themMaGiamGiaTaiQuay(@RequestBody HoaDonDTO hoaDonDTO) {
+        return banHangTaiQuayService.themMaGiamGiaTaiQuay(hoaDonDTO);
     }
 
-    @RequestMapping("/new-bill")
-    public String newBill() {
-        HoaDon hoaDon = new HoaDon();
-        hoaDon.setMaHoaDon("HD034");
-        hoaDon.setCreatedby("hduong");
-        hoaDon.setCreatedDate(new Date());
-        billRepository.save(hoaDon);
-        return "create bill done";
+    @PostMapping("/add/KhachHang")
+    public ResponseEntity<?> addKhachHang(@RequestBody KhachHangDTO dto) {
+        return banHangTaiQuayService.addKhachHang(dto);
     }
 
-    @RequestMapping("/cancel")
-    public String huyDon(@RequestParam("id_bill") long id_bill) {
-        Optional<HoaDon> optionalBill = billRepository.findById(1L);
-        if (optionalBill.isPresent()) {
-            HoaDon hoaDon = optionalBill.get();
-            TrangThai trangThai = new TrangThai();
-            trangThai.setId(8L);
-            hoaDon.setTrangThai(trangThai);
-            billRepository.save(hoaDon);
-        }
-
-        return "Payment bill done";
+    @PostMapping("/huyDon")
+    public ResponseEntity huyDon(@RequestBody HoaDonDTO hoaDonDTO) {
+        return banHangTaiQuayService.huyDon(hoaDonDTO);
     }
 
-    @RequestMapping("/select-product-details")
-    public String productDetails(@RequestParam("id_product") long id_product,
-                                 @RequestParam("id_color") long id_color,
-                                 @RequestParam("id_size") long id_size) {
-        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByColorAndSize(id_product, id_color, id_size);
-        Optional<HoaDon> optionalBill = billRepository.findById(1L);
-        if (optionalBill.isPresent()) {
-            HoaDon hoaDon = optionalBill.get();
-            HoaDonChiTiet bill_details = new HoaDonChiTiet();
-            bill_details.setSoLuong(2);
-            bill_details.setDonGia(100);
-            bill_details.setThanhTien(200);
-            bill_details.setHoaDon(hoaDon);
-            bill_details.setSanPhamChiTiet(sanPhamChiTiet);
-            billDetailsRepository.save(bill_details);
-        }
-        return "save product to bill done";
+    @PostMapping("/thanhToan")
+    public ResponseEntity thanhToan(@RequestBody HoaDonDTO hoaDonDTO) {
+        return banHangTaiQuayService.thanhToan(hoaDonDTO);
     }
 
-    @RequestMapping("/payment")
-    public String thanhtoanHoaDonTaiQuay(@RequestParam("id_bill") long id_bill) {
-        Optional<HoaDon> optionalBill = billRepository.findById(id_bill);
-        if (optionalBill.isPresent()) {
-            HoaDon hoaDon = optionalBill.get();
-            TrangThai trangThai = new TrangThai();
-            trangThai.setId(7L);
-            hoaDon.setTrangThai(trangThai);
-            billRepository.save(hoaDon);
-        }
-
-        return "Payment bill done";
+    @GetMapping("/inHoaDon/{id}")
+    public ResponseEntity<byte[]> inHoaDon(@PathVariable("id") long id) {
+        return inHoaDonService.generatePdf(id);
     }
 
-    @PostMapping("/xoa-san-pham")
-    public String xoaSanPham(@RequestParam("id_bill") long id_bill,
-                             @RequestParam("id_bill_details") long id_bill_details) {
-        Optional<HoaDonChiTiet> detailedInvoice = billDetailsRepository.findById(id_bill_details);
-        Optional<HoaDon> optionalBill = billRepository.findById(id_bill);
-        if (detailedInvoice.isPresent() && optionalBill.isPresent()) {
-            HoaDonChiTiet details = detailedInvoice.get();
-            HoaDon hoaDon = optionalBill.get();
-
-            details.setDeleted(true);
-            billDetailsRepository.save(details);
-
-            int tongTien = details.getThanhTien();
-            int tongTienBill = hoaDon.getTongTienHoaDon();
-            int capNhatTongTien = tongTienBill - tongTien;
-            hoaDon.setTongTienHoaDon(capNhatTongTien);
-
-            long id_product_details = details.getSanPhamChiTiet().getId();
-            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(id_product_details);
-            int soLuong = details.getSoLuong();
-            int soLuongBanDau = sanPhamChiTiet.getSoLuong();
-            sanPhamChiTiet.setSoLuong(soLuongBanDau + soLuong);
-            sanPhamChiTietRepository.save(sanPhamChiTiet);
-        }
-        return "deleted san pham thanh cong";
+    @PostMapping("/xoaHDCT")
+    public ResponseEntity<?> xoaHDCT(@RequestBody HoaDonChiTietDTO dto) {
+        return banHangTaiQuayService.xoaHDCT(dto);
     }
 }

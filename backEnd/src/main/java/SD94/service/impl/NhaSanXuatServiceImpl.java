@@ -32,7 +32,7 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
         String errorMessage;
         Message errorResponse;
 
-        if (nhaSanXuatUpdate.getName() == "" || nhaSanXuatUpdate.getDiaChi() == null) {
+        if (nhaSanXuatUpdate.getName() == "") {
             errorMessage = "Nhập đầy đủ thông tin";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
@@ -62,7 +62,6 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
                 NhaSanXuat nhaSanXuat = optionalProducer.get();
                 nhaSanXuat.setDeleted(true);
                 producerRepository.save(nhaSanXuat);
-
                 List<NhaSanXuat> nhaSanXuatList = findAllProducer();
                 return ResponseEntity.ok(nhaSanXuatList);
             } else {
@@ -79,7 +78,7 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
         String errorMessage;
         Message errorResponse;
 
-        if (nhaSanXuatCreate.getName() == null || nhaSanXuatCreate.getDiaChi() == null) {
+        if (nhaSanXuatCreate.getName() == null) {
             errorMessage = "Nhập đầy đủ thông tin";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
@@ -88,7 +87,6 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
         try {
             NhaSanXuat nhaSanXuat = new NhaSanXuat();
             nhaSanXuat.setName(nhaSanXuatCreate.getName());
-            nhaSanXuat.setDiaChi(nhaSanXuatCreate.getDiaChi());
             producerRepository.save(nhaSanXuat);
             return ResponseEntity.ok(nhaSanXuat);
         } catch (Exception e){

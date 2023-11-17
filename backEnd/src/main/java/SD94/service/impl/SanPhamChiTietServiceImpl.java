@@ -4,9 +4,11 @@ import SD94.controller.message.Message;
 import SD94.dto.HinhAnhDTO;
 import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.MauSac;
+import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
+import SD94.repository.sanPham.SanPhamRepository;
 import SD94.service.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,10 +29,19 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Autowired
     HinhAnhRepository hinhAnhRepository;
 
+    @Autowired
+    SanPhamRepository sanPhamRepository;
+
 
     @Override
     public List<SanPhamChiTiet> findAllProductDetails() {
         List<SanPhamChiTiet> list = repository.findAll();
+        return list;
+    }
+
+    @Override
+    public List<SanPhamChiTiet> findProductDetails() {
+        List<SanPhamChiTiet> list = repository.findProductDetails();
         return list;
     }
 
@@ -41,7 +52,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             if (optional.isPresent()){
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
                 sanPhamChiTiet.setSoLuong(sanPhamChiTietUpdate.getSoLuong());
-                sanPhamChiTiet.setTrangThai(sanPhamChiTietUpdate.getTrangThai());
+                sanPhamChiTiet.setTrangThai(0);
                 sanPhamChiTiet.setSanPham(sanPhamChiTietUpdate.getSanPham());
                 sanPhamChiTiet.setMauSac(sanPhamChiTietUpdate.getMauSac());
                 sanPhamChiTiet.setKichCo(sanPhamChiTietUpdate.getKichCo());
@@ -55,16 +66,15 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         }
     }
 
-    @Override
     public ResponseEntity<List<SanPhamChiTiet>> deleteProductDetails(Long id) {
         try {
             Optional<SanPhamChiTiet> optional = repository.findById(id);
+            SanPham sp = sanPhamRepository.findByID(optional.get().getSanPham().getId());
             if (optional.isPresent()){
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
                 sanPhamChiTiet.setDeleted(true);
                 repository.save(sanPhamChiTiet);
-
-                List<SanPhamChiTiet> list = findAllProductDetails();
+                List<SanPhamChiTiet> list = repository.findSpctByIdSp(sp.getId());
                 return ResponseEntity.ok(list);
             } else {
                 return ResponseEntity.notFound().build();
@@ -110,22 +120,24 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public ResponseEntity themAnhSanPham(HinhAnhDTO hinhAnhDTO) {
-        SanPhamChiTiet sanPhamChiTiet = repository.findByID(hinhAnhDTO.getId_SPCT());
-        MauSac mauSac = sanPhamChiTiet.getMauSac();
-        HinhAnh hinhAnh = new HinhAnh();
-        hinhAnh.setTenAnh(hinhAnhDTO.getName());
-        hinhAnh.setSanPhamChiTiet(sanPhamChiTiet);
-        hinhAnh.setMauSac(mauSac);
-        hinhAnh.setAnhMacDinh(false);
-        hinhAnhRepository.save(hinhAnh);
+//        SanPhamChiTiet sanPhamChiTiet = repository.findByID(hinhAnhDTO.getId_SPCT());
+//        MauSac mauSac = sanPhamChiTiet.getMauSac();
+//        HinhAnh hinhAnh = new HinhAnh();
+//        hinhAnh.setTenAnh(hinhAnhDTO.getName());
+//        hinhAnh.setSanPhamChiTiet(sanPhamChiTiet);
+//        hinhAnh.setMauSac(mauSac);
+//        hinhAnh.setAnhMacDinh(false);
+//        hinhAnhRepository.save(hinhAnh);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity themAnhMacDinh(HinhAnhDTO hinhAnhDTO) {
-        HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId());
-        hinhAnh.setAnhMacDinh(true);
-        hinhAnhRepository.save(hinhAnh);
+//        HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId());
+//        hinhAnh.setAnhMacDinh(true);
+//        hinhAnhRepository.save(hinhAnh);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+
 }

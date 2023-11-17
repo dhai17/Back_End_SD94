@@ -2,6 +2,7 @@ package SD94.repository.sanPham;
 
 import SD94.entity.sanPham.HinhAnh;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +23,30 @@ public interface HinhAnhRepository extends JpaRepository<HinhAnh, Long> {
 
     @Query(value = "select * from hinh_anh where name = ?", nativeQuery = true)
     Optional<HinhAnh> findByName(String name);
+
+    @Query(value = "select * from hinh_anh where id_product = ? and is_deleted = false", nativeQuery = true)
+    List<HinhAnh> findByIDProduct(long id_sanPham);
+
+    @Query(value = "select * from hinh_anh where id_product = ? and anh_mac_dinh = true;", nativeQuery = true)
+    HinhAnh findAnhMacDinh(long id_sp);
+
+    @Modifying
+    @Query(value = "delete from hinh_anh where id = ?", nativeQuery = true)
+    void xoaAnh(long id);
+
+    @Query(value = "select name from hinh_anh where id_product = ? and anh_mac_dinh = true limit 1", nativeQuery = true)
+    String getTenAnhSanPham_HienThiDanhSach(long sanPham_id);
+
+    @Query(value = "select name from hinh_anh where id_product = ?1 and id_color = ?2 and anh_mac_dinh = true limit 1", nativeQuery = true)
+    String getAnhMacDinh(long san_pham_id, long mau_sac_id);
+
+    @Query(value = "select name from hinh_anh where id_product = ?1 and id_color = ?2 LIMIT 1", nativeQuery = true)
+    String getAnhSPByMauSacAndSPID(long sanPham_id, long mau_sac_id);
+
+    @Query(value = "select * from hinh_anh where id_product = ?", nativeQuery = true)
+    List<HinhAnh> getHinhAnhByProductID(long sanPham_id);
+
+    @Query(value = "select * from hinh_anh where id_product = ?1 and id_color = ?2", nativeQuery = true)
+    List<HinhAnh> getHinhAnhs(long sanPham_id, long id_mauSac);
+
 }

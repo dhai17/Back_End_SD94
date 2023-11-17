@@ -2,7 +2,9 @@ package SD94.controller.admin.hoaDon.datHang;
 
 import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
+import SD94.entity.khachHang.KhachHang;
 import SD94.entity.nhanVien.NhanVien;
+import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.service.service.HoaDonDatHangService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class DangGiaoHangController {
 
     @Autowired
     NhanVienRepository nhanVienRepository;
+
+    @Autowired
+    KhachHangRepository khachHangRepository;
 
     @GetMapping("/danhSach")
     public List<HoaDon> listBill3() {
@@ -42,8 +47,15 @@ public class DangGiaoHangController {
         Long id = hoaDonDTO.getId();
         String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
+        String nguoiThaoTac = null;
+        if(nhanVien != null){
+            nguoiThaoTac = nhanVien.getHoTen();
+        }else {
+            KhachHang khachHang = khachHangRepository.findByEmail(email);
+            nguoiThaoTac = khachHang.getHoTen();
+        }
         hoaDonDatHangService.capNhatTrangThai(5, id);
-        hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, nhanVien.getHoTen());
+        hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, nguoiThaoTac);
         return ResponseEntity.ok().build();
     }
 

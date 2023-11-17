@@ -4,7 +4,6 @@ import SD94.dto.HinhAnhDTO;
 import SD94.dto.HoaDonChiTietDTO;
 import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.KichCo;
-import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.KichCoRepository;
@@ -13,11 +12,13 @@ import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.SanPhamChiTietService;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/sanPhamChiTiet")
@@ -44,11 +45,25 @@ public class SanPhamChiTietController {
     @Autowired
     HinhAnhRepository hinhAnhRepository;
 
+    Long spct_id;
+
     //Hien thi
     @GetMapping("/danhSach")
     public ResponseEntity<List<SanPhamChiTiet>> getColor() {
         List<SanPhamChiTiet> list = productDetailsRepository.findAll();
         return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/dsCTSP")
+    public ResponseEntity<List<SanPhamChiTiet>> getProduct(@RequestParam("san_pham_id") Long id) {
+        List<SanPhamChiTiet> product = sanPhamChiTietRepository.getProductD(id);
+        return ResponseEntity.ok().body(product);
+    }
+
+    @GetMapping("/themAnh/{id}")
+    public ResponseEntity<?> getHinhAnh(@PathVariable("id") long id) {
+        List<SanPhamChiTiet> product = sanPhamChiTietRepository.findByProductID(id);
+        return ResponseEntity.ok().body(product);
     }
 
     //Hien thi theo id
@@ -90,8 +105,6 @@ public class SanPhamChiTietController {
         return sanPhamChiTietService.searchDateProductDetails(search);
     }
 
-
-    //Hduong25
     @GetMapping("/get/SanPhamChiTiet")
     public SanPhamChiTiet getSPCT(@RequestParam long id_SPCT) {
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(id_SPCT);
@@ -104,12 +117,57 @@ public class SanPhamChiTietController {
     }
 
     @PostMapping("/themAnhSanPham")
-    public ResponseEntity themAnhSanPham(@RequestBody HinhAnhDTO hinhAnhDTO) {
-        return sanPhamChiTietService.themAnhSanPham(hinhAnhDTO);
+    public ResponseEntity<?> themAnhSanPham(@RequestBody HinhAnhDTO hinhAnhDTO) {
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hinhAnhDTO.getId_spct());
+        spct_id = sanPhamChiTiet.getId();
+        HinhAnh hinhAnh = null;
+        for(String tenAnh: hinhAnhDTO.getTen_anh()){
+            hinhAnh = new HinhAnh();
+            hinhAnh.setSanPham(sanPhamChiTiet.getSanPham());
+            hinhAnh.setTenAnh(tenAnh);
+            hinhAnh.setMauSac(sanPhamChiTiet.getMauSac());
+            hinhAnh.setAnhMacDinh(false);
+            hinhAnhRepository.save(hinhAnh);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("mess", "Them anh thanh cong");
+        return ResponseEntity.ok().body(response);
     }
 
-    @PutMapping("/ThemAnhMacDinh")
-    public ResponseEntity themAnhMacDinh(@RequestBody HinhAnhDTO hinhAnhDTO) {
-        return sanPhamChiTietService.themAnhMacDinh(hinhAnhDTO);
+    @GetMapping("/hienThiAnh/{id}")
+    public ResponseEntity<?> hienThiAnh(@PathVariable("id") long id_spct){
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(id_spct);
+        List<HinhAnh> hinhAnhs = hinhAnhRepository.getHinhAnhs(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+        return ResponseEntity.ok().body(hinhAnhs);
+    }
+
+    @PutMapping("/setAnhMacDinh")
+    public ResponseEntity<?> setAnhMacDinh(@RequestBody HinhAnhDTO hinhAnhDTO) {
+        HinhAnh check = hinhAnhRepository.findAnhMacDinh(hinhAnhDTO.getId_spct());
+        if(check != null){
+            check.setAnhMacDinh(false);
+            hinhAnhRepository.save(check);
+            HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId_hinh_anh());
+            hinhAnh.setAnhMacDinh(true);
+            hinhAnhRepository.save(hinhAnh);
+            Map<String, Object> response = new HashMap<>();
+            response.put("mess", "set anh mac dinh thanh cong");
+            return ResponseEntity.ok().body(response);
+        }else {
+            HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId_hinh_anh());
+            hinhAnh.setAnhMacDinh(true);
+            hinhAnhRepository.save(hinhAnh);
+            Map<String, Object> response = new HashMap<>();
+            response.put("mess", "set anh mac dinh thanh cong");
+            return ResponseEntity.ok().body(response);
+        }
+    }
+
+    @Transactional
+    @PutMapping("/xoaAnh")
+    public ResponseEntity<?> xoaAnh(@RequestBody HinhAnhDTO hinhAnhDTO) {
+         hinhAnhRepository.xoaAnh(hinhAnhDTO.getId_hinh_anh());
+        List<HinhAnh> hinhAnhs = hinhAnhRepository.findByIDProduct(spct_id);
+        return ResponseEntity.ok().body(hinhAnhs);
     }
 }

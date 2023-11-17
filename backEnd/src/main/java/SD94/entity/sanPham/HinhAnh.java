@@ -23,7 +23,7 @@ public class HinhAnh extends Base implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "idProduct", referencedColumnName = "id")
-    private SanPhamChiTiet sanPhamChiTiet;
+    private SanPham sanPham;
 
     @Column(name = "name", columnDefinition = "nvarchar(256) null")
     private String tenAnh;

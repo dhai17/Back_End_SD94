@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/mauSac")
 public class MauSacController {
     @Autowired
@@ -29,7 +30,7 @@ public class MauSacController {
         return mauSacService.saveCreate(mauSac);
     }
 
-    @PutMapping("/xoa/{id}")
+    @DeleteMapping("/xoa/{id}")
     public ResponseEntity<List<MauSac>> delete(@PathVariable("id") Long id) {
         return mauSacService.deleteProductColor(id);
     }

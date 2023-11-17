@@ -13,18 +13,18 @@ public interface SanPhamService {
 
     List<SanPham> findAllProduct();
 
-    ResponseEntity<SanPham> saveEdit(SanPham sanPhamUpdate);
+    ResponseEntity<SanPham> saveEdit(SanPhamDTO sanPhamDTO);
 
     ResponseEntity<List<SanPham>> deleteProduct(Long id);
-
-    ResponseEntity<SanPham> saveCreate(SanPham sanPhamCreate);
 
     List<SanPham> searchAllProduct(String search);
 
     List<SanPham> searchDateProduct(String searchDate);
 
-    List<SanPhamChiTiet> taoSanPham(SanPhamDTO sanPhamDTO);
+    ResponseEntity<?> taoSanPham(SanPhamDTO sanPhamDTO);
 
     List<Object> chiTietSanPham(long id_SanPham);
+
+    List<SanPhamChiTiet> spct_list();
 
 }
