@@ -20,4 +20,7 @@ public class GioHangDTO {
     private long [] id_gioHangChiTiet;
 
     private int tongTien;
+
+    private Integer soLuongHienCo;
+
 }

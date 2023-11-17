@@ -47,7 +47,7 @@ public class SanPhamDTO {
 
     private String kichCoDaChon;
 
-    private long san_pham_id;
+    private Long san_pham_id;
 
     private int soLuongDaChon;
 
@@ -57,7 +57,12 @@ public class SanPhamDTO {
 
     private int tongTien;
 
-    private long id_hoaDon;
+    private Long id_hoaDon;
 
-    private long anh_id;
+
+    private Integer soLuongHienCo;
+
+    private Long anh_id;
+
+    private String anh_san_pham;
 }
