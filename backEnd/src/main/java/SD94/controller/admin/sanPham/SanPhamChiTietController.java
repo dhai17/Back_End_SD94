@@ -136,9 +136,10 @@ public class SanPhamChiTietController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/hienThiAnh")
-    public ResponseEntity<?> hienThiAnh(){
-        List<HinhAnh> hinhAnhs = hinhAnhRepository.findByIDProduct(spct_id);
+    @GetMapping("/hienThiAnh/{id}")
+    public ResponseEntity<?> hienThiAnh(@PathVariable("id") long id_spct){
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(id_spct);
+        List<HinhAnh> hinhAnhs = hinhAnhRepository.getHinhAnhs(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
         return ResponseEntity.ok().body(hinhAnhs);
     }
 
