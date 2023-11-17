@@ -66,11 +66,6 @@ public class MuaNgayController {
 
     @PostMapping("/datHang")
     public ResponseEntity datHang(@RequestBody HoaDonDTO dto) {
-//        ResponseEntity<?> response = DatHangValidate.datHang(dto);
-//        if (!response.getStatusCode().is2xxSuccessful()) {
-//            return response;
-//        } else {
             return muaNgayService.datHang(dto);
         }
-
 }
