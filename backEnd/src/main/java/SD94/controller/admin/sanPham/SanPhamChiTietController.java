@@ -143,7 +143,8 @@ public class SanPhamChiTietController {
 
     @PutMapping("/setAnhMacDinh")
     public ResponseEntity<?> setAnhMacDinh(@RequestBody HinhAnhDTO hinhAnhDTO) {
-        HinhAnh check = hinhAnhRepository.findAnhMacDinh(hinhAnhDTO.getId_spct());
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hinhAnhDTO.getId_spct());
+        HinhAnh check = hinhAnhRepository.findAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
         if(check != null){
             check.setAnhMacDinh(false);
             hinhAnhRepository.save(check);
