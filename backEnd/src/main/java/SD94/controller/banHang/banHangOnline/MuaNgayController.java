@@ -1,11 +1,14 @@
 package SD94.controller.banHang.banHangOnline;
 
+import SD94.dto.HoaDonChiTietDTO;
 import SD94.dto.HoaDonDTO;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
+import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.service.service.MuaNgayService;
 
 import SD94.validator.SanPhamValidate;
@@ -27,6 +30,9 @@ public class MuaNgayController {
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
 
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
+
 
     @PostMapping("/check-out")
     public ResponseEntity<?> muaNgayCheckOut(@RequestBody SanPhamDTO dto) {
@@ -47,9 +53,29 @@ public class MuaNgayController {
     }
 
     @GetMapping("/getHoaDonChiTiet/{id}")
-    public List<HoaDonChiTiet> getHoaDonChiTiet(@PathVariable("id") long id_HoaDon) {
+    public ResponseEntity<?> getHoaDonChiTiet(@PathVariable("id") long id_HoaDon) {
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(id_HoaDon);
-        return hoaDonChiTiets;
+        List<HoaDonChiTietDTO> dto = new ArrayList<>();
+        for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
+            String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+
+            HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
+            hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
+            hoaDonChiTietDTO.setIdProduct(sanPhamChiTiet.getSanPham().getId());
+            hoaDonChiTietDTO.setIdColor(sanPhamChiTiet.getMauSac().getId());
+            hoaDonChiTietDTO.setIdSize(sanPhamChiTiet.getKichCo().getId());
+            hoaDonChiTietDTO.setSoLuong(hoaDonChiTiet.getSoLuong());
+            hoaDonChiTietDTO.setDonGia(hoaDonChiTiet.getDonGia());
+            hoaDonChiTietDTO.setThanhTien(hoaDonChiTiet.getThanhTien());
+            hoaDonChiTietDTO.setHoaDon(hoaDon);
+            hoaDonChiTietDTO.setSanPhamChiTiet(sanPhamChiTiet);
+            hoaDonChiTietDTO.setAnhSanPham(anh_san_pham);
+
+            dto.add(hoaDonChiTietDTO);
+        }
+        return ResponseEntity.ok().body(dto);
     }
 
     @GetMapping("/check-out")

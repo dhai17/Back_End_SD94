@@ -13,6 +13,7 @@ import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;
+import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.KichCoRepository;
 import SD94.repository.sanPham.MauSacRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
@@ -51,6 +52,9 @@ public class MuaNgayServiceImpl implements MuaNgayService {
 
     @Autowired
     HoaDonDatHangService hoaDonDatHangService;
+
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
 
     private Long idBill;
 

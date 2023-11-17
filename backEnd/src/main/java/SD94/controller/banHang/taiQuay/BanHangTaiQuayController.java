@@ -5,10 +5,12 @@ import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.khachHang.KhachHang;
 import SD94.entity.khuyenMai.KhuyenMai;
+import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;
+import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.service.service.BanHangTaiQuayService;
 import SD94.service.service.InHoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class BanHangTaiQuayController {
     @Autowired
     KhuyenMaiRepository khuyenMaiRepository;
 
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
+
     @GetMapping("/danhSachHoaDon")
     public List<HoaDon> danhSachHoaDonCho() {
         List<HoaDon> hoaDonList = hoaDonRepository.getDanhSachHoaDonCho();
@@ -45,9 +50,29 @@ public class BanHangTaiQuayController {
     }
 
     @GetMapping("/getHoaDonChitiet/{id}")
-    public List<HoaDonChiTiet> getHoaDonChiTiet(@PathVariable("id") long id) {
+    public ResponseEntity<?> getHoaDonChiTiet(@PathVariable("id") long id) {
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(id);
-        return hoaDonChiTiets;
+        List<HoaDonChiTietDTO> dto = new ArrayList<>();
+        for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
+            String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+
+            HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
+            hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
+            hoaDonChiTietDTO.setIdProduct(sanPhamChiTiet.getSanPham().getId());
+            hoaDonChiTietDTO.setIdColor(sanPhamChiTiet.getMauSac().getId());
+            hoaDonChiTietDTO.setIdSize(sanPhamChiTiet.getKichCo().getId());
+            hoaDonChiTietDTO.setSoLuong(hoaDonChiTiet.getSoLuong());
+            hoaDonChiTietDTO.setDonGia(hoaDonChiTiet.getDonGia());
+            hoaDonChiTietDTO.setThanhTien(hoaDonChiTiet.getThanhTien());
+            hoaDonChiTietDTO.setHoaDon(hoaDon);
+            hoaDonChiTietDTO.setSanPhamChiTiet(sanPhamChiTiet);
+            hoaDonChiTietDTO.setAnhSanPham(anh_san_pham);
+
+            dto.add(hoaDonChiTietDTO);
+        }
+        return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping("/taoHoaDon")
