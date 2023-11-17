@@ -1,6 +1,7 @@
 package SD94.service.impl;
 
 import SD94.dto.GioHangDTO;
+import SD94.dto.HoaDonChiTietDTO;
 import SD94.dto.HoaDonDTO;
 import SD94.entity.gioHang.GioHang;
 import SD94.entity.gioHang.GioHangChiTiet;
@@ -17,6 +18,7 @@ import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;
+import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.BanHangOnlineService;
 import SD94.service.service.HoaDonDatHangService;
@@ -64,6 +66,9 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
     @Autowired
     MailService mailService;
 
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
+
     private Long idBill;
 
 
@@ -103,9 +108,29 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
     }
 
     @Override
-    public List<HoaDonChiTiet> getHoaDonChiTiet(long id_hoa_don) {
+    public ResponseEntity<?> getHoaDonChiTiet(long id_hoa_don) {
         List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(id_hoa_don);
-        return hoaDonChiTiets;
+        List<HoaDonChiTietDTO> dto = new ArrayList<>();
+        for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
+            String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+
+            HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
+            hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
+            hoaDonChiTietDTO.setIdProduct(sanPhamChiTiet.getSanPham().getId());
+            hoaDonChiTietDTO.setIdColor(sanPhamChiTiet.getMauSac().getId());
+            hoaDonChiTietDTO.setIdSize(sanPhamChiTiet.getKichCo().getId());
+            hoaDonChiTietDTO.setSoLuong(hoaDonChiTiet.getSoLuong());
+            hoaDonChiTietDTO.setDonGia(hoaDonChiTiet.getDonGia());
+            hoaDonChiTietDTO.setThanhTien(hoaDonChiTiet.getThanhTien());
+            hoaDonChiTietDTO.setHoaDon(hoaDon);
+            hoaDonChiTietDTO.setSanPhamChiTiet(sanPhamChiTiet);
+            hoaDonChiTietDTO.setAnhSanPham(anh_san_pham);
+
+            dto.add(hoaDonChiTietDTO);
+        }
+        return ResponseEntity.ok().body(dto);
     }
 
     @Override

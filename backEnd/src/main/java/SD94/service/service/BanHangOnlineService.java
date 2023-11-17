@@ -15,7 +15,7 @@ public interface BanHangOnlineService {
 
     ResponseEntity<HoaDon> getHoaDon(long id_hoa_don);
 
-    List<HoaDonChiTiet> getHoaDonChiTiet(long id_hoa_don);
+    ResponseEntity<?> getHoaDonChiTiet(long id_hoa_don);
 
     ResponseEntity<HoaDon> getBill();
 

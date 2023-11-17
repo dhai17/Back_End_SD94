@@ -36,7 +36,7 @@ public class BanHangOnlineController {
     }
 
     @GetMapping("/getHoaDonChiTiet/{id}")
-    public List<HoaDonChiTiet> getHoaDonChiTiet(@PathVariable("id") long id_HoaDon) {
+    public ResponseEntity<?> getHoaDonChiTiet(@PathVariable("id") long id_HoaDon) {
         return banHangOnlineService.getHoaDonChiTiet(id_HoaDon);
     }
 
