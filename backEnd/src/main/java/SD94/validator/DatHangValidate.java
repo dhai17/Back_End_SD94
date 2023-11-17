@@ -21,7 +21,7 @@ public class DatHangValidate {
         Null_nguoiTao,
     }
 
-    public static ResponseEntity<?> datHang(HoaDonDTO hoaDonDTO) {
+    public static ResponseEntity<?> datHangcheckout(HoaDonDTO hoaDonDTO) {
         Map<String, String> errors = new HashMap<>();
         checkNguoiTao(hoaDonDTO.getNguoiTao(), errors);
         checksoDienThoai(hoaDonDTO.getSoDienThoai(), errors);
