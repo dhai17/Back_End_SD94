@@ -27,6 +27,12 @@ public class SanPhamController {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping("/danhSachSpAnh")
+    public ResponseEntity<List<SanPham>> getSPAnh() {
+        List<SanPham> list = sanPhamRepository.findAllSpAnh();
+        return ResponseEntity.ok().body(list);
+    }
+
     @GetMapping("/ChiTietSanPham")
     public List<Object> chiTietSanPham(@RequestParam long id_SanPham) {
         return sanPhamService.chiTietSanPham(id_SanPham);

@@ -3,6 +3,7 @@ package SD94.repository.sanPham;
 import SD94.entity.sanPham.SanPham;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -13,6 +14,11 @@ import java.util.Optional;
 public interface SanPhamRepository extends JpaRepository<SanPham, Long> {
     @Query(value = "SELECT * FROM san_pham WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)
     List<SanPham> findAll();
+
+    @Query(value = "select * from san_pham_chi_tiet pd\n" +
+            "join hinh_anh ha on pd.id = ha.id_product\n" +
+            "where ha.anh_mac_dinh = false;", nativeQuery = true)
+    List<SanPham> findAllSpAnh();
 
     @Query(value = "select * from san_pham where id = ? and is_deleted = false", nativeQuery = true)
     SanPham findByID(Long id);
