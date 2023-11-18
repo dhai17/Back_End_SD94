@@ -4,11 +4,9 @@ import SD94.dto.HinhAnhDTO;
 import SD94.dto.HoaDonChiTietDTO;
 import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.KichCo;
+import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
-import SD94.repository.sanPham.HinhAnhRepository;
-import SD94.repository.sanPham.KichCoRepository;
-import SD94.repository.sanPham.MauSacRepository;
-import SD94.repository.sanPham.SanPhamChiTietRepository;
+import SD94.repository.sanPham.*;
 import SD94.service.service.SanPhamChiTietService;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +39,9 @@ public class SanPhamChiTietController {
 
     @Autowired
     SanPhamChiTietRepository sanPhamChiTietRepository;
+
+    @Autowired
+    SanPhamRepository sanPhamRepository;
 
     @Autowired
     HinhAnhRepository hinhAnhRepository;
