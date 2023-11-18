@@ -27,6 +27,8 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Long> {
 
     @Query(value = "select * from hoa_don where loai_hoa_don = 1 and trang_thai_id = 6 order by id desc", nativeQuery = true)
     List<HoaDon> getDanhSachHoaDonCho();
+    @Query(value = "SELECT * FROM hoa_don WHERE is_deleted = false and loai_hoa_don = ?  ORDER BY id DESC", nativeQuery = true)
+    List<HoaDon> findHoaDonByLoai(int loai_hoa_don);
 
 }
 
