@@ -52,7 +52,6 @@ public class SanPhamCustomerController {
 
             sanPhamDTOList.add(sanPhamDTO);
         }
-
         return ResponseEntity.ok().body(sanPhamDTOList);
     }
 

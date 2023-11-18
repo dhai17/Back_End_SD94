@@ -11,6 +11,8 @@ import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.service.service.MuaNgayService;
 
+import SD94.validator.DatHangCheckoutValidate;
+import SD94.validator.DatHangValidate;
 import SD94.validator.SanPhamValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -90,6 +92,11 @@ public class MuaNgayController {
 
     @PostMapping("/datHang")
     public ResponseEntity datHang(@RequestBody HoaDonDTO dto) {
+        ResponseEntity<?> response = DatHangValidate.datHangcheck(dto);
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return response;
+        } else {
             return muaNgayService.datHang(dto);
         }
+    }
 }
