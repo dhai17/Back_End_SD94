@@ -90,8 +90,6 @@ public class MuaNgayController {
 
     @PostMapping("/datHang")
     public ResponseEntity datHang(@RequestBody HoaDonDTO dto) {
-        return muaNgayService.datHang(dto);
-
-    }
-
+            return muaNgayService.datHang(dto);
+        }
 }
