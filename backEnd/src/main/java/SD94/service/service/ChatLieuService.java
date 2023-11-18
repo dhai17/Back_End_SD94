@@ -15,7 +15,7 @@ public interface ChatLieuService {
 
     ResponseEntity<List<ChatLieu>> deleteProductMaterial(Long id);
 
-    ResponseEntity<ChatLieu> saveCreate(ChatLieu chatLieuCreate);
+    ResponseEntity<?> saveCreate(ChatLieu chatLieuCreate);
 
     List<ChatLieu> searchAllProductMaterial(String search);
 

@@ -18,7 +18,7 @@ import java.util.Optional;
 public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Autowired
-    ChatLieuRepository repository;
+    ChatLieuRepository  repository;
 
     @Override
     public List<ChatLieu> findAllProductMaterial() {
@@ -72,7 +72,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     }
 
     @Override
-    public ResponseEntity<ChatLieu> saveCreate(ChatLieu chatLieuCreate) {
+    public ResponseEntity<?> saveCreate(ChatLieu chatLieuCreate) {
         String errorMessage;
         Message errorResponse;
 
@@ -86,7 +86,8 @@ public class ChatLieuServiceImpl implements ChatLieuService {
             ChatLieu chatLieu = new ChatLieu();
             chatLieu.setChatLieu(chatLieuCreate.getChatLieu());
             repository.save(chatLieu);
-            return ResponseEntity.ok(chatLieu);
+            List<ChatLieu> chatLieus = repository.findAll();
+            return ResponseEntity.ok().body(chatLieus);
         } catch (Exception e){
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
