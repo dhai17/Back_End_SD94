@@ -33,4 +33,5 @@ public interface HoaDonDatHangService {
     ResponseEntity<?> CTDaGiaoHang(long id_hoa_don);
 
     ResponseEntity<?> CTDaHuy(long id_hoa_don);
+    ResponseEntity<?> TaiQuay(long id_hoa_don);
 }
