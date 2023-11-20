@@ -6,6 +6,7 @@ import SD94.entity.khachHang.KhachHang;
 import SD94.entity.nhanVien.NhanVien;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.service.service.HoaDonDatHangService;
+import SD94.service.service.InHoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,8 @@ public class ChoXacNhanController {
 
     @Autowired
     NhanVienRepository nhanVienRepository;
+    @Autowired
+    InHoaDonService inHoaDonService;
 
     @GetMapping("/danhSach")
     public List<HoaDon> listBill1() {
@@ -79,4 +82,9 @@ public class ChoXacNhanController {
     public List<HoaDon> searchDateBill1(@PathVariable("searchDate") String searchDate) {
         return hoaDonDatHangService.searchDateBill(1, searchDate);
     }
+    @GetMapping("/inHoaDon/{id}")
+    public ResponseEntity<byte[]> inHoaDon(@PathVariable("id") long id) {
+        return inHoaDonService.hoaDonDatHangPdf(id);
+    }
+
 }
