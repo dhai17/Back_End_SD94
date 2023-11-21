@@ -59,7 +59,6 @@ public class SanPhamDTO {
 
     private Long id_hoaDon;
 
-
     private Integer soLuongHienCo;
 
     private Long anh_id;
