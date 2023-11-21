@@ -4,13 +4,16 @@ import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.khachHang.KhachHang;
 import SD94.entity.nhanVien.NhanVien;
+import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.service.service.HoaDonDatHangService;
 import SD94.service.service.InHoaDonService;
+import SD94.service.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
 
@@ -20,11 +23,15 @@ import java.util.Map;
 public class ChoXacNhanController {
     @Autowired
     HoaDonDatHangService hoaDonDatHangService;
+    @Autowired
+    HoaDonRepository hoaDonRepository;
 
     @Autowired
     NhanVienRepository nhanVienRepository;
     @Autowired
     InHoaDonService inHoaDonService;
+    @Autowired
+    MailService mailService;
 
     @GetMapping("/danhSach")
     public List<HoaDon> listBill1() {
@@ -32,9 +39,11 @@ public class ChoXacNhanController {
     }
 
     @PostMapping("/capNhatTrangThai/daXacNhan")
-    public List<HoaDon> updateStatus2(@RequestBody HoaDonDTO hoaDonDTO) {
+    public List<HoaDon> updateStatus2(@RequestBody HoaDonDTO hoaDonDTO) throws MessagingException {
         Long id = hoaDonDTO.getId();
         String email = hoaDonDTO.getEmail_user();
+        HoaDon hoaDon = hoaDonRepository.findByID(id);
+        mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(),hoaDon);
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
         hoaDonDatHangService.capNhatTrangThai(2, id);
         hoaDonDatHangService.createTimeLine("Xác nhận đơn", 2, id, nhanVien.getHoTen());
@@ -84,7 +93,7 @@ public class ChoXacNhanController {
     }
     @GetMapping("/inHoaDon/{id}")
     public ResponseEntity<byte[]> inHoaDon(@PathVariable("id") long id) {
-        return inHoaDonService.hoaDonDatHangPdf(id);
+        return inHoaDonService.hoaDonDatHangPdf(id,"Đã thanh toán trước");
     }
 
 }

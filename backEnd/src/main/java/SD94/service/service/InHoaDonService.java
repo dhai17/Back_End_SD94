@@ -227,7 +227,7 @@ public class InHoaDonService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<byte[]> hoaDonDatHangPdf(Long hoaDonId) {
+    public ResponseEntity<byte[]> hoaDonDatHangPdf(Long hoaDonId, String tinhTrangThanhToan) {
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDonId);
         Optional<HoaDon> optHoaDon = hoaDonRepository.findById(hoaDonId);
         if (optHoaDon.isPresent()) {
@@ -367,7 +367,7 @@ public class InHoaDonService {
             htmlContentBuilder.append("<p>Khách hàng: ").append(hoaDon.getNguoiNhan()).append("</p>");
             htmlContentBuilder.append("<p>Số điện thoại khách hàng: ").append(hoaDon.getSDTNguoiNhan()).append("</p>");
             htmlContentBuilder.append("<p>Địa chỉ: ").append(hoaDon.getDiaChiGiaoHang()).append("</p>");
-            htmlContentBuilder.append("<p>Trạng thái đơn: Thanh toán khi nhận hàng</p>");
+            htmlContentBuilder.append("<p>Trạng thái đơn: ").append(tinhTrangThanhToan).append("</p>");
 
 
             String formattedTongTienDonHang = numberFormat.format(hoaDon.getTongTienDonHang());
@@ -403,7 +403,7 @@ public class InHoaDonService {
             byte[] pdfBytes = createPdfFromHtml(htmlContentBuilder);
 
             // Lưu file PDF vào thư mục dự án
-            String filePath = "D:\\DATN_SD94\\Back_End_SD94\\backEnd\\hoa_don_" + hoaDonId + ".pdf";
+            String filePath = "D:\\DATN_SD94\\Back_End_SD94\\backEnd\\hoa_don\\hoa_don_" + hoaDonId + ".pdf";
             try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
                 fileOutputStream.write(pdfBytes);
             } catch (IOException e) {
