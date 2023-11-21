@@ -24,7 +24,7 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, Long> {
     @Query(value = "select * from khach_hang where ho_ten = ?1 OR so_dien_thoai = ?1 OR email = ?1 OR dia_chi = ?1", nativeQuery = true)
     List<KhachHang> findCustomerAll(String input);
 
-    @Query(value = "select * from khach_hang where is_deleted = false and date(ngaySinh) = ?", nativeQuery = true)
+    @Query(value = "select * from khach_hang where is_deleted = false and date(ngay_sinh) = ?", nativeQuery = true)
     List<KhachHang> findCustomerDate(LocalDate ngaySinh);
 
     @Query(value = "select * from khach_hang where email = ?", nativeQuery = true)
