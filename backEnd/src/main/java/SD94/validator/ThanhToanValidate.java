@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DatHangValidate {
+public class ThanhToanValidate {
     public enum ErrorCode {
         Null_email,
 
@@ -20,7 +20,8 @@ public class DatHangValidate {
 
         Null_nguoiTao,
     }
-    public static ResponseEntity<?> datHang(HoaDonDTO hoaDonDTO) {
+
+    public static ResponseEntity<?> thanhtoan(HoaDonDTO hoaDonDTO) {
         Map<String, String> errors = new HashMap<>();
         checkNguoiTao(hoaDonDTO.getNguoiTao(), errors);
         checksoDienThoai(hoaDonDTO.getSoDienThoai(), errors);
@@ -32,6 +33,7 @@ public class DatHangValidate {
 
         return ResponseEntity.badRequest().body(errors);
     }
+
     public static void checkNguoiTao(String nguoiTao, Map<String, String> errors) {
         if (nguoiTao == null || nguoiTao == "") {
             errors.put(DatHangCheckoutValidate.ErrorCode.Null_nguoiTao.name(), "Bạn chưa nhập họ tên");
