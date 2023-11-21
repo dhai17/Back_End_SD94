@@ -24,10 +24,12 @@ import java.util.regex.Pattern;
 
 @Service
 public class NhanVienServiceImpl implements NhanVienService {
+
     @Autowired
     NhanVienRepository staffRepository;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
     @Override
@@ -92,7 +94,7 @@ public class NhanVienServiceImpl implements NhanVienService {
             staff.setEmail(staffCreate.getEmail());
             staff.setDiaChi(staffCreate.getDiaChi());
             staff.setNgaySinh(staffCreate.getNgaySinh());
-            staff.setMatKhau("123123");
+            staff.setMatKhau(passwordEncoder.encode(staffCreate.getMatKhau()));
             staff.setSoDienThoai(staffCreate.getSoDienThoai());
             staffRepository.save(staff);
             return ResponseEntity.ok(staff);
@@ -155,7 +157,7 @@ public class NhanVienServiceImpl implements NhanVienService {
                 staff.setEmail(staffEdit.getEmail());
                 staff.setDiaChi(staffEdit.getDiaChi());
                 staff.setNgaySinh(staffEdit.getNgaySinh());
-//                staff.setMatKhau(bCryptPasswordEncoder.encode(staffEdit.getMatKhau()));
+              staff.setMatKhau(staffEdit.getMatKhau());
                 staff.setSoDienThoai(staffEdit.getSoDienThoai());
                 staff.setGioiTinh(staffEdit.getGioiTinh());
                 staffRepository.save(staff);

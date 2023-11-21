@@ -1,5 +1,6 @@
 package SD94.controller.admin.nhanVien;
 
+import SD94.entity.khuyenMai.KhuyenMai;
 import SD94.entity.nhanVien.NhanVien;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.service.service.NhanVienService;
@@ -36,8 +37,9 @@ public class NhanVienController {
         return nhanVienService.createStaff(staffCreate);
     }
 
-    @DeleteMapping("/xoa/{id}")
-    public ResponseEntity<List<NhanVien>> deleteStaff(@PathVariable("id") Long id) {
+    @PutMapping("/xoa")
+    public ResponseEntity<List<NhanVien>> deleteStaff(@RequestBody NhanVien nhanVien) {
+        Long id = nhanVien.getId();
         return nhanVienService.deleteStaff(id);
     }
 
