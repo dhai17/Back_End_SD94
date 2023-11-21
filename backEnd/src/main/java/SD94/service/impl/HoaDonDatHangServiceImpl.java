@@ -16,10 +16,13 @@ import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.service.service.HoaDonDatHangService;
+import SD94.service.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import javax.mail.MessagingException;
 import java.time.LocalDate;
 
 import java.util.*;
@@ -44,6 +47,9 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     @Autowired
     HinhAnhRepository hinhAnhRepository;
 
+    @Autowired
+    MailService mailService;
+
     @Override
     public List<HoaDon> findHoaDonByTrangThai(long trang_thai_id) {
         List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByTrangThai(trang_thai_id);
@@ -58,6 +64,11 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             TrangThai trangThai = optionalTrangThai.get();
             hoaDon.setTrangThai(trangThai);
             hoaDonRepository.save(hoaDon);
+        }
+        try {
+            mailService.guiMailKhiThaoTac(hoaDon.getEmailNguoiNhan(), hoaDon);
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
         return ResponseEntity.ok().build();
     }

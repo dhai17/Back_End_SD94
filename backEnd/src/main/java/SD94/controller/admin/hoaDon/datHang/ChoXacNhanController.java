@@ -24,9 +24,6 @@ public class ChoXacNhanController {
     @Autowired
     HoaDonDatHangService hoaDonDatHangService;
     @Autowired
-    HoaDonRepository hoaDonRepository;
-
-    @Autowired
     NhanVienRepository nhanVienRepository;
     @Autowired
     InHoaDonService inHoaDonService;
@@ -42,8 +39,6 @@ public class ChoXacNhanController {
     public List<HoaDon> updateStatus2(@RequestBody HoaDonDTO hoaDonDTO) throws MessagingException {
         Long id = hoaDonDTO.getId();
         String email = hoaDonDTO.getEmail_user();
-        HoaDon hoaDon = hoaDonRepository.findByID(id);
-        mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(),hoaDon);
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
         hoaDonDatHangService.capNhatTrangThai(2, id);
         hoaDonDatHangService.createTimeLine("Xác nhận đơn", 2, id, nhanVien.getHoTen());
