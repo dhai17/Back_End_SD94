@@ -55,12 +55,12 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             Optional<SanPhamChiTiet> optional = repository.findById(sanPhamChiTietDTO.getId());
             if (optional.isPresent()){
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
-                sanPhamChiTiet.setSoLuong(sanPhamChiTietDTO.getQuantity());
+                sanPhamChiTiet.setSoLuong(sanPhamChiTietDTO.getSoLuong());
                 sanPhamChiTiet.setTrangThai(0);
-                Long id = sanPhamChiTietDTO.getKichCo_id();
-                sanPhamChiTiet.setKichCo(kichCoRepository.findByID(id));
-                Long idMs = sanPhamChiTietDTO.getMauSac_id();
-                sanPhamChiTiet.setMauSac(mauSacRepository.findByID(idMs));
+                Long idKichCo = sanPhamChiTietDTO.getKichCo_id();
+                sanPhamChiTiet.setKichCo(kichCoRepository.findById(idKichCo).orElse(null));
+                Long idMauSac = sanPhamChiTietDTO.getMauSac_id();
+                sanPhamChiTiet.setMauSac(mauSacRepository.findById(idMauSac).orElse(null));
                 sanPhamChiTiet.setSanPham(sanPhamChiTietDTO.getSanPham());
                 repository.save(sanPhamChiTiet);
                 return ResponseEntity.ok(sanPhamChiTiet);

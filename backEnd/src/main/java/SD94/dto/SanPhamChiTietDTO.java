@@ -12,7 +12,7 @@ public class SanPhamChiTietDTO {
 
     private Long id;
 
-    private Integer quantity;
+    private Integer soLuong;
 
     private Integer status;
 

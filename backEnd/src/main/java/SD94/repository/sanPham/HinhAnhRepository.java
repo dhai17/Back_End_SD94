@@ -14,9 +14,7 @@ import java.util.Optional;
 @Repository
 public interface HinhAnhRepository extends JpaRepository<HinhAnh, Long> {
 
-    @Query(value = "select * from hinh_anh ha join san_pham_chi_tiet spct on ha.id_product = spct.id\n" +
-            "         join san_pham sp on spct.san_pham_id = sp.id\n" +
-            "         where anh_mac_dinh = true and sp.id =:idsp and ha.is_deleted = false limit 1", nativeQuery = true)
+    @Query(value = "select * from hinh_anh where id_product = ? and anh_mac_dinh = true limit 1;", nativeQuery = true)
     HinhAnh getFirstAnhByIdSanPham(@Param("idsp")Long idsp);
 
     @Query(value = "SELECT * FROM hinh_anh WHERE is_deleted = false ORDER BY id DESC", nativeQuery = true)

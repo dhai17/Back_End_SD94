@@ -36,11 +36,11 @@ public class SanPhamDTO {
 
     private List<Long> mauSac;
 
-    private long chatLieu_id;
+    private Long  chatLieu_id;
 
-    private long loaiSanPham_id;
+    private Long  loaiSanPham_id;
 
-    private long nhaSanXuat_id;
+    private Long  nhaSanXuat_id;
 
     //Dùng để add to cart bên phía customer
     private String maMauSac;
