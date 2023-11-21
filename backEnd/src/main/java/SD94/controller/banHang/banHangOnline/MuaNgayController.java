@@ -9,6 +9,9 @@ import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
+import SD94.repository.sanPham.KichCoRepository;
+import SD94.repository.sanPham.MauSacRepository;
+import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.MuaNgayService;
 
 import SD94.validator.SanPhamValidate;
@@ -33,15 +36,14 @@ public class MuaNgayController {
     @Autowired
     HinhAnhRepository hinhAnhRepository;
 
-
     @PostMapping("/check-out")
     public ResponseEntity<?> muaNgayCheckOut(@RequestBody SanPhamDTO dto) {
         ResponseEntity<?> response = SanPhamValidate.checkOut(dto);
         if (!response.getStatusCode().is2xxSuccessful()) {
             return response;
         } else {
-            Long id_hoaDon = muaNgayService.muaNgayCheckOut(dto);
-            return ResponseEntity.ok(id_hoaDon);
+//            Long id_hoaDon = muaNgayService.muaNgayCheckOut(dto);
+            return muaNgayService.muaNgayCheckOut(dto);
         }
     }
 

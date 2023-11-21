@@ -61,7 +61,7 @@ public class MuaNgayServiceImpl implements MuaNgayService {
 
     @Transactional
     @Override
-    public Long muaNgayCheckOut(SanPhamDTO dto) {
+    public ResponseEntity<?> muaNgayCheckOut(SanPhamDTO dto) {
         MauSac mauSac = mauSacRepository.findByMaMauSac(dto.getMaMauSac());
         KichCo kichCo = kichCoRepository.findByKichCo(dto.getKichCoDaChon());
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.getSanPhamChiTiet(mauSac.getId(), kichCo.getId(), dto.getSan_pham_id());
@@ -82,7 +82,10 @@ public class MuaNgayServiceImpl implements MuaNgayService {
         hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
         hoaDonChiTietRepository.save(hoaDonChiTiet);
         idBill = hoaDon.getId();
-        return hoaDon.getId();
+        Map<String, Object> response = new HashMap<>();
+        response.put("id_hoa_don", hoaDon.getId());
+        response.put("san_pham_chi_tiet", sanPhamChiTiet);
+        return ResponseEntity.ok(response);
     }
 
     @Override

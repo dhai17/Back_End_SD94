@@ -1,6 +1,9 @@
 package SD94.validator;
 
 import SD94.dto.SanPhamDTO;
+import SD94.repository.sanPham.KichCoRepository;
+import SD94.repository.sanPham.MauSacRepository;
+import SD94.repository.sanPham.SanPhamChiTietRepository;
 import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
