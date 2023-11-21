@@ -4,12 +4,16 @@ import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.khachHang.KhachHang;
 import SD94.entity.nhanVien.NhanVien;
+import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.service.service.HoaDonDatHangService;
+import SD94.service.service.InHoaDonService;
+import SD94.service.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,9 +23,12 @@ import java.util.Map;
 public class ChoXacNhanController {
     @Autowired
     HoaDonDatHangService hoaDonDatHangService;
-
     @Autowired
     NhanVienRepository nhanVienRepository;
+    @Autowired
+    InHoaDonService inHoaDonService;
+    @Autowired
+    MailService mailService;
 
     @GetMapping("/danhSach")
     public List<HoaDon> listBill1() {
@@ -29,7 +36,7 @@ public class ChoXacNhanController {
     }
 
     @PostMapping("/capNhatTrangThai/daXacNhan")
-    public List<HoaDon> updateStatus2(@RequestBody HoaDonDTO hoaDonDTO) {
+    public List<HoaDon> updateStatus2(@RequestBody HoaDonDTO hoaDonDTO) throws MessagingException {
         Long id = hoaDonDTO.getId();
         String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
@@ -79,4 +86,9 @@ public class ChoXacNhanController {
     public List<HoaDon> searchDateBill1(@PathVariable("searchDate") String searchDate) {
         return hoaDonDatHangService.searchDateBill(1, searchDate);
     }
+    @GetMapping("/inHoaDon/{id}")
+    public ResponseEntity<byte[]> inHoaDon(@PathVariable("id") long id) {
+        return inHoaDonService.hoaDonDatHangPdf(id,"Đã thanh toán trước");
+    }
+
 }

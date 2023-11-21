@@ -250,13 +250,26 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
     @Override
     public ResponseEntity<?> xoaHDCT(HoaDonChiTietDTO dto) {
         Optional<HoaDonChiTiet> optionalHoaDonChiTiet = hoaDonChiTietRepository.findById(dto.getId());
+
         if(optionalHoaDonChiTiet.isPresent()){
             HoaDonChiTiet hoaDonChiTiet = optionalHoaDonChiTiet.get();
             hoaDonChiTiet.setDeleted(true);
             hoaDonChiTietRepository.save(hoaDonChiTiet);
+
+            HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
+            int tongTienHoaDon = 0;
+            List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+            for(HoaDonChiTiet hoaDonChiTiet1: hoaDonChiTiets){
+                tongTienHoaDon += hoaDonChiTiet1.getThanhTien();
+            }
+
+            hoaDon.setTongTienHoaDon(tongTienHoaDon);
+            hoaDon.setTongTienDonHang(tongTienHoaDon);
+            hoaDonRepository.save(hoaDon);
+
+            return ResponseEntity.ok().body(hoaDon);
+
         }
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Xóa thành công");
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.badRequest().build();
     }
 }

@@ -52,7 +52,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             if (optional.isPresent()){
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
                 sanPhamChiTiet.setSoLuong(sanPhamChiTietUpdate.getSoLuong());
-                sanPhamChiTiet.setTrangThai(0);
+                sanPhamChiTiet.setTrangThai(true);
                 sanPhamChiTiet.setSanPham(sanPhamChiTietUpdate.getSanPham());
                 sanPhamChiTiet.setMauSac(sanPhamChiTietUpdate.getMauSac());
                 sanPhamChiTiet.setKichCo(sanPhamChiTietUpdate.getKichCo());
