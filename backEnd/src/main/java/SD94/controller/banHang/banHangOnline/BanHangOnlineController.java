@@ -8,6 +8,7 @@ import SD94.entity.hoaDon.HoaDon;
 import SD94.service.service.BanHangOnlineService;
 
 import SD94.validator.DatHangCheckoutValidate;
+import SD94.validator.GioHangValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,13 @@ public class BanHangOnlineController {
 
     @PostMapping("/checkOut")
     public ResponseEntity<?> checkout(@RequestBody GioHangDTO dto) {
-        Long id_hoaDon = banHangOnlineService.checkout(dto);
-        return ResponseEntity.ok(id_hoaDon);
+        ResponseEntity<?> response = GioHangValidate.checkout(dto);
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return response;
+        } else {
+            Long id_hoaDon = banHangOnlineService.checkout(dto);
+            return ResponseEntity.ok(id_hoaDon);
+        }
     }
 
     @GetMapping("/getHoaDon/{id}")
