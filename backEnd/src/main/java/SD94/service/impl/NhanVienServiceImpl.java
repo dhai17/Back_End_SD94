@@ -83,7 +83,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         Date dateOfBirth = staffCreate.getNgaySinh();
 
         if (dateOfBirth.after(dateC)) {
-            errorMessage = "Ngay sinh khong duoc vuot qua thoi gian hien tai";
+            errorMessage = "Ngày sinh không được vượt qua thời gian hiện tại";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
         }
@@ -122,7 +122,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         }
 
         //SDT
-        if (staffEdit.getSoDienThoai().length() !=10) {
+        if (staffEdit.getSoDienThoai().length() != 10) {
             errorMessage = "Số điện thoại phải đủ 10 số";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
@@ -157,7 +157,7 @@ public class NhanVienServiceImpl implements NhanVienService {
                 staff.setEmail(staffEdit.getEmail());
                 staff.setDiaChi(staffEdit.getDiaChi());
                 staff.setNgaySinh(staffEdit.getNgaySinh());
-              staff.setMatKhau(staffEdit.getMatKhau());
+                staff.setMatKhau(staffEdit.getMatKhau());
                 staff.setSoDienThoai(staffEdit.getSoDienThoai());
                 staff.setGioiTinh(staffEdit.getGioiTinh());
                 staffRepository.save(staff);
