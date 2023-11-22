@@ -19,12 +19,14 @@ import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.HoaDonDatHangService;
 import SD94.service.service.VnpayService;
+import SD94.validator.ThanhToanValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
@@ -62,20 +64,30 @@ public class VnpayController {
     HoaDonDTO dto = null;
 
     @PostMapping("/payment/create")
-    public ResponseEntity<VnpayDTO> createUrl(@RequestBody HoaDonDTO hoaDonDTO){
-        dto = hoaDonDTO;
-        return vnpayService.createPayment(hoaDonDTO);
+    public ResponseEntity<?> createUrl(@RequestBody HoaDonDTO hoaDonDTO) {
+        ResponseEntity<?> response = ThanhToanValidate.thanhtoan(hoaDonDTO);
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return response;
+        } else {
+            dto = hoaDonDTO;
+            return vnpayService.createPayment(hoaDonDTO);
+        }
     }
 
     @PostMapping("/payment/MuaNgay/create")
-    public ResponseEntity<VnpayDTO> MuaNgaycreateUrl(@RequestBody HoaDonDTO hoaDonDTO){
-        dto = hoaDonDTO;
-        return vnpayService.createPaymentMuaNgay(hoaDonDTO);
+    public ResponseEntity<?> MuaNgaycreateUrl(@RequestBody HoaDonDTO hoaDonDTO) {
+        ResponseEntity<?> response = ThanhToanValidate.thanhtoan(hoaDonDTO);
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return response;
+        } else {
+            dto = hoaDonDTO;
+            return vnpayService.createPaymentMuaNgay(hoaDonDTO);
+        }
     }
 
     @Transactional
     @RequestMapping("/payment/return")
-    public ResponseEntity<String> returnPayment(HttpServletRequest request){
+    public ResponseEntity<String> returnPayment(HttpServletRequest request) {
         int paymentStatus = VnpayConflig.orderReturn(request);
         HoaDon hoaDon = hoaDonRepository.findByID(dto.getId());
         KhachHang khachHang = khachHangRepository.findByEmail(dto.getEmail_user());
@@ -86,7 +98,7 @@ public class VnpayController {
             gioHangChiTietRepository.deleteGioHangChiTiet(hoaDonChiTiet.getSanPhamChiTiet().getId());
         }
 
-        for(GioHangChiTiet gioHangChiTiet: gioHangChiTiets){
+        for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
             sanPhamChiTietRepository.save(sanPhamChiTiet);
@@ -107,11 +119,11 @@ public class VnpayController {
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());
-        if(paymentStatus == 1){
+        if (paymentStatus == 1) {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Success.html"));
             return new ResponseEntity<>(headers, HttpStatus.FOUND);
-        }else {
+        } else {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Error.html"));
             return new ResponseEntity<>(headers, HttpStatus.FOUND);
@@ -120,7 +132,7 @@ public class VnpayController {
 
     @Transactional
     @RequestMapping("/payment/MuaNgay/return")
-    public ResponseEntity<String> returnPaymentMuaNgay(HttpServletRequest request){
+    public ResponseEntity<String> returnPaymentMuaNgay(HttpServletRequest request) {
         int paymentStatus = VnpayConflig.orderReturn(request);
         HoaDon hoaDon = hoaDonRepository.findByID(dto.getId());
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
@@ -145,11 +157,11 @@ public class VnpayController {
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), dto.getNguoiTao());
-        if(paymentStatus == 1){
+        if (paymentStatus == 1) {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Success.html"));
             return new ResponseEntity<>(headers, HttpStatus.FOUND);
-        }else {
+        } else {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Error.html"));
             return new ResponseEntity<>(headers, HttpStatus.FOUND);

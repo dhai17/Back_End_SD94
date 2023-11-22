@@ -4,7 +4,7 @@ import SD94.controller.message.Message;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
-import SD94.service.service.HinhAnhService;
+//import SD94.service.service.HinhAnhService;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -22,9 +22,9 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Autowired
     SanPhamRepository repository;
-
-    @Autowired
-    HinhAnhService hinhAnhService;
+//
+//    @Autowired
+//    HinhAnhService hinhAnhService;
 
     @Autowired
     ChatLieuRepository chatLieuRepository;
@@ -132,6 +132,7 @@ public class SanPhamServiceImpl implements SanPhamService {
                 sanPhamChiTiet.setSanPham(sanPham);
                 sanPhamChiTiet.setMauSac(mauSac);
                 sanPhamChiTiet.setKichCo(kichCo);
+                sanPhamChiTiet.setTrangThai(true);
                 sanPhamChiTiet.setSoLuong(sanPhamDTO.getSoLuong());
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
                 sanPhamChiTietList.add(sanPhamChiTiet);

@@ -1,37 +1,22 @@
 package SD94.controller.banHang.taiQuay;
 
 import SD94.dto.*;
-import SD94.entity.gioHang.GioHang;
-import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
-import SD94.entity.hoaDon.TrangThai;
 import SD94.entity.khachHang.KhachHang;
 import SD94.entity.khuyenMai.KhuyenMai;
-import SD94.entity.nhanVien.NhanVien;
-import SD94.entity.sanPham.KichCo;
-import SD94.entity.sanPham.MauSac;
-import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
-import SD94.repository.gioHang.GioHangRepository;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
-import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;
-import SD94.repository.nhanVien.NhanVienRepository;
-import SD94.repository.sanPham.KichCoRepository;
-import SD94.repository.sanPham.MauSacRepository;
-import SD94.repository.sanPham.SanPhamChiTietRepository;
-import SD94.repository.sanPham.SanPhamRepository;
+import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.service.service.BanHangTaiQuayService;
 import SD94.service.service.InHoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 @RestController
@@ -55,6 +40,9 @@ public class BanHangTaiQuayController {
     @Autowired
     KhuyenMaiRepository khuyenMaiRepository;
 
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
+
     @GetMapping("/danhSachHoaDon")
     public List<HoaDon> danhSachHoaDonCho() {
         List<HoaDon> hoaDonList = hoaDonRepository.getDanhSachHoaDonCho();
@@ -62,9 +50,29 @@ public class BanHangTaiQuayController {
     }
 
     @GetMapping("/getHoaDonChitiet/{id}")
-    public List<HoaDonChiTiet> getHoaDonChiTiet(@PathVariable("id") long id) {
+    public ResponseEntity<?> getHoaDonChiTiet(@PathVariable("id") long id) {
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(id);
-        return hoaDonChiTiets;
+        List<HoaDonChiTietDTO> dto = new ArrayList<>();
+        for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
+            String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+
+            HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
+            hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
+            hoaDonChiTietDTO.setIdProduct(sanPhamChiTiet.getSanPham().getId());
+            hoaDonChiTietDTO.setIdColor(sanPhamChiTiet.getMauSac().getId());
+            hoaDonChiTietDTO.setIdSize(sanPhamChiTiet.getKichCo().getId());
+            hoaDonChiTietDTO.setSoLuong(hoaDonChiTiet.getSoLuong());
+            hoaDonChiTietDTO.setDonGia(hoaDonChiTiet.getDonGia());
+            hoaDonChiTietDTO.setThanhTien(hoaDonChiTiet.getThanhTien());
+            hoaDonChiTietDTO.setHoaDon(hoaDon);
+            hoaDonChiTietDTO.setSanPhamChiTiet(sanPhamChiTiet);
+            hoaDonChiTietDTO.setAnhSanPham(anh_san_pham);
+
+            dto.add(hoaDonChiTietDTO);
+        }
+        return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping("/taoHoaDon")
@@ -87,7 +95,6 @@ public class BanHangTaiQuayController {
     public List<HoaDon> xoaHoaDon(@RequestBody HoaDonDTO hoaDonDTO) {
         return banHangTaiQuayService.xoaHoaDon(hoaDonDTO);
     }
-
 
     @GetMapping("/khachHang/list")
     public ResponseEntity<List<KhachHang>> listKhachHang() {

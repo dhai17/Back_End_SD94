@@ -1,20 +1,16 @@
 package SD94.controller.customer.sanPham;
 
-import SD94.dto.KichCoDTO;
-import SD94.dto.MauSacDTO;
-import SD94.dto.SPCTDTO;
-import SD94.entity.sanPham.KichCo;
-import SD94.entity.sanPham.MauSac;
-import SD94.entity.sanPham.SanPham;
-import SD94.repository.sanPham.KichCoRepository;
-import SD94.repository.sanPham.MauSacRepository;
-import SD94.repository.sanPham.SanPhamChiTietRepository;
-import SD94.repository.sanPham.SanPhamRepository;
+import SD94.dto.*;
+import SD94.entity.sanPham.*;
+import SD94.repository.sanPham.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/customer/sanPham")
@@ -32,12 +28,33 @@ public class SanPhamCustomerController {
     @Autowired
     MauSacRepository mauSacRepository;
 
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
+
     //Lay danh sach
     @GetMapping("/danhSach")
-    public List<SanPham> getSanPhamCustomer() {
-        List<SanPham> SanPham = sanPhamRepository.findAll();
-        return SanPham;
+    public ResponseEntity<?> getSanPhamCustomer() {
+        List<SanPham> sanPhamList = sanPhamRepository.findAll();
+        List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
+
+        for (SanPham pham : sanPhamList) {
+            SanPhamDTO sanPhamDTO = new SanPhamDTO();
+            sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
+            sanPhamDTO.setId(pham.getId());
+            sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
+            sanPhamDTO.setSan_pham_id(pham.getId());
+            sanPhamDTO.setTenSanPham(pham.getTenSanPham());
+            sanPhamDTO.setGia(pham.getGia());
+            sanPhamDTO.setChatLieu(pham.getChatLieu());
+
+            String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
+            sanPhamDTO.setAnh_san_pham(anhSanPham);
+
+            sanPhamDTOList.add(sanPhamDTO);
+        }
+        return ResponseEntity.ok().body(sanPhamDTOList);
     }
+
 
     //Loc san pham
     @GetMapping("/loc/gia")
@@ -94,9 +111,26 @@ public class SanPhamCustomerController {
         return ResponseEntity.ok().body(soLuong);
     }
 
-    @GetMapping("/getAnhMacDinh")
-    public String getAnhMacDinh(@RequestParam long id_sanPham) {
-        String tenAnh = sanPhamChiTietRepository.getAnhMacDinh(id_sanPham);
-        return tenAnh;
+    @GetMapping("/getAnhMacDinhSanPham/{id}")
+    public ResponseEntity<?> getAnhMacDinhSanPham(@PathVariable("id") long id_sanPham) {
+        String hinhAnhs = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(id_sanPham);
+        Map<String, String> respone = new HashMap<>();
+        respone.put("anhMacDinh", hinhAnhs);
+        return ResponseEntity.ok().body(respone);
+    }
+
+    @PostMapping("/getAnhByMauSac")
+    public ResponseEntity<?> getAnhMacDinhSanPham(@RequestBody HinhAnhDTO hinhAnhDTO) {
+        MauSac mauSac = mauSacRepository.findByMaMauSac(hinhAnhDTO.getMaMauSac());
+        String hinhAnhs = hinhAnhRepository.getAnhSPByMauSacAndSPID(hinhAnhDTO.getId_SP(), mauSac.getId());
+        Map<String, String> respone = new HashMap<>();
+        respone.put("anh", hinhAnhs);
+        return ResponseEntity.ok().body(respone);
+    }
+
+    @GetMapping("/getAnhSanPham/{id}")
+    public ResponseEntity<?> getAnhMacDinh(@PathVariable("id") long id_sanPham) {
+        List<HinhAnh> hinhAnhs = hinhAnhRepository.getHinhAnhByProductID(id_sanPham);
+        return ResponseEntity.ok().body(hinhAnhs);
     }
 }

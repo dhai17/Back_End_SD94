@@ -13,13 +13,12 @@ import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;
+import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.KichCoRepository;
 import SD94.repository.sanPham.MauSacRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.MuaNgayService;
 import SD94.service.service.HoaDonDatHangService;
-import SD94.validator.DataIsEmpty;
-import SD94.validator.SanPhamValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,12 +53,15 @@ public class MuaNgayServiceImpl implements MuaNgayService {
     @Autowired
     HoaDonDatHangService hoaDonDatHangService;
 
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
+
     private Long idBill;
 
 
     @Transactional
     @Override
-    public Long muaNgayCheckOut(SanPhamDTO dto) {
+    public ResponseEntity<?> muaNgayCheckOut(SanPhamDTO dto) {
         MauSac mauSac = mauSacRepository.findByMaMauSac(dto.getMaMauSac());
         KichCo kichCo = kichCoRepository.findByKichCo(dto.getKichCoDaChon());
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.getSanPhamChiTiet(mauSac.getId(), kichCo.getId(), dto.getSan_pham_id());
@@ -80,7 +82,10 @@ public class MuaNgayServiceImpl implements MuaNgayService {
         hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
         hoaDonChiTietRepository.save(hoaDonChiTiet);
         idBill = hoaDon.getId();
-        return hoaDon.getId();
+        Map<String, Object> response = new HashMap<>();
+        response.put("id_hoa_don", hoaDon.getId());
+        response.put("san_pham_chi_tiet", sanPhamChiTiet);
+        return ResponseEntity.ok(response);
     }
 
     @Override

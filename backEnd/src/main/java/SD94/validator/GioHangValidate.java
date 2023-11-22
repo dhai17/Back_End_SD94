@@ -1,16 +1,12 @@
 package SD94.validator;
 
-import SD94.dto.SanPhamDTO;
-import SD94.repository.sanPham.KichCoRepository;
-import SD94.repository.sanPham.MauSacRepository;
-import SD94.repository.sanPham.SanPhamChiTietRepository;
+import SD94.dto.GioHangDTO;
 import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SanPhamValidate {
-
+public class GioHangValidate {
     public enum ErrorCode {
         Null_maMauSac,
 
@@ -29,51 +25,46 @@ public class SanPhamValidate {
         Null_id_hoaDon,
 
         Null_soLuongHienCo
-
     }
 
-    //Mua ngay
-    public static ResponseEntity<?> checkOut(SanPhamDTO sanPhamDTO) {
-        Map<String, String> errors = new HashMap<>();
-        checkMaMauSac(sanPhamDTO.getMaMauSac(), errors);
-        checkKichCoDaChon(sanPhamDTO.getKichCoDaChon(), errors);
-        checkSanPhamID(sanPhamDTO.getSan_pham_id(), errors);
-        checkSoLuongHienCo(sanPhamDTO.getSoLuongHienCo(), errors);
-        checkSoLuongDaChon(sanPhamDTO.getSoLuong(), sanPhamDTO.getSoLuongHienCo(), errors);
+        public static ResponseEntity<?> addToCartCheck(GioHangDTO GioHangDTO) {
+            Map<String, String> errors = new HashMap<>();
+            checkMaMauSac(GioHangDTO.getMaMauSac(), errors);
+            checkKichCoDaChon(GioHangDTO.getKichCo(), errors);
+            checkSanPhamID(GioHangDTO.getSan_pham_id(), errors);
+            checkSoLuongHienCo(GioHangDTO.getSoLuongHienCo(), errors);
+            checkSoLuongDaChon(GioHangDTO.getSoLuong(), GioHangDTO.getSoLuongHienCo(), errors);
+            if (errors.isEmpty()) {
+                return ResponseEntity.ok().build();
+            }
 
-        if (errors.isEmpty()) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.badRequest().body(errors);
         }
-
-        return ResponseEntity.badRequest().body(errors);
-
-    }
-
     public static void checkSoLuongHienCo(Integer SoLuongHienCO, Map<String, String> errors) {
         if (SoLuongHienCO == null) {
-            errors.put(ErrorCode.Null_soLuongHienCo.name(), "Không có số lượng hiện có");
+            errors.put(SanPhamValidate.ErrorCode.Null_soLuongHienCo.name(), "Không có số lượng hiện có");
         }
     }
 
     public static void checkMaMauSac(String maMauSac, Map<String, String> errors) {
         if (maMauSac == null || maMauSac.trim().isEmpty()) {
-            errors.put(ErrorCode.Null_maMauSac.name(), "Phải chọn màu sắc và kích cỡ");
+            errors.put(SanPhamValidate.ErrorCode.Null_maMauSac.name(), "Phải chọn màu sắc và kích cỡ");
         }
     }
 
     public static void checkKichCoDaChon(String kichCoDaChon, Map<String, String> errors) {
         if (kichCoDaChon == null || kichCoDaChon.trim().isEmpty()) {
-            errors.put(ErrorCode.Null_kichCoDaChon.name(), "Phải chọn màu sắc và kích cỡ");
+            errors.put(SanPhamValidate.ErrorCode.Null_kichCoDaChon.name(), "Phải chọn màu sắc và kích cỡ");
         }
     }
 
     public static void checkSoLuongDaChon(Integer soLuongDaChon, Integer soLuongDaCo, Map<String, String> errors) {
         if (soLuongDaChon == null) {
-            errors.put(ErrorCode.Null_soLuongDaChon.name(), "Số lượng không được để trống");
+            errors.put(SanPhamValidate.ErrorCode.Null_soLuongDaChon.name(), "Số lượng không được để trống");
         }
 
         if (soLuongDaChon <= 0) {
-            errors.put(ErrorCode.Null_soLuongDaChon.name(), "Số lượng phải lớn hơn 0");
+            errors.put(SanPhamValidate.ErrorCode.Null_soLuongDaChon.name(), "Số lượng phải lớn hơn 0");
         }
 
         if (soLuongDaCo != null && soLuongDaChon > soLuongDaCo) {
@@ -98,5 +89,4 @@ public class SanPhamValidate {
             errors.put(SanPhamValidate.ErrorCode.Null_san_pham_id.name(), "Không có sản phẩm nào được tìm thấy");
         }
     }
-
 }

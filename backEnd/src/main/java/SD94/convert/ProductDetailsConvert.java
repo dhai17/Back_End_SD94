@@ -11,7 +11,7 @@ public class ProductDetailsConvert {
         SanPhamChiTietDTO dto = new SanPhamChiTietDTO();
         dto.setId(entity.getId());
         dto.setQuantity(entity.getSoLuong());
-        dto.setStatus(entity.getTrangThai());
+        dto.setStatus(entity.isTrangThai());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setCreatedby(entity.getCreatedby());
         dto.setLastModifiedDate(entity.getLastModifiedDate());
@@ -26,7 +26,7 @@ public class ProductDetailsConvert {
         SanPhamChiTiet entity = new SanPhamChiTiet();
         entity.setId(dto.getId());
         entity.setSoLuong(dto.getQuantity());
-        entity.setTrangThai(dto.getStatus());
+        entity.setTrangThai(dto.isStatus());
         entity.setCreatedDate(dto.getCreatedDate());
         entity.setCreatedby(dto.getCreatedby());
         entity.setLastModifiedDate(dto.getLastModifiedDate());

@@ -1,17 +1,23 @@
 package SD94.controller.customer.gioHang;
 
+import SD94.dto.GioHangChiTietDTO;
+import SD94.dto.SanPhamDTO;
 import SD94.entity.gioHang.GioHang;
 import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.khachHang.KhachHang;
+import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.gioHang.GioHangChiTietRepository;
 import SD94.repository.gioHang.GioHangRepository;
 import SD94.repository.khachHang.KhachHangRepository;
+import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +36,31 @@ public class GioHangController {
     @Autowired
     KhachHangRepository khachHangRepository;
 
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
+
     @RequestMapping("/danhSach/{email}")
-    public List<GioHangChiTiet> listCart(@PathVariable("email") String email) {
+    public ResponseEntity<?> listCart(@PathVariable("email") String email) {
         KhachHang khachHang = khachHangRepository.findByEmail(email);
         GioHang gioHang = cartRepository.findbyCustomerID(khachHang.getId());
         long idCart = gioHang.getId();
+        List<GioHangChiTietDTO> gioHangChiTietDTOS = new ArrayList<>();
         List<GioHangChiTiet> cartList = cartDetailsRepository.findByCartID(idCart);
-        return cartList;
+        for(GioHangChiTiet gioHangChiTiet: cartList){
+            SanPhamChiTiet sanPhamChiTiet =  gioHangChiTiet.getSanPhamChiTiet();
+            GioHangChiTietDTO dto = new GioHangChiTietDTO();
+            String hinhAnhs = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+
+            dto.setId(gioHangChiTiet.getId());
+            dto.setSanPhamChiTiet(sanPhamChiTiet);
+            dto.setSoLuong(gioHangChiTiet.getSoLuong());
+            dto.setDonGia(gioHangChiTiet.getDonGia());
+            dto.setThanhTien(gioHangChiTiet.getThanhTien());
+            dto.setAnh_san_pham(hinhAnhs);
+
+            gioHangChiTietDTOS.add(dto);
+        }
+        return ResponseEntity.ok().body(gioHangChiTietDTOS);
     }
 
     @PostMapping("/xoa/gioHangChiTiet")

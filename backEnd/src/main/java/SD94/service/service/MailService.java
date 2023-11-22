@@ -58,5 +58,36 @@ public class MailService {
 
         javaMailSender.send(message);
     }
+    public void guiMailKhiThaoTac(String recipientEmail,
+                                           HoaDon hoaDon) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setFrom("linhnkph22810@fpt.edu.vn");
+        helper.setTo(recipientEmail);
+        helper.setSubject("Đơn hàng của bạn đang được nhân viên của chúng tôi xử lý");
+
+        long idHoaDon = hoaDon.getId();
+        // Lấy danh sách ảnh chính của tất cả sản phẩm và lưu vào List
+        List<HoaDonChiTiet> hoaDonChiTiet = hoaDonChiTietRepository.findByIDBill(idHoaDon);
+        List<String> tenAnhChinhList = new ArrayList<>();
+
+        // Tạo context và thêm thông tin đơn hàng vào mẫu email
+        Context context = new Context();
+        context.setVariable("id", hoaDon.getId());
+        context.setVariable("nguoiNhan", hoaDon.getNguoiNhan());
+        context.setVariable("tongTien", hoaDon.getTongTienHoaDon());
+        context.setVariable("hoaDonChiTiet", hoaDonChiTiet);
+        context.setVariable("hoaDon", hoaDon);
+        context.setVariable("trangThai", hoaDon.getTrangThai().getName());
+        context.setVariable("tenAnhChinhList", tenAnhChinhList);
+        // Thêm các thông tin khác của đơn hàng vào context nếu cần
+
+        String emailContent = templateEngine.process("mail/GuiMailKhiThaoTac", context);
+
+        helper.setText(emailContent, true);
+
+        javaMailSender.send(message);
+    }
 
 }

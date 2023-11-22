@@ -27,7 +27,7 @@ public class ChatLieuController {
     }
 
     @PostMapping("/themMoi")
-    public ResponseEntity<ChatLieu> saveCreate(@RequestBody ChatLieu chatLieu) {
+    public ResponseEntity<?> saveCreate(@RequestBody ChatLieu chatLieu) {
         return chatLieuService.saveCreate(chatLieu);
     }
 
