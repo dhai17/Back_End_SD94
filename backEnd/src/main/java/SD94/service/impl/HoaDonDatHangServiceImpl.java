@@ -65,11 +65,6 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             hoaDon.setTrangThai(trangThai);
             hoaDonRepository.save(hoaDon);
         }
-        try {
-            mailService.guiMailKhiThaoTac(hoaDon.getEmailNguoiNhan(), hoaDon);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
         return ResponseEntity.ok().build();
     }
 
@@ -83,6 +78,11 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                 hoaDon.setTrangThai(trangThai);
                 createTimeLine(thaoTac, trang_thai_id_sau, hoaDon.getId(), nguoiThaoTac);
                 hoaDonRepository.save(hoaDon);
+                try {
+                    mailService.guiMailKhiThaoTac(hoaDon.getEmailNguoiNhan(), hoaDon);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return ResponseEntity.ok().build();

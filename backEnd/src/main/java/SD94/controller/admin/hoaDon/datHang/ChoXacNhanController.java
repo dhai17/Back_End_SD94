@@ -27,8 +27,12 @@ public class ChoXacNhanController {
     NhanVienRepository nhanVienRepository;
     @Autowired
     InHoaDonService inHoaDonService;
+
     @Autowired
     MailService mailService;
+
+    @Autowired
+    HoaDonRepository hoaDonRepository;
 
     @GetMapping("/danhSach")
     public List<HoaDon> listBill1() {
@@ -36,13 +40,12 @@ public class ChoXacNhanController {
     }
 
     @PostMapping("/capNhatTrangThai/daXacNhan")
-    public List<HoaDon> updateStatus2(@RequestBody HoaDonDTO hoaDonDTO) throws MessagingException {
+    public List<HoaDon> updateStatus2(@RequestBody HoaDonDTO hoaDonDTO)  {
         Long id = hoaDonDTO.getId();
         String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
         hoaDonDatHangService.capNhatTrangThai(2, id);
         hoaDonDatHangService.createTimeLine("Xác nhận đơn", 2, id, nhanVien.getHoTen());
-
         return hoaDonDatHangService.findHoaDonByTrangThai(1);
     }
 
@@ -70,7 +73,7 @@ public class ChoXacNhanController {
         return hoaDonDatHangService.capNhatTrangThai_DaChon(hoaDonDTO, 2,"Xác nhận đơn",nhanVien.getHoTen());
     }
 
-        @PutMapping("/huyDon/daChon")
+    @PutMapping("/huyDon/daChon")
     public List<HoaDon> updateStatusSelect5(@RequestBody HoaDonDTO hoaDonDTO) {
             String email = hoaDonDTO.getEmail_user();
             NhanVien nhanVien = nhanVienRepository.findByEmail(email);
@@ -90,5 +93,15 @@ public class ChoXacNhanController {
     public ResponseEntity<byte[]> inHoaDon(@PathVariable("id") long id) {
         return inHoaDonService.hoaDonDatHangPdf(id,"Đã thanh toán trước");
     }
+    @GetMapping("/guiMail/{id}")
+    public void guiMail(@PathVariable("id") long id) {
+        HoaDon hoaDon = hoaDonRepository.findByID(id);
+        try {
+            mailService.guiMailKhiThaoTac(hoaDon.getEmailNguoiNhan(), hoaDon);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
