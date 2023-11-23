@@ -169,7 +169,7 @@
             </tbody>
         </table>
         <p>Tổng giá trị đơn hàng: <span
-                th:text="${#numbers.formatDecimal(hoaDon.tongTienDonHang, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
+                th:text="${#numbers.formatDecimal(hoaDon.tongTienHoaDon, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
         <p>Phí vận chuyển: <span
                 th:text="${#numbers.formatDecimal(hoaDon.tienShip, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
         <p>Giảm giá:
@@ -182,7 +182,7 @@
             </span>
         </p>
         <p>Tổng tiền thanh toán: <span
-                th:text="${#numbers.formatDecimal(hoaDon.tongTienHoaDon, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
+                th:text="${#numbers.formatDecimal(hoaDon.tongTienDonHang, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
     </div>
 
     <div class="email-footer">
