@@ -1,9 +1,10 @@
 package SD94.repository.thongKe;
 
-import SD94.dto.thongKe.ThongKeAll;
+import SD94.dto.thongKe.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,5 +18,17 @@ import java.util.Objects;
 public interface ThongKeRepository {
     @Procedure(name = "thongKeAll()")
     List<ThongKeAll> getThongKe();
+
+    @Procedure(name = "tamTinhTongTienDaBanTheoNgay()")
+    List<TamTinhTongTienDaBanTheoNgay> getThongKeTheoNgay();
+
+    @Procedure(name = "thongKeTheoThang()")
+    List<ThongKeTheoThang> getThongKeTheoThang(@Param("thang") int thang);
+
+    @Procedure(name = "thongKeTheoNam()")
+    List<ThongKeTheoNam> getThongKeTheoNam(@Param("nam") int nam);
+
+    @Procedure(name = "top5SanPhamBanChay()")
+    List<TopSanPhamBanChay> getThongKeSanPhamBanChay();
 
 }
