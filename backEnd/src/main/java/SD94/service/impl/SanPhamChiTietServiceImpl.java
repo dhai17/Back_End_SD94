@@ -2,12 +2,13 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.dto.HinhAnhDTO;
-import SD94.dto.SanPhamChiTietDTO;
 import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
-import SD94.repository.sanPham.*;
+import SD94.repository.sanPham.HinhAnhRepository;
+import SD94.repository.sanPham.SanPhamChiTietRepository;
+import SD94.repository.sanPham.SanPhamRepository;
 import SD94.service.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,11 +32,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Autowired
     SanPhamRepository sanPhamRepository;
 
-    @Autowired
-    MauSacRepository mauSacRepository;
-
-    @Autowired
-    KichCoRepository kichCoRepository;
 
     @Override
     public List<SanPhamChiTiet> findAllProductDetails() {
@@ -50,19 +46,21 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTietDTO sanPhamChiTietDTO) {
+    public ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate) {
         try {
-            Optional<SanPhamChiTiet> optional = repository.findById(sanPhamChiTietDTO.getId());
-            if (optional.isPresent()){
+            Optional<SanPhamChiTiet> optional = repository.findById(sanPhamChiTietUpdate.getId());
+            if (optional.isPresent()) {
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
-                sanPhamChiTiet.setSoLuong(sanPhamChiTietDTO.getSoLuong());
-                sanPhamChiTiet.setTrangThai(0);
-                Long idKichCo = sanPhamChiTietDTO.getKichCo_id();
-                sanPhamChiTiet.setKichCo(kichCoRepository.findById(idKichCo).orElse(null));
-                Long idMauSac = sanPhamChiTietDTO.getMauSac_id();
-                sanPhamChiTiet.setMauSac(mauSacRepository.findById(idMauSac).orElse(null));
-                sanPhamChiTiet.setSanPham(sanPhamChiTietDTO.getSanPham());
+                sanPhamChiTiet.setSoLuong(sanPhamChiTietUpdate.getSoLuong());
+                sanPhamChiTiet.setTrangThai(true);
+                sanPhamChiTiet.setMauSac(sanPhamChiTietUpdate.getMauSac());
+                sanPhamChiTiet.setKichCo(sanPhamChiTietUpdate.getKichCo());
+                SanPham sanPham = sanPhamChiTietUpdate.getSanPham();
+                if (sanPham != null) {
+                    sanPhamChiTiet.setSanPham(sanPham);
+                }
                 repository.save(sanPhamChiTiet);
+
                 return ResponseEntity.ok(sanPhamChiTiet);
             } else {
                 return ResponseEntity.notFound().build();
@@ -123,27 +121,4 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         repository.save(sanPhamChiTiets);
         return new ResponseEntity(HttpStatus.OK);
     }
-
-    @Override
-    public ResponseEntity themAnhSanPham(HinhAnhDTO hinhAnhDTO) {
-//        SanPhamChiTiet sanPhamChiTiet = repository.findByID(hinhAnhDTO.getId_SPCT());
-//        MauSac mauSac = sanPhamChiTiet.getMauSac();
-//        HinhAnh hinhAnh = new HinhAnh();
-//        hinhAnh.setTenAnh(hinhAnhDTO.getName());
-//        hinhAnh.setSanPhamChiTiet(sanPhamChiTiet);
-//        hinhAnh.setMauSac(mauSac);
-//        hinhAnh.setAnhMacDinh(false);
-//        hinhAnhRepository.save(hinhAnh);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity themAnhMacDinh(HinhAnhDTO hinhAnhDTO) {
-//        HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId());
-//        hinhAnh.setAnhMacDinh(true);
-//        hinhAnhRepository.save(hinhAnh);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-
 }

@@ -16,10 +16,13 @@ import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.service.service.HoaDonDatHangService;
+import SD94.service.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import javax.mail.MessagingException;
 import java.time.LocalDate;
 
 import java.util.*;
@@ -44,6 +47,9 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     @Autowired
     HinhAnhRepository hinhAnhRepository;
 
+    @Autowired
+    MailService mailService;
+
     @Override
     public List<HoaDon> findHoaDonByTrangThai(long trang_thai_id) {
         List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByTrangThai(trang_thai_id);
@@ -58,6 +64,11 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             TrangThai trangThai = optionalTrangThai.get();
             hoaDon.setTrangThai(trangThai);
             hoaDonRepository.save(hoaDon);
+        }
+        try {
+            mailService.guiMailKhiThaoTac(hoaDon.getEmailNguoiNhan(), hoaDon);
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
         return ResponseEntity.ok().build();
     }
@@ -340,4 +351,50 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         response.put("hoaDon", hoaDon);
         return ResponseEntity.ok().body(response);
     }
+    @Override
+    public ResponseEntity<?> CTDonHangKH(long id_hoa_don) {
+        HoaDon hoaDon = hoaDonRepository.findByID(id_hoa_don);
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        LichSuHoaDon timeLine_ChoXacNhan = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 1L);
+        LichSuHoaDon timeLine_ChoGiaoHang = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 2L);
+        LichSuHoaDon timeLine_DangGiaoHang = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 3L);
+        LichSuHoaDon timeLine_DaGiaoHang = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 4L);
+        LichSuHoaDon timeLine_DaHuy = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 5L);
+        List<HoaDonChiTietDTO> dto = new ArrayList<>();
+        for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            HoaDon hoaDon2 = hoaDonChiTiet.getHoaDon();
+            String anh_san_pham = hinhAnhRepository.getAnhSPByMauSacAndSPID(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+
+            HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
+            hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
+            hoaDonChiTietDTO.setIdProduct(sanPhamChiTiet.getSanPham().getId());
+            hoaDonChiTietDTO.setIdColor(sanPhamChiTiet.getMauSac().getId());
+            hoaDonChiTietDTO.setIdSize(sanPhamChiTiet.getKichCo().getId());
+            hoaDonChiTietDTO.setSoLuong(hoaDonChiTiet.getSoLuong());
+            hoaDonChiTietDTO.setDonGia(hoaDonChiTiet.getDonGia());
+            hoaDonChiTietDTO.setThanhTien(hoaDonChiTiet.getThanhTien());
+            hoaDonChiTietDTO.setHoaDon(hoaDon2);
+            hoaDonChiTietDTO.setSanPhamChiTiet(sanPhamChiTiet);
+            hoaDonChiTietDTO.setAnhSanPham(anh_san_pham);
+
+            dto.add(hoaDonChiTietDTO);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("list_HDCT", dto);
+        response.put("hoaDon", hoaDon);
+        response.put("timeLine_ChoXacNhan", timeLine_ChoXacNhan);
+        response.put("timeLine_ChoGiaoHang", timeLine_ChoGiaoHang);
+        response.put("timeLine_DangGiaoHang", timeLine_DangGiaoHang);
+        response.put("timeLine_DaGiaoHang", timeLine_DaGiaoHang);
+        response.put("timeLine_DaHuy", timeLine_DaHuy);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Override
+    public List<HoaDon> findHoaDonByLoai(int loai_hoa_don) {
+        List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByLoai(loai_hoa_don);
+        return hoaDonList;
+    }
+
 }

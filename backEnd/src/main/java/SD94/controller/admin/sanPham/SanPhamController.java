@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,16 +22,25 @@ public class SanPhamController {
     @Autowired
     SanPhamService sanPhamService;
 
-    @GetMapping("/danhSach")
-    public ResponseEntity<List<SanPham>> getProduct() {
-        List<SanPham> list = sanPhamRepository.findAll();
-        return ResponseEntity.ok().body(list);
-    }
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
 
-    @GetMapping("/danhSachSpAnh")
-    public ResponseEntity<List<SanPham>> getSPAnh() {
-        List<SanPham> list = sanPhamRepository.findAllSpAnh();
-        return ResponseEntity.ok().body(list);
+    @GetMapping("/danhSach")
+    public ResponseEntity<?> getProduct() {
+        List<SanPham> list = sanPhamRepository.findAll();
+        List<SanPhamDTO> dtoList = new ArrayList<>();
+        for(SanPham sp: list){
+            SanPhamDTO sanPhamDTO = new SanPhamDTO();
+            sanPhamDTO.setId(sp.getId());
+            sanPhamDTO.setTenSanPham(sp.getTenSanPham());
+            sanPhamDTO.setGia(sp.getGia());
+            sanPhamDTO.setTrangThai(sp.getTrangThai());
+            String hinh_anh = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(sp.getId());
+            sanPhamDTO.setAnh_san_pham(hinh_anh);
+
+            dtoList.add(sanPhamDTO);
+        }
+        return ResponseEntity.ok().body(dtoList);
     }
 
     @GetMapping("/ChiTietSanPham")

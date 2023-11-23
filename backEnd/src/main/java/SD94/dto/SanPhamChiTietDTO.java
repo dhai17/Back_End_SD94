@@ -14,7 +14,7 @@ public class SanPhamChiTietDTO {
 
     private Integer soLuong;
 
-    private Integer status;
+    private boolean status;
 
     private Date createdDate;
 

@@ -61,12 +61,9 @@ public class SanPhamServiceImpl implements SanPhamService {
                 sanPham.setTenSanPham(sanPhamDTO.getTenSanPham());
                 sanPham.setGia(sanPhamDTO.getGia());
                 sanPham.setTrangThai(0);
-                Long id = sanPhamDTO.getChatLieu_id();
-                sanPham.setChatLieu(chatLieuRepository.findByID(id));
-                Long idNsx = sanPhamDTO.getNhaSanXuat_id();
-                sanPham.setNhaSanXuat(nhaSanXuatRepository.findByID(idNsx));
-                Long idLsp = sanPhamDTO.getLoaiSanPham_id();
-                sanPham.setLoaiSanPham(loaiSanPhamRepository.findByID(idLsp));
+                sanPham.setLoaiSanPham(sanPhamDTO.getLoaiSanPham());
+                sanPham.setChatLieu(sanPhamDTO.getChatLieu());
+                sanPham.setNhaSanXuat(sanPhamDTO.getNhaSanXuat());
                 repository.save(sanPham);
                 return ResponseEntity.ok(sanPham);
             } else {
@@ -135,6 +132,7 @@ public class SanPhamServiceImpl implements SanPhamService {
                 sanPhamChiTiet.setSanPham(sanPham);
                 sanPhamChiTiet.setMauSac(mauSac);
                 sanPhamChiTiet.setKichCo(kichCo);
+                sanPhamChiTiet.setTrangThai(true);
                 sanPhamChiTiet.setSoLuong(sanPhamDTO.getSoLuong());
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
                 sanPhamChiTietList.add(sanPhamChiTiet);

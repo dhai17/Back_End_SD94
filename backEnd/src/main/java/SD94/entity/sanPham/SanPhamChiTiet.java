@@ -20,10 +20,10 @@ public class SanPhamChiTiet extends Base implements Serializable {
     @Column(name = "soLuong", columnDefinition = "int null")
     private Integer soLuong;
 
-    @Column(name = "trangThai", columnDefinition = "int null")
-    private Integer trangThai;
+    @Column(name = "trangThai", columnDefinition = "bit")
+    private boolean trangThai;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sanPham_id", referencedColumnName = "id")
     private SanPham sanPham;
 
