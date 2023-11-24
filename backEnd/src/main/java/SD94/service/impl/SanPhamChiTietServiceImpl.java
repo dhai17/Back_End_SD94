@@ -51,16 +51,20 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             Optional<SanPhamChiTiet> optional = repository.findById(sanPhamChiTietUpdate.getId());
             if (optional.isPresent()) {
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
+                if (sanPhamChiTietUpdate.getSoLuong() == 0) {
+                    sanPhamChiTiet.setTrangThai(false);
+                } else {
+                    sanPhamChiTiet.setTrangThai(true);
+                }
                 sanPhamChiTiet.setSoLuong(sanPhamChiTietUpdate.getSoLuong());
-                sanPhamChiTiet.setTrangThai(true);
                 sanPhamChiTiet.setMauSac(sanPhamChiTietUpdate.getMauSac());
                 sanPhamChiTiet.setKichCo(sanPhamChiTietUpdate.getKichCo());
                 SanPham sanPham = sanPhamChiTietUpdate.getSanPham();
+
                 if (sanPham != null) {
                     sanPhamChiTiet.setSanPham(sanPham);
                 }
                 repository.save(sanPhamChiTiet);
-
                 return ResponseEntity.ok(sanPhamChiTiet);
             } else {
                 return ResponseEntity.notFound().build();

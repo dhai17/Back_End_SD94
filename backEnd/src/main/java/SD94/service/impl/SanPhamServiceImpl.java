@@ -22,9 +22,6 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Autowired
     SanPhamRepository repository;
-//
-//    @Autowired
-//    HinhAnhService hinhAnhService;
 
     @Autowired
     ChatLieuRepository chatLieuRepository;
@@ -119,6 +116,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         sanPham.setLoaiSanPham(loaiSanPham);
         sanPham.setNhaSanXuat(nhaSanXuat);
         sanPham.setChatLieu(chatLieu);
+//        sanPham.setDeleted(true);
         repository.save(sanPham);
 
         id_product = sanPham.getId();
