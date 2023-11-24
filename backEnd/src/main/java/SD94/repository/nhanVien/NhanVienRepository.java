@@ -21,11 +21,11 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Long> {
     @Query(value = "select * from nhan_vien where ho_ten = ? and is_deleted = false ", nativeQuery = true)
     NhanVien findByName(String hoTen);
 
-    @Query(value = "select * from nhan_vien where is_deleted = false and (so_dien_thoai LIKE %?1% OR ho_ten LIKE %?1% OR email LIKE %?1%)", nativeQuery = true)
+    @Query(value = "select * from nhan_vien where is_deleted = false and so_dien_thoai LIKE %?1% OR ho_ten LIKE %?1% OR email LIKE %?1%", nativeQuery = true)
     List<NhanVien> findStaffAll(String input);
 
 
-    @Query(value = "select * from nhan_vien where is_deleted = false  and date(dateOfBrirth)=?", nativeQuery = true)
+    @Query(value = "select * from nhan_vien where is_deleted = false and date(dateOfBrirth)=?", nativeQuery = true)
     List<NhanVien> findStaffDate(LocalDate dateOfBirth);
 
     //    Staff findByUsername(String username);
