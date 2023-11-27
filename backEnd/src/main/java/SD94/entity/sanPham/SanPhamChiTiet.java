@@ -23,7 +23,7 @@ public class SanPhamChiTiet extends Base implements Serializable {
     @Column(name = "trangThai", columnDefinition = "bit")
     private boolean trangThai;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sanPham_id", referencedColumnName = "id")
     private SanPham sanPham;
 

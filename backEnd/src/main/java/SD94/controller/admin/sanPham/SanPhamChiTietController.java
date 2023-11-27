@@ -5,7 +5,6 @@ import SD94.dto.HoaDonChiTietDTO;
 import SD94.dto.SanPhamChiTietDTO;
 import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.KichCo;
-import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.sanPham.*;
 import SD94.service.service.SanPhamChiTietService;
@@ -22,9 +21,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/sanPhamChiTiet")
 public class SanPhamChiTietController {
-
-    @Autowired
-    SanPhamChiTietRepository productDetailsRepository;
 
     @Autowired
     SanPhamChiTietService sanPhamChiTietService;
@@ -52,13 +48,13 @@ public class SanPhamChiTietController {
     //Hien thi
     @GetMapping("/danhSach")
     public ResponseEntity<List<SanPhamChiTiet>> getColor() {
-        List<SanPhamChiTiet> list = productDetailsRepository.findAll();
+        List<SanPhamChiTiet> list = sanPhamChiTietRepository.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping("/dsCTSP")
     public ResponseEntity<List<SanPhamChiTiet>> getProduct(@RequestParam("san_pham_id") Long id) {
-        List<SanPhamChiTiet> product = sanPhamChiTietRepository.getProductD(id);
+        List<SanPhamChiTiet> product = sanPhamChiTietRepository.findSpctByIdSp(id);
         return ResponseEntity.ok().body(product);
     }
 
@@ -71,7 +67,7 @@ public class SanPhamChiTietController {
     //Hien thi theo id
     @GetMapping("/chinhSua/{id}")
     public SanPhamChiTiet editProductDetails(@PathVariable("id") Long id) {
-        return productDetailsRepository.findByID(id);
+        return sanPhamChiTietRepository.findByID(id);
     }
 
     //Sửa và lưu
@@ -92,7 +88,7 @@ public class SanPhamChiTietController {
         SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
         sanPhamChiTiet.setKichCo(size);
         sanPhamChiTiet.setSoLuong(detailsDTO.getQuantity());
-        productDetailsRepository.save(sanPhamChiTiet);
+        sanPhamChiTietRepository.save(sanPhamChiTiet);
         return sanPhamChiTiet;
     }
 

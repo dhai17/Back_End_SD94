@@ -10,7 +10,7 @@ public class ProductDetailsConvert {
     public SanPhamChiTietDTO toDto(SanPhamChiTiet entity) {
         SanPhamChiTietDTO dto = new SanPhamChiTietDTO();
         dto.setId(entity.getId());
-        dto.setQuantity(entity.getSoLuong());
+        dto.setSoLuong(entity.getSoLuong());
         dto.setStatus(entity.isTrangThai());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setCreatedby(entity.getCreatedby());
@@ -25,7 +25,7 @@ public class ProductDetailsConvert {
     public SanPhamChiTiet toEntity(SanPhamChiTietDTO dto) {
         SanPhamChiTiet entity = new SanPhamChiTiet();
         entity.setId(dto.getId());
-        entity.setSoLuong(dto.getQuantity());
+        entity.setSoLuong(dto.getSoLuong());
         entity.setTrangThai(dto.isStatus());
         entity.setCreatedDate(dto.getCreatedDate());
         entity.setCreatedby(dto.getCreatedby());

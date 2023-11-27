@@ -12,7 +12,7 @@ public class SanPhamChiTietDTO {
 
     private Long id;
 
-    private Integer quantity;
+    private Integer soLuong;
 
     private boolean status;
 
@@ -30,6 +30,9 @@ public class SanPhamChiTietDTO {
 
     private KichCo size;
 
+    private long mauSac_id;
 
+    private long kichCo_id;
 
+    private long sanPham_id;
 }

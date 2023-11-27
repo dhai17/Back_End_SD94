@@ -21,7 +21,12 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     @Query(value = "select * from san_pham_chi_tiet where id = ? and is_deleted = false", nativeQuery = true)
     SanPhamChiTiet findByID(Long id);
 
-    @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false AND (name LIKE %?1% OR maximumvalue LIKE %?1% OR percent_discount LIKE %?1%)", nativeQuery = true)
+    @Query(value = "select * from san_pham_chi_tiet spct\n" +
+            "        join san_pham sp on spct.san_pham_id = sp.id\n" +
+            "        join chat_lieu cl on sp.chat_lieu_id = cl.id\n" +
+            "        join nha_san_xuat nsx on sp.nha_san_xuat_id = nsx.id\n" +
+            "        join loai_san_pham lsp on sp.loai_san_pham_id = lsp.id\n" +
+            "        where sp.is_deleted = false and (ten_san_pham = ?1 or gia = ?1 or chat_lieu = ?1 or nha_san_xuat = ?1 or loai_san_pham = ?1);", nativeQuery = true)
     List<SanPhamChiTiet> findByAll(String input);
 
     @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
@@ -36,7 +41,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     @Query(value = "select * from san_pham_chi_tiet where id_product = ? and id_color = ? and id_size = ?", nativeQuery = true)
     SanPhamChiTiet findByColorAndSize(long id_product, long id_color, long id_size);
 
-    @Query(value = "SELECT s FROM SanPhamChiTiet s WHERE s.sanPham.id = :san_pham_id")
+    @Query(value = "select * from san_pham_chi_tiet spct where spct.san_pham_id = ? and spct.is_deleted = false", nativeQuery = true)
     List<SanPhamChiTiet> getProductD(@Param("san_pham_id") long san_pham_id);
 
     @Query(value = "SELECT * FROM san_pham_chi_tiet WHERE is_deleted = false AND san_pham_id = ?", nativeQuery = true)

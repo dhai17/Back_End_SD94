@@ -2,10 +2,12 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.entity.nhanVien.NhanVien;
+import SD94.entity.security.Role;
 import SD94.entity.security.UserRole;
 import SD94.helper.UserFoundException;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.repository.role.RoleRepository;
+import SD94.repository.role.UserRoleRepository;
 import SD94.service.service.NhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,10 +27,18 @@ import java.util.regex.Pattern;
 
 @Service
 public class NhanVienServiceImpl implements NhanVienService {
+
     @Autowired
     NhanVienRepository staffRepository;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
+    UserRoleRepository userRoleRepository;
 
 
     @Override
@@ -81,7 +92,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         Date dateOfBirth = staffCreate.getNgaySinh();
 
         if (dateOfBirth.after(dateC)) {
-            errorMessage = "Ngay sinh khong duoc vuot qua thoi gian hien tai";
+            errorMessage = "Ngày sinh không được vượt qua thời gian hiện tại";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
         }
@@ -92,9 +103,18 @@ public class NhanVienServiceImpl implements NhanVienService {
             staff.setEmail(staffCreate.getEmail());
             staff.setDiaChi(staffCreate.getDiaChi());
             staff.setNgaySinh(staffCreate.getNgaySinh());
-            staff.setMatKhau("123123");
+            staff.setMatKhau(passwordEncoder.encode(staffCreate.getMatKhau()));
             staff.setSoDienThoai(staffCreate.getSoDienThoai());
             staffRepository.save(staff);
+
+            Role role = roleRepository.find("STAFF");
+
+            Set<UserRole> userRoleSet = new HashSet<>();
+            UserRole userRole = new UserRole();
+            userRole.setRole(role);
+            userRole.setStaff(staff);
+            userRoleSet.add(userRole);
+            userRoleRepository.save(userRole);
             return ResponseEntity.ok(staff);
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,7 +140,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         }
 
         //SDT
-        if (staffEdit.getSoDienThoai().length() !=10) {
+        if (staffEdit.getSoDienThoai().length() != 10) {
             errorMessage = "Số điện thoại phải đủ 10 số";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
@@ -155,7 +175,7 @@ public class NhanVienServiceImpl implements NhanVienService {
                 staff.setEmail(staffEdit.getEmail());
                 staff.setDiaChi(staffEdit.getDiaChi());
                 staff.setNgaySinh(staffEdit.getNgaySinh());
-//                staff.setMatKhau(bCryptPasswordEncoder.encode(staffEdit.getMatKhau()));
+                staff.setMatKhau(staffEdit.getMatKhau());
                 staff.setSoDienThoai(staffEdit.getSoDienThoai());
                 staff.setGioiTinh(staffEdit.getGioiTinh());
                 staffRepository.save(staff);
@@ -201,9 +221,6 @@ public class NhanVienServiceImpl implements NhanVienService {
         return staffList;
 
     }
-
-    @Autowired
-    private RoleRepository roleRepository;
 
 
     @Override

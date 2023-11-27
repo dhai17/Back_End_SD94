@@ -30,15 +30,15 @@ public class SanPham extends Base implements Serializable {
     @Column(name = "trangThai", columnDefinition = "int null")
     private Integer trangThai;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "chatLieu_id", referencedColumnName = "id")
     private ChatLieu chatLieu;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "loaiSanPham_id", referencedColumnName = "id")
     private LoaiSanPham loaiSanPham;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "nhaSanXuat_id", referencedColumnName = "id")
     private NhaSanXuat nhaSanXuat;
 

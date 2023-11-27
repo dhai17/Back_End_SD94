@@ -27,9 +27,4 @@ public interface SanPhamChiTietService {
 
     ResponseEntity chinhSuaSoLuongSPCT(SanPhamChiTiet sanPhamChiTiet);
 
-    ResponseEntity themAnhSanPham(HinhAnhDTO hinhAnhDTO);
-
-    ResponseEntity themAnhMacDinh(HinhAnhDTO hinhAnhDTO);
-
-
 }

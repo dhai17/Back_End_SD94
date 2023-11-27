@@ -4,6 +4,7 @@ import SD94.entity.Base;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 
 @Entity
 @Data
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)

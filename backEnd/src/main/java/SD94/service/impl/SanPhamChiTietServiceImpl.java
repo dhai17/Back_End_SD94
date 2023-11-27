@@ -49,14 +49,18 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate) {
         try {
             Optional<SanPhamChiTiet> optional = repository.findById(sanPhamChiTietUpdate.getId());
-            if (optional.isPresent()){
+            if (optional.isPresent()) {
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
                 sanPhamChiTiet.setSoLuong(sanPhamChiTietUpdate.getSoLuong());
                 sanPhamChiTiet.setTrangThai(true);
-                sanPhamChiTiet.setSanPham(sanPhamChiTietUpdate.getSanPham());
                 sanPhamChiTiet.setMauSac(sanPhamChiTietUpdate.getMauSac());
                 sanPhamChiTiet.setKichCo(sanPhamChiTietUpdate.getKichCo());
+                SanPham sanPham = sanPhamChiTietUpdate.getSanPham();
+                if (sanPham != null) {
+                    sanPhamChiTiet.setSanPham(sanPham);
+                }
                 repository.save(sanPhamChiTiet);
+
                 return ResponseEntity.ok(sanPhamChiTiet);
             } else {
                 return ResponseEntity.notFound().build();
@@ -117,27 +121,4 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         repository.save(sanPhamChiTiets);
         return new ResponseEntity(HttpStatus.OK);
     }
-
-    @Override
-    public ResponseEntity themAnhSanPham(HinhAnhDTO hinhAnhDTO) {
-//        SanPhamChiTiet sanPhamChiTiet = repository.findByID(hinhAnhDTO.getId_SPCT());
-//        MauSac mauSac = sanPhamChiTiet.getMauSac();
-//        HinhAnh hinhAnh = new HinhAnh();
-//        hinhAnh.setTenAnh(hinhAnhDTO.getName());
-//        hinhAnh.setSanPhamChiTiet(sanPhamChiTiet);
-//        hinhAnh.setMauSac(mauSac);
-//        hinhAnh.setAnhMacDinh(false);
-//        hinhAnhRepository.save(hinhAnh);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity themAnhMacDinh(HinhAnhDTO hinhAnhDTO) {
-//        HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId());
-//        hinhAnh.setAnhMacDinh(true);
-//        hinhAnhRepository.save(hinhAnh);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-
 }

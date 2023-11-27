@@ -61,9 +61,9 @@ public class SanPhamServiceImpl implements SanPhamService {
                 sanPham.setTenSanPham(sanPhamDTO.getTenSanPham());
                 sanPham.setGia(sanPhamDTO.getGia());
                 sanPham.setTrangThai(0);
-                sanPham.setNhaSanXuat(sanPhamDTO.getNhaSanXuat());
                 sanPham.setLoaiSanPham(sanPhamDTO.getLoaiSanPham());
                 sanPham.setChatLieu(sanPhamDTO.getChatLieu());
+                sanPham.setNhaSanXuat(sanPhamDTO.getNhaSanXuat());
                 repository.save(sanPham);
                 return ResponseEntity.ok(sanPham);
             } else {
