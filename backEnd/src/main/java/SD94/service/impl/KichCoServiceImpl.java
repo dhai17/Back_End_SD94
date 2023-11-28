@@ -40,7 +40,7 @@ public class KichCoServiceImpl implements KichCoService {
 
         try {
             Optional<KichCo> optional = kichCoRepository.findById(kichCoUpdate.getId());
-            if (optional.isPresent()){
+            if (optional.isPresent()) {
                 KichCo product = optional.get();
                 product.setKichCo(kichCoUpdate.getKichCo());
                 kichCoRepository.save(product);
@@ -48,7 +48,7 @@ public class KichCoServiceImpl implements KichCoService {
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
     }
@@ -57,7 +57,7 @@ public class KichCoServiceImpl implements KichCoService {
     public ResponseEntity<List<KichCo>> deleteProductSize(Long id) {
         try {
             Optional<KichCo> optional = kichCoRepository.findById(id);
-            if (optional.isPresent()){
+            if (optional.isPresent()) {
                 KichCo product = optional.get();
                 product.setDeleted(true);
                 kichCoRepository.save(product);
@@ -67,7 +67,7 @@ public class KichCoServiceImpl implements KichCoService {
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -77,19 +77,27 @@ public class KichCoServiceImpl implements KichCoService {
         String errorMessage;
         Message errorResponse;
 
-        if (kichCoCreate.getKichCo() == null) {
-            errorMessage = "Nhập đầy đủ thông tin";
+        if (kichCoCreate.getKichCo() == null || !isNumeric(kichCoCreate.getKichCo())) {
+            errorMessage = "Nhập kích cỡ cho đúng định dạng";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
-
         try {
             KichCo kichCo = new KichCo();
             kichCo.setKichCo(kichCoCreate.getKichCo());
             kichCoRepository.save(kichCo);
             return ResponseEntity.ok(kichCo);
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 

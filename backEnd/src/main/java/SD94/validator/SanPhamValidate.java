@@ -1,12 +1,15 @@
 package SD94.validator;
 
 import SD94.dto.SanPhamDTO;
+import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.KichCoRepository;
 import SD94.repository.sanPham.MauSacRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SanPhamValidate {
@@ -97,6 +100,32 @@ public class SanPhamValidate {
         if (sanPham_id == null) {
             errors.put(SanPhamValidate.ErrorCode.Null_san_pham_id.name(), "Không có sản phẩm nào được tìm thấy");
         }
+    }
+
+    public static ResponseEntity<?> checkTaoSP(SanPhamDTO sanPhamDTO) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (sanPhamDTO.getTenSanPham() == null || sanPhamDTO.getTenSanPham().isEmpty() ||
+                sanPhamDTO.getGia() == null ||
+                sanPhamDTO.getLoaiSanPham_id() == null || sanPhamDTO.getNhaSanXuat_id() == null ||
+                sanPhamDTO.getKichCo() == null || sanPhamDTO.getKichCo().isEmpty() ||
+                sanPhamDTO.getMauSac() == null || sanPhamDTO.getMauSac().isEmpty() ||
+                sanPhamDTO.getSoLuong() <= 0) {
+            response.put("error", "Nhập đầy đủ thông tin");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (Float.compare(sanPhamDTO.getGia(), 0.0f) <= 0) {
+            response.put("error", "Giá tiền sản phẩm phải lớn hơn 0");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (sanPhamDTO.getSoLuong() <= 0) {
+            response.put("error", "Số lượng sản phẩm phải lớn hơn 0");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok().body(response);
     }
 
 }

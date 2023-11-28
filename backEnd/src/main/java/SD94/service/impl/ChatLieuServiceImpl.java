@@ -18,7 +18,7 @@ import java.util.Optional;
 public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Autowired
-    ChatLieuRepository  repository;
+    ChatLieuRepository repository;
 
     @Override
     public List<ChatLieu> findAllProductMaterial() {
@@ -31,15 +31,15 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         String errorMessage;
         Message errorResponse;
 
-        if (chatLieuUpdate.getChatLieu() == "") {
-            errorMessage = "Nhập đầy đủ thông tin";
+        if (chatLieuUpdate.getChatLieu() == null || !isValid(chatLieuUpdate.getChatLieu())) {
+            errorMessage = "Nhập hợp lệ (chỉ chữ hoặc có cả chữ lẫn số)";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
         try {
             Optional<ChatLieu> optional = repository.findById(chatLieuUpdate.getId());
-            if (optional.isPresent()){
+            if (optional.isPresent()) {
                 ChatLieu chatLieu = optional.get();
                 chatLieu.setChatLieu(chatLieuUpdate.getChatLieu());
                 repository.save(chatLieu);
@@ -47,7 +47,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
     }
@@ -56,7 +56,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     public ResponseEntity<List<ChatLieu>> deleteProductMaterial(Long id) {
         try {
             Optional<ChatLieu> optional = repository.findById(id);
-            if (optional.isPresent()){
+            if (optional.isPresent()) {
                 ChatLieu chatLieu = optional.get();
                 chatLieu.setDeleted(true);
                 repository.save(chatLieu);
@@ -66,7 +66,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -76,8 +76,8 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         String errorMessage;
         Message errorResponse;
 
-        if (chatLieuCreate.getChatLieu() == "") {
-            errorMessage = "Nhập đầy đủ thông tin";
+        if (chatLieuCreate.getChatLieu() == null || !isValid(chatLieuCreate.getChatLieu())) {
+            errorMessage = "Nhập hợp lệ (chỉ chữ hoặc có cả chữ lẫn số)";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
@@ -88,9 +88,13 @@ public class ChatLieuServiceImpl implements ChatLieuService {
             repository.save(chatLieu);
             List<ChatLieu> chatLieus = repository.findAll();
             return ResponseEntity.ok().body(chatLieus);
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private boolean isValid(String str) {
+        return str.matches("^(?=.*[a-zA-Z])[a-zA-Z\\d]+$");
     }
 
     @Override

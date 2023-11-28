@@ -32,8 +32,8 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
         String errorMessage;
         Message errorResponse;
 
-        if (nhaSanXuatUpdate.getName() == "") {
-            errorMessage = "Nhập đầy đủ thông tin";
+        if (nhaSanXuatUpdate.getName() == null || !isValid(nhaSanXuatUpdate.getName())) {
+            errorMessage = "Nhập hợp lệ (chỉ chữ hoặc có cả chữ lẫn số)";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
@@ -78,8 +78,8 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
         String errorMessage;
         Message errorResponse;
 
-        if (nhaSanXuatCreate.getName() == null) {
-            errorMessage = "Nhập đầy đủ thông tin";
+        if (nhaSanXuatCreate.getName() == null || !isValid(nhaSanXuatCreate.getName())) {
+            errorMessage = "Nhập hợp lệ (chỉ chữ hoặc có cả chữ lẫn số)";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
@@ -93,6 +93,10 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    private boolean isValid(String str) {
+        return str.matches("^(?=.*[a-zA-Z])[a-zA-Z\\d]+$");
     }
 
     @Override
