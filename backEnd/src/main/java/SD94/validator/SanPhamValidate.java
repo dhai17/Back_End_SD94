@@ -105,27 +105,42 @@ public class SanPhamValidate {
     public static ResponseEntity<?> checkTaoSP(SanPhamDTO sanPhamDTO) {
         Map<String, Object> response = new HashMap<>();
 
-        if (sanPhamDTO.getTenSanPham() == null || sanPhamDTO.getTenSanPham().isEmpty() ||
-                sanPhamDTO.getGia() == null ||
-                sanPhamDTO.getLoaiSanPham_id() == null || sanPhamDTO.getNhaSanXuat_id() == null ||
-                sanPhamDTO.getKichCo() == null || sanPhamDTO.getKichCo().isEmpty() ||
-                sanPhamDTO.getMauSac() == null || sanPhamDTO.getMauSac().isEmpty() ||
-                sanPhamDTO.getSoLuong() <= 0) {
-            response.put("error", "Nhập đầy đủ thông tin");
-            return ResponseEntity.badRequest().body(response);
+        if (sanPhamDTO.getTenSanPham() == null || sanPhamDTO.getTenSanPham().isEmpty()) {
+            response.put("tenSanPham", "Nhập tên sản phẩm");
         }
 
-        if (Float.compare(sanPhamDTO.getGia(), 0.0f) <= 0) {
-            response.put("error", "Giá tiền sản phẩm phải lớn hơn 0");
-            return ResponseEntity.badRequest().body(response);
+        if (sanPhamDTO.getLoaiSanPham_id() == null) {
+            response.put("loaiSanPham", "Chọn loại sản phẩm");
+        }
+
+        if (sanPhamDTO.getNhaSanXuat_id() == null) {
+            response.put("nhaSanXuat", "Chọn hãng");
+        }
+
+        if (sanPhamDTO.getKichCo() == null || sanPhamDTO.getKichCo().isEmpty()) {
+            response.put("kichCo", "Chọn kích cỡ sản phẩm");
+        }
+
+        if (sanPhamDTO.getMauSac() == null || sanPhamDTO.getMauSac().isEmpty()) {
+            response.put("mauSac", "Chọn màu sắc sản phẩm");
+        }
+
+        if (sanPhamDTO.getGia() == null) {
+            response.put("gia", "Nhập giá sản phẩm");
+        } else if (Float.compare(sanPhamDTO.getGia(), 0.0f) <= 0) {
+            response.put("gia", "Giá tiền sản phẩm phải lớn hơn 0");
         }
 
         if (sanPhamDTO.getSoLuong() <= 0) {
-            response.put("error", "Số lượng sản phẩm phải lớn hơn 0");
+            response.put("soLuong", "Số lượng sản phẩm phải lớn hơn 0");
+        }
+
+        if (!response.isEmpty()) {
             return ResponseEntity.badRequest().body(response);
         }
 
         return ResponseEntity.ok().body(response);
-    }
+    }+
+
 
 }

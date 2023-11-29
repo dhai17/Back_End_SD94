@@ -33,15 +33,25 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Long> {
     @Query(value = "select * from san_pham where name = ?", nativeQuery = true)
     Optional<SanPham> findByName(String name);
 
-    @Query(value = "select * from san_pham where loaiSanPham_id = ?", nativeQuery = true)
+    @Query(value = "select * from san_pham where loai_san_pham_id = ? and is_deleted = false", nativeQuery = true)
     List<SanPham> findByLoaiSanPham(long loaiSanPham_id);
 
-    @Query(value = "select * from san_pham where chatLieu_id = ?", nativeQuery = true)
+    @Query(value = "select * from san_pham where chat_lieu_id = ? and is_deleted = false", nativeQuery = true)
     List<SanPham> findByChatLieu(long chatLieu_id);
 
-    @Query(value = "select * from san_pham where nhaSanXuat_id = ?", nativeQuery = true)
+    @Query(value = "select * from san_pham where nha_san_xuat_id = ? and is_deleted = false", nativeQuery = true)
     List<SanPham> findByNSX(long nhaSanXuat_id);
 
-    @Query(value = "SELECT * FROM san_pham WHERE gia >= gia1 and gia <= gia2", nativeQuery = true)
+    @Query(value = "select * from san_pham \n" +
+            "         join san_pham_chi_tiet on san_pham.id = san_pham_id\n" +
+            "         where mau_sac_id = ? and san_pham.is_deleted = false", nativeQuery = true)
+    List<SanPham> findByMau(long mauSac_id);
+
+    @Query(value = "select * from san_pham\n" +
+            "         join san_pham_chi_tiet on san_pham.id = san_pham_id\n" +
+            "         where kich_co_id = ? and san_pham.is_deleted = false", nativeQuery = true)
+    List<SanPham> findByKichCo(long kichCo_id);
+
+    @Query(value = "SELECT * FROM san_pham WHERE gia >= san_pham.gia1 and gia <= gia2 and is_deleted = false", nativeQuery = true)
     List<SanPham> findTheoGia(Float gia1, Float gia2);
 }
