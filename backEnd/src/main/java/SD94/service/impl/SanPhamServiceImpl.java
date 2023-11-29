@@ -22,9 +22,6 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Autowired
     SanPhamRepository repository;
-//
-//    @Autowired
-//    HinhAnhService hinhAnhService;
 
     @Autowired
     ChatLieuRepository chatLieuRepository;
@@ -108,6 +105,8 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public ResponseEntity<?> taoSanPham(SanPhamDTO sanPhamDTO) {
+        Map<String, Object> response = new HashMap<>();
+
         ChatLieu chatLieu = chatLieuRepository.findByID(sanPhamDTO.getChatLieu_id());
         LoaiSanPham loaiSanPham = loaiSanPhamRepository.findByID(sanPhamDTO.getLoaiSanPham_id());
         NhaSanXuat nhaSanXuat = nhaSanXuatRepository.findByID(sanPhamDTO.getNhaSanXuat_id());
@@ -138,12 +137,10 @@ public class SanPhamServiceImpl implements SanPhamService {
                 sanPhamChiTietList.add(sanPhamChiTiet);
             }
         }
-        Map<String, Object> response = new HashMap<>();
         response.put("list", sanPhamChiTietList);
         response.put("id_product", sanPham.getId());
         return ResponseEntity.ok().body(response);
     }
-
 
     @Override
     public List<Object> chiTietSanPham(long id_SanPham) {

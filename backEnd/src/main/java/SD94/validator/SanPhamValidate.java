@@ -1,12 +1,15 @@
 package SD94.validator;
 
 import SD94.dto.SanPhamDTO;
+import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.KichCoRepository;
 import SD94.repository.sanPham.MauSacRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SanPhamValidate {
@@ -97,6 +100,46 @@ public class SanPhamValidate {
         if (sanPham_id == null) {
             errors.put(SanPhamValidate.ErrorCode.Null_san_pham_id.name(), "Không có sản phẩm nào được tìm thấy");
         }
+    }
+
+    public static ResponseEntity<?> checkTaoSP(SanPhamDTO sanPhamDTO) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (sanPhamDTO.getTenSanPham() == null || sanPhamDTO.getTenSanPham().isEmpty()) {
+            response.put("tenSanPham", "Nhập tên sản phẩm");
+        }
+
+        if (sanPhamDTO.getLoaiSanPham_id() == null) {
+            response.put("loaiSanPham", "Chọn loại sản phẩm");
+        }
+
+        if (sanPhamDTO.getNhaSanXuat_id() == null) {
+            response.put("nhaSanXuat", "Chọn hãng");
+        }
+
+        if (sanPhamDTO.getKichCo() == null || sanPhamDTO.getKichCo().isEmpty()) {
+            response.put("kichCo", "Chọn kích cỡ sản phẩm");
+        }
+
+        if (sanPhamDTO.getMauSac() == null || sanPhamDTO.getMauSac().isEmpty()) {
+            response.put("mauSac", "Chọn màu sắc sản phẩm");
+        }
+
+        if (sanPhamDTO.getGia() == null) {
+            response.put("gia", "Nhập giá sản phẩm");
+        } else if (Float.compare(sanPhamDTO.getGia(), 0.0f) <= 0) {
+            response.put("gia", "Giá tiền sản phẩm phải lớn hơn 0");
+        }
+
+        if (sanPhamDTO.getSoLuong() <= 0) {
+            response.put("soLuong", "Số lượng sản phẩm phải lớn hơn 0");
+        }
+
+        if (!response.isEmpty()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok().body(response);
     }
 
 }

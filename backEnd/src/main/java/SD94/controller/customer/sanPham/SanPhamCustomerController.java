@@ -64,8 +64,8 @@ public class SanPhamCustomerController {
     }
 
     @GetMapping("/loc/loai_san_pham")
-    public List<SanPham> getSanPhamTheoLoaiSanPham(@RequestParam long id_loai_san_pham) {
-        List<SanPham> sanPhams = sanPhamRepository.findByLoaiSanPham(id_loai_san_pham);
+    public List<SanPham> getSanPhamTheoLoaiSanPham(@RequestParam long idloaiSanPham) {
+        List<SanPham> sanPhams = sanPhamRepository.findByLoaiSanPham(idloaiSanPham);
         return sanPhams;
     }
 
@@ -78,6 +78,18 @@ public class SanPhamCustomerController {
     @GetMapping("/loc/nha_san_xuat")
     public List<SanPham> getSanPhamTheoNSX(@RequestParam long id_nsx) {
         List<SanPham> sanPhams = sanPhamRepository.findByNSX(id_nsx);
+        return sanPhams;
+    }
+
+    @GetMapping("/loc/mau_sac")
+    public List<SanPham> getSanPhamTheoMauSac(@RequestParam long mauSac_id) {
+        List<SanPham> sanPhams = sanPhamRepository.findByMau(mauSac_id);
+        return sanPhams;
+    }
+
+    @GetMapping("/loc/kich_co")
+    public List<SanPham> getSanPhamTheoKichCo(@RequestParam long kichCo_id) {
+        List<SanPham> sanPhams = sanPhamRepository.findByKichCo(kichCo_id);
         return sanPhams;
     }
 

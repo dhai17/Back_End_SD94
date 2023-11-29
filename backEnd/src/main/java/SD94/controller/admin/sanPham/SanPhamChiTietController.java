@@ -128,7 +128,7 @@ public class SanPhamChiTietController {
             hinhAnhRepository.save(hinhAnh);
         }
         Map<String, Object> response = new HashMap<>();
-        response.put("mess", "Them anh thanh cong");
+        response.put("mess", "Thêm ảnh thành công");
         return ResponseEntity.ok().body(response);
     }
 
@@ -150,14 +150,14 @@ public class SanPhamChiTietController {
             hinhAnh.setAnhMacDinh(true);
             hinhAnhRepository.save(hinhAnh);
             Map<String, Object> response = new HashMap<>();
-            response.put("mess", "set anh mac dinh thanh cong");
+            response.put("mess", "Đặt ảnh mặc định thành công");
             return ResponseEntity.ok().body(response);
         } else {
             HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId_hinh_anh());
             hinhAnh.setAnhMacDinh(true);
             hinhAnhRepository.save(hinhAnh);
             Map<String, Object> response = new HashMap<>();
-            response.put("mess", "set anh mac dinh thanh cong");
+            response.put("mess", "Đặt ảnh mặc định thành công");
             return ResponseEntity.ok().body(response);
         }
     }
