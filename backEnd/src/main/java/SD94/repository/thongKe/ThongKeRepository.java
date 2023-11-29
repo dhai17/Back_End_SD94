@@ -19,7 +19,7 @@ public interface ThongKeRepository {
     @Procedure(name = "thongKeAll()")
     List<ThongKeAll> getThongKe();
 
-    @Procedure(name = "thongKeTheoNgay()")
+    @Procedure(name = "thongKeTheoNgay();")
     List<TamTinhTongTienDaBanTheoNgay> getThongKeTheoNgay();
 
     @Procedure(name = "thongKeTheoThang()")
