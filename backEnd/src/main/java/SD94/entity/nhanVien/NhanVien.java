@@ -50,10 +50,6 @@ public class NhanVien extends Base implements UserDetails {
     @Column(name = "trangThai", columnDefinition = "int null")
     private int trangThai;
 
-//    @ManyToOne
-//    @JoinColumn(name = "idPosition", referencedColumnName = "id")
-//    private Position position;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "staff")
     @JsonIgnore
     private Set<UserRole> userRoles = new HashSet<>();

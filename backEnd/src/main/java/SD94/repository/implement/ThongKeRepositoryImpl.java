@@ -29,7 +29,7 @@ public class ThongKeRepositoryImpl implements ThongKeRepository {
     @Override
     public List<TamTinhTongTienDaBanTheoNgay> getThongKeTheoNgay() {
         return jdbcTemplate.query(
-                "call tamTinhTongTienDaBanTheoNgay()",
+                "call thongKeTheoNgay();",
                 ((rs, rowNum) -> new TamTinhTongTienDaBanTheoNgay(
                         rs.getLong("trangThai_id"),
                         rs.getLong("tong_so_hoadon"),

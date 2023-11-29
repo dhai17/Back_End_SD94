@@ -2,6 +2,8 @@ package SD94.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class KhachHangDTO {
 
@@ -12,4 +14,12 @@ public class KhachHangDTO {
     private String soDienThoai;
 
     private long id_hoaDon;
+
+    private String email;
+
+    private Date ngaySinh;
+
+    private String diaChi;
+
+
 }
