@@ -83,13 +83,19 @@ public class SanPhamController {
     }
 
     @RequestMapping("/timKiem={search}")
-    public List<SanPham> searchAll(@PathVariable("search") String search) {
+    public ResponseEntity<?> searchAll(@PathVariable("search") String search) {
         return sanPhamService.searchAllProduct(search);
     }
 
     @RequestMapping("/timKiemNgay={searchDate}")
     public List<SanPham> searchDate(@PathVariable("searchDate") String search) {
         return sanPhamService.searchDateProduct(search);
+    }
+
+    @GetMapping("/getAnhSanPham/{id}")
+    public ResponseEntity<?> getAnhMacDinh(@PathVariable("id") long id_sanPham) {
+        List<HinhAnh> hinhAnhs = hinhAnhRepository.getHinhAnhByProductID(id_sanPham);
+        return ResponseEntity.ok().body(hinhAnhs);
     }
 
 }

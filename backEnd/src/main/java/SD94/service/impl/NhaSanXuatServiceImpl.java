@@ -33,7 +33,7 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
         Message errorResponse;
 
         if (nhaSanXuatUpdate.getName() == null || !isValid(nhaSanXuatUpdate.getName())) {
-            errorMessage = "Nhập hợp lệ (chỉ chữ hoặc có cả chữ lẫn số)";
+            errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
@@ -79,7 +79,7 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
         Message errorResponse;
 
         if (nhaSanXuatCreate.getName() == null || !isValid(nhaSanXuatCreate.getName())) {
-            errorMessage = "Nhập hợp lệ (chỉ chữ hoặc có cả chữ lẫn số)";
+            errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }

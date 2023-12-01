@@ -33,7 +33,7 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
         Message errorResponse;
 
         if (loaiSanPhamUpdate.getLoaiSanPham() == null || !isValid(loaiSanPhamUpdate.getLoaiSanPham())) {
-            errorMessage = "Nhập hợp lệ (chỉ chữ hoặc có cả chữ lẫn số)";
+            errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
@@ -78,7 +78,7 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
         Message errorResponse;
 
         if (loaiSanPhamCreate.getLoaiSanPham() == null || !isValid(loaiSanPhamCreate.getLoaiSanPham())) {
-            errorMessage = "Nhập hợp lệ (chỉ chữ hoặc có cả chữ lẫn số)";
+            errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }

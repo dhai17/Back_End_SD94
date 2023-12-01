@@ -41,6 +41,9 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Autowired
     SanPhamChiTietRepository sanPhamChiTietRepository;
 
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
+
     Long id_product;
 
     @Override
@@ -91,9 +94,25 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public List<SanPham> searchAllProduct(String search) {
+    public ResponseEntity<?> searchAllProduct(String search) {
         List<SanPham> list = repository.findByAll(search);
-        return list;
+        List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
+        for (SanPham pham : list) {
+            SanPhamDTO sanPhamDTO = new SanPhamDTO();
+            sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
+            sanPhamDTO.setId(pham.getId());
+            sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
+            sanPhamDTO.setSan_pham_id(pham.getId());
+            sanPhamDTO.setTenSanPham(pham.getTenSanPham());
+            sanPhamDTO.setGia(pham.getGia());
+            sanPhamDTO.setChatLieu(pham.getChatLieu());
+
+            String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
+            sanPhamDTO.setAnh_san_pham(anhSanPham);
+
+            sanPhamDTOList.add(sanPhamDTO);
+        }
+        return ResponseEntity.ok().body(sanPhamDTOList);
     }
 
     @Override

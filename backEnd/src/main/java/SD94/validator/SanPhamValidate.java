@@ -106,27 +106,29 @@ public class SanPhamValidate {
         Map<String, Object> response = new HashMap<>();
 
         if (sanPhamDTO.getTenSanPham() == null || sanPhamDTO.getTenSanPham().isEmpty()) {
-            response.put("tenSanPham", "Nhập tên sản phẩm");
+            response.put("tenSanPham", "Vui lòng nhập tên sản phẩm");
+        } else if (!sanPhamDTO.getTenSanPham().matches("^(?=.*[a-zA-Z0-9])[a-zA-Z0-9@#$%^&+=]*$")) {
+            response.put("tenSanPham", "Tên sản phẩm không hợp lệ");
         }
 
         if (sanPhamDTO.getLoaiSanPham_id() == null) {
-            response.put("loaiSanPham", "Chọn loại sản phẩm");
+            response.put("loaiSanPham", "Vui lòng chọn loại sản phẩm");
         }
 
         if (sanPhamDTO.getNhaSanXuat_id() == null) {
-            response.put("nhaSanXuat", "Chọn hãng");
+            response.put("nhaSanXuat", "Vui lòng chọn hãng");
         }
 
         if (sanPhamDTO.getKichCo() == null || sanPhamDTO.getKichCo().isEmpty()) {
-            response.put("kichCo", "Chọn kích cỡ sản phẩm");
+            response.put("kichCo", "Vui lòng chọn kích cỡ sản phẩm");
         }
 
         if (sanPhamDTO.getMauSac() == null || sanPhamDTO.getMauSac().isEmpty()) {
-            response.put("mauSac", "Chọn màu sắc sản phẩm");
+            response.put("mauSac", "Vui lòng chọn màu sắc sản phẩm");
         }
 
         if (sanPhamDTO.getGia() == null) {
-            response.put("gia", "Nhập giá sản phẩm");
+            response.put("gia", "Vui lòng nhập giá sản phẩm");
         } else if (Float.compare(sanPhamDTO.getGia(), 0.0f) <= 0) {
             response.put("gia", "Giá tiền sản phẩm phải lớn hơn 0");
         }

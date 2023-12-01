@@ -32,7 +32,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         Message errorResponse;
 
         if (chatLieuUpdate.getChatLieu() == null || !isValid(chatLieuUpdate.getChatLieu())) {
-            errorMessage = "Nhập hợp lệ (chỉ chữ hoặc có cả chữ lẫn số)";
+            errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
@@ -77,7 +77,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         Message errorResponse;
 
         if (chatLieuCreate.getChatLieu() == null || !isValid(chatLieuCreate.getChatLieu())) {
-            errorMessage = "Nhập hợp lệ (chỉ chữ hoặc có cả chữ lẫn số)";
+            errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
