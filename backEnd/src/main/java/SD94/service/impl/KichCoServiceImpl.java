@@ -32,8 +32,8 @@ public class KichCoServiceImpl implements KichCoService {
         String errorMessage;
         Message errorResponse;
 
-        if (kichCoUpdate.getKichCo() == null) {
-            errorMessage = "Nhập đầy đủ thông tin";
+        if (kichCoUpdate.getKichCo() == null || !isNumeric(kichCoUpdate.getKichCo())) {
+            errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
@@ -78,7 +78,7 @@ public class KichCoServiceImpl implements KichCoService {
         Message errorResponse;
 
         if (kichCoCreate.getKichCo() == null || !isNumeric(kichCoCreate.getKichCo())) {
-            errorMessage = "Nhập kích cỡ cho đúng định dạng";
+            errorMessage = "Nhập kích cỡ không đúng định dạng";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
