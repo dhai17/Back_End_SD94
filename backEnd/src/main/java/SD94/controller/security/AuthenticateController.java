@@ -36,7 +36,6 @@ public class AuthenticateController {
 
     @Autowired
     NhanVienRepository nhanVienRepository;
-
     // generte token
     @SneakyThrows
     @PostMapping("/login")
@@ -67,4 +66,6 @@ public class AuthenticateController {
     public NhanVien getCurrentUser(Principal principal) {
         return (NhanVien) this.staffDetailsService.loadUserByUsername(principal.getName());
     }
+
+
 }
