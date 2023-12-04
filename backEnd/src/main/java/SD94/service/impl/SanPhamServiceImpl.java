@@ -22,9 +22,6 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Autowired
     SanPhamRepository repository;
-//
-//    @Autowired
-//    HinhAnhService hinhAnhService;
 
     @Autowired
     ChatLieuRepository chatLieuRepository;
@@ -43,6 +40,9 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Autowired
     SanPhamChiTietRepository sanPhamChiTietRepository;
+
+    @Autowired
+    HinhAnhRepository hinhAnhRepository;
 
     Long id_product;
 
@@ -94,9 +94,25 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public List<SanPham> searchAllProduct(String search) {
+    public ResponseEntity<?> searchAllProduct(String search) {
         List<SanPham> list = repository.findByAll(search);
-        return list;
+        List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
+        for (SanPham pham : list) {
+            SanPhamDTO sanPhamDTO = new SanPhamDTO();
+            sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
+            sanPhamDTO.setId(pham.getId());
+            sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
+            sanPhamDTO.setSan_pham_id(pham.getId());
+            sanPhamDTO.setTenSanPham(pham.getTenSanPham());
+            sanPhamDTO.setGia(pham.getGia());
+            sanPhamDTO.setChatLieu(pham.getChatLieu());
+
+            String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
+            sanPhamDTO.setAnh_san_pham(anhSanPham);
+
+            sanPhamDTOList.add(sanPhamDTO);
+        }
+        return ResponseEntity.ok().body(sanPhamDTOList);
     }
 
     @Override
@@ -108,6 +124,8 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public ResponseEntity<?> taoSanPham(SanPhamDTO sanPhamDTO) {
+        Map<String, Object> response = new HashMap<>();
+
         ChatLieu chatLieu = chatLieuRepository.findByID(sanPhamDTO.getChatLieu_id());
         LoaiSanPham loaiSanPham = loaiSanPhamRepository.findByID(sanPhamDTO.getLoaiSanPham_id());
         NhaSanXuat nhaSanXuat = nhaSanXuatRepository.findByID(sanPhamDTO.getNhaSanXuat_id());
@@ -138,12 +156,10 @@ public class SanPhamServiceImpl implements SanPhamService {
                 sanPhamChiTietList.add(sanPhamChiTiet);
             }
         }
-        Map<String, Object> response = new HashMap<>();
         response.put("list", sanPhamChiTietList);
         response.put("id_product", sanPham.getId());
         return ResponseEntity.ok().body(response);
     }
-
 
     @Override
     public List<Object> chiTietSanPham(long id_SanPham) {

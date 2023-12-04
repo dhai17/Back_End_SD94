@@ -32,8 +32,8 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
         String errorMessage;
         Message errorResponse;
 
-        if (loaiSanPhamUpdate.getLoaiSanPham() == "") {
-            errorMessage = "Nhập đầy đủ thông tin";
+        if (loaiSanPhamUpdate.getLoaiSanPham() == null || !isValid(loaiSanPhamUpdate.getLoaiSanPham())) {
+            errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
@@ -77,8 +77,8 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
         String errorMessage;
         Message errorResponse;
 
-        if (loaiSanPhamCreate.getLoaiSanPham() == "") {
-            errorMessage = "Nhập đầy đủ thông tin";
+        if (loaiSanPhamCreate.getLoaiSanPham() == null || !isValid(loaiSanPhamCreate.getLoaiSanPham())) {
+            errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
@@ -91,6 +91,10 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
         } catch (Exception e){
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private boolean isValid(String str) {
+        return str.matches("^(?=.*[a-zA-Z])[a-zA-Z\\d]+$");
     }
 
     @Override

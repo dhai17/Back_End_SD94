@@ -1,9 +1,12 @@
 package SD94.controller.admin.sanPham;
 
+import SD94.dto.HoaDonDTO;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
 import SD94.service.service.SanPhamService;
+import SD94.validator.DatHangCheckoutValidate;
+import SD94.validator.SanPhamValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +32,7 @@ public class SanPhamController {
     public ResponseEntity<?> getProduct() {
         List<SanPham> list = sanPhamRepository.findAll();
         List<SanPhamDTO> dtoList = new ArrayList<>();
-        for(SanPham sp: list){
+        for (SanPham sp : list) {
             SanPhamDTO sanPhamDTO = new SanPhamDTO();
             sanPhamDTO.setId(sp.getId());
             sanPhamDTO.setTenSanPham(sp.getTenSanPham());
@@ -51,7 +54,12 @@ public class SanPhamController {
     //Tạo mới và gen ra sản phẩm chi tiết
     @PostMapping("/TaoSanPham")
     public ResponseEntity<?> saveCreate(@RequestBody SanPhamDTO sanPhamDTO) {
-        return sanPhamService.taoSanPham(sanPhamDTO);
+        ResponseEntity<?> response = SanPhamValidate.checkTaoSP(sanPhamDTO);
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return response;
+        } else {
+            return sanPhamService.taoSanPham(sanPhamDTO);
+        }
     }
 
     @DeleteMapping("/xoa/{id}")
@@ -75,13 +83,19 @@ public class SanPhamController {
     }
 
     @RequestMapping("/timKiem={search}")
-    public List<SanPham> searchAll(@PathVariable("search") String search) {
+    public ResponseEntity<?> searchAll(@PathVariable("search") String search) {
         return sanPhamService.searchAllProduct(search);
     }
 
     @RequestMapping("/timKiemNgay={searchDate}")
     public List<SanPham> searchDate(@PathVariable("searchDate") String search) {
         return sanPhamService.searchDateProduct(search);
+    }
+
+    @GetMapping("/getAnhSanPham/{id}")
+    public ResponseEntity<?> getAnhMacDinh(@PathVariable("id") long id_sanPham) {
+        List<HinhAnh> hinhAnhs = hinhAnhRepository.getHinhAnhByProductID(id_sanPham);
+        return ResponseEntity.ok().body(hinhAnhs);
     }
 
 }

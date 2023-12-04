@@ -55,30 +55,166 @@ public class SanPhamCustomerController {
         return ResponseEntity.ok().body(sanPhamDTOList);
     }
 
+    @GetMapping("/timKiemTheoTen/{search}")
+    public ResponseEntity<?> timKiemTheoTen(@PathVariable("search") String search) {
+        List<SanPham> list = sanPhamRepository.findByName(search);
+        List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
+
+        for (SanPham pham : list) {
+            SanPhamDTO sanPhamDTO = new SanPhamDTO();
+            sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
+            sanPhamDTO.setId(pham.getId());
+            sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
+            sanPhamDTO.setSan_pham_id(pham.getId());
+            sanPhamDTO.setTenSanPham(pham.getTenSanPham());
+            sanPhamDTO.setGia(pham.getGia());
+            sanPhamDTO.setChatLieu(pham.getChatLieu());
+
+            String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
+            sanPhamDTO.setAnh_san_pham(anhSanPham);
+
+            sanPhamDTOList.add(sanPhamDTO);
+        }
+        return ResponseEntity.ok().body(sanPhamDTOList);
+    }
 
     //Loc san pham
     @GetMapping("/loc/gia")
-    public List<SanPham> getSanPhamTheoGia(Float gia1, Float gia2) {
+    public ResponseEntity<?> getSanPhamTheoGia(@RequestParam Float gia1, @RequestParam Float gia2) {
         List<SanPham> sanPhams = sanPhamRepository.findTheoGia(gia1, gia2);
-        return sanPhams;
+        List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
+
+        for (SanPham pham : sanPhams) {
+            SanPhamDTO sanPhamDTO = new SanPhamDTO();
+            sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
+            sanPhamDTO.setId(pham.getId());
+            sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
+            sanPhamDTO.setSan_pham_id(pham.getId());
+            sanPhamDTO.setTenSanPham(pham.getTenSanPham());
+            sanPhamDTO.setGia(pham.getGia());
+            sanPhamDTO.setChatLieu(pham.getChatLieu());
+
+            String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
+            sanPhamDTO.setAnh_san_pham(anhSanPham);
+
+            sanPhamDTOList.add(sanPhamDTO);
+        }
+        return ResponseEntity.ok().body(sanPhamDTOList);
     }
 
     @GetMapping("/loc/loai_san_pham")
-    public List<SanPham> getSanPhamTheoLoaiSanPham(@RequestParam long id_loai_san_pham) {
-        List<SanPham> sanPhams = sanPhamRepository.findByLoaiSanPham(id_loai_san_pham);
-        return sanPhams;
+    public ResponseEntity<?> getSanPhamTheoLoaiSanPham(@RequestParam long idloaiSanPham) {
+        List<SanPham> sanPhams = sanPhamRepository.findByLoaiSanPham(idloaiSanPham);
+        List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
+
+        for (SanPham pham : sanPhams) {
+            SanPhamDTO sanPhamDTO = new SanPhamDTO();
+            sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
+            sanPhamDTO.setId(pham.getId());
+            sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
+            sanPhamDTO.setSan_pham_id(pham.getId());
+            sanPhamDTO.setTenSanPham(pham.getTenSanPham());
+            sanPhamDTO.setGia(pham.getGia());
+            sanPhamDTO.setChatLieu(pham.getChatLieu());
+
+            String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
+            sanPhamDTO.setAnh_san_pham(anhSanPham);
+
+            sanPhamDTOList.add(sanPhamDTO);
+        }
+        return ResponseEntity.ok().body(sanPhamDTOList);
     }
 
     @GetMapping("/loc/chat_lieu")
-    public List<SanPham> getSanPhamTheoChatLieu(@RequestParam long id_chat_lieu) {
+    public ResponseEntity<?> getSanPhamTheoChatLieu(@RequestParam long id_chat_lieu) {
         List<SanPham> sanPhams = sanPhamRepository.findByChatLieu(id_chat_lieu);
-        return sanPhams;
+        List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
+
+        for (SanPham pham : sanPhams) {
+            SanPhamDTO sanPhamDTO = new SanPhamDTO();
+            sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
+            sanPhamDTO.setId(pham.getId());
+            sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
+            sanPhamDTO.setSan_pham_id(pham.getId());
+            sanPhamDTO.setTenSanPham(pham.getTenSanPham());
+            sanPhamDTO.setGia(pham.getGia());
+            sanPhamDTO.setChatLieu(pham.getChatLieu());
+
+            String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
+            sanPhamDTO.setAnh_san_pham(anhSanPham);
+
+            sanPhamDTOList.add(sanPhamDTO);
+        }
+        return ResponseEntity.ok().body(sanPhamDTOList);
     }
 
     @GetMapping("/loc/nha_san_xuat")
-    public List<SanPham> getSanPhamTheoNSX(@RequestParam long id_nsx) {
+    public ResponseEntity<?> getSanPhamTheoNSX(@RequestParam long id_nsx) {
         List<SanPham> sanPhams = sanPhamRepository.findByNSX(id_nsx);
-        return sanPhams;
+        List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
+
+        for (SanPham pham : sanPhams) {
+            SanPhamDTO sanPhamDTO = new SanPhamDTO();
+            sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
+            sanPhamDTO.setId(pham.getId());
+            sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
+            sanPhamDTO.setSan_pham_id(pham.getId());
+            sanPhamDTO.setTenSanPham(pham.getTenSanPham());
+            sanPhamDTO.setGia(pham.getGia());
+            sanPhamDTO.setChatLieu(pham.getChatLieu());
+
+            String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
+            sanPhamDTO.setAnh_san_pham(anhSanPham);
+
+            sanPhamDTOList.add(sanPhamDTO);
+        }
+        return ResponseEntity.ok().body(sanPhamDTOList);
+    }
+
+    @GetMapping("/loc/mau_sac")
+    public ResponseEntity<?> getSanPhamTheoMauSac(@RequestParam long mauSac_id) {
+        List<SanPham> sanPhams = sanPhamRepository.findByMau(mauSac_id);
+        List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
+
+        for (SanPham pham : sanPhams) {
+            SanPhamDTO sanPhamDTO = new SanPhamDTO();
+            sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
+            sanPhamDTO.setId(pham.getId());
+            sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
+            sanPhamDTO.setSan_pham_id(pham.getId());
+            sanPhamDTO.setTenSanPham(pham.getTenSanPham());
+            sanPhamDTO.setGia(pham.getGia());
+            sanPhamDTO.setChatLieu(pham.getChatLieu());
+
+            String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
+            sanPhamDTO.setAnh_san_pham(anhSanPham);
+
+            sanPhamDTOList.add(sanPhamDTO);
+        }
+        return ResponseEntity.ok().body(sanPhamDTOList);
+    }
+
+    @GetMapping("/loc/kich_co")
+    public ResponseEntity<?> getSanPhamTheoKichCo(@RequestParam long kichCo_id) {
+        List<SanPham> sanPhams = sanPhamRepository.findByKichCo(kichCo_id);
+        List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
+
+        for (SanPham pham : sanPhams) {
+            SanPhamDTO sanPhamDTO = new SanPhamDTO();
+            sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
+            sanPhamDTO.setId(pham.getId());
+            sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
+            sanPhamDTO.setSan_pham_id(pham.getId());
+            sanPhamDTO.setTenSanPham(pham.getTenSanPham());
+            sanPhamDTO.setGia(pham.getGia());
+            sanPhamDTO.setChatLieu(pham.getChatLieu());
+
+            String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
+            sanPhamDTO.setAnh_san_pham(anhSanPham);
+
+            sanPhamDTOList.add(sanPhamDTO);
+        }
+        return ResponseEntity.ok().body(sanPhamDTOList);
     }
 
     //Chuc nang
