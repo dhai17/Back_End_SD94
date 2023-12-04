@@ -23,6 +23,6 @@ public interface LoaiSanPhamRepository extends JpaRepository<LoaiSanPham, Long> 
     @Query(value = "SELECT * FROM loai_san_pham WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
     List<LoaiSanPham> findByDate(LocalDate ngayTao);
 
-    @Query(value = "select * from loai_san_pham where name = ?", nativeQuery = true)
-    Optional<LoaiSanPham> findByName(String name);
+    @Query(value = "select * from loai_san_pham where is_deleted = false and loai_san_pham = ?;", nativeQuery = true)
+    LoaiSanPham findByName(String name);
 }
