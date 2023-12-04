@@ -17,7 +17,7 @@ public interface SanPhamService {
 
     ResponseEntity<List<SanPham>> deleteProduct(Long id);
 
-    List<SanPham> searchAllProduct(String search);
+    ResponseEntity<?> searchAllProduct(String search);
 
     List<SanPham> searchDateProduct(String searchDate);
 
