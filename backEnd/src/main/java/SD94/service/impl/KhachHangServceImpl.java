@@ -75,7 +75,7 @@ public class KhachHangServceImpl implements KhachHangService {
 
         //Email
         String email = khachHangCreate.getEmail();
-        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";//kiểm tra định dạng email
+        String emailRegex = "^[A-Za-z0-9+_.-]+@.+";//kiểm tra định dạng email
         Pattern pattern = Pattern.compile(emailRegex);//tạo Pattern để kiểm tra email
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches()) {
@@ -134,7 +134,7 @@ public class KhachHangServceImpl implements KhachHangService {
 
         //Email
         String email = khachHangEdit.getEmail();
-        String emailRegex = "^[A-Za-z0-9+_.-]+@gmail(.+)$";//kiểm tra định dạng email
+        String emailRegex = "^[A-Za-z0-9+_.-]+@.+";//kiểm tra định dạng email
         Pattern pattern = Pattern.compile(emailRegex);//tạo Pattern để kiểm tra email
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches()) {
