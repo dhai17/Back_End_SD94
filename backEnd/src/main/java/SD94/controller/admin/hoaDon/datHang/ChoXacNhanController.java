@@ -77,8 +77,9 @@ public class ChoXacNhanController {
     @PutMapping("/huyDon/daChon")
     public List<HoaDon> updateStatusSelect5(@RequestBody HoaDonDTO hoaDonDTO) {
             String email = hoaDonDTO.getEmail_user();
+            String ghiChu= hoaDonDTO.getGhiChu();
             NhanVien nhanVien = nhanVienRepository.findByEmail(email);
-        return hoaDonDatHangService.capNhatTrangThaiHuy_DaChon(hoaDonDTO, nhanVien.getHoTen());
+        return hoaDonDatHangService.capNhatTrangThaiHuy_DaChon(hoaDonDTO, nhanVien.getHoTen(),ghiChu);
     }
 
     @RequestMapping("/timKiem={search}")

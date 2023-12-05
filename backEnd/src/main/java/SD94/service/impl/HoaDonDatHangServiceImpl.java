@@ -119,13 +119,14 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public List<HoaDon> capNhatTrangThaiHuy_DaChon(HoaDonDTO hoaDonDTO, String nguoiThaoTac) {
+    public List<HoaDon> capNhatTrangThaiHuy_DaChon(HoaDonDTO hoaDonDTO, String nguoiThaoTac, String ghiChu) {
         for (Long id_hoaDon : hoaDonDTO.getId_hoaDon()) {
             HoaDon hoaDon = hoaDonRepository.findByID(id_hoaDon);
             Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(5L);
             if (optionalTrangThai.isPresent()) {
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
+                hoaDon.setGhiChu(ghiChu);
                 createTimeLine("Huỷ đơn", 5L, id_hoaDon, nguoiThaoTac);
                 hoaDonRepository.save(hoaDon);
             }
