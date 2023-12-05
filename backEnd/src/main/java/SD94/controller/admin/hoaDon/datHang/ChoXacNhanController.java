@@ -92,7 +92,7 @@ public class ChoXacNhanController {
     }
     @GetMapping("/inHoaDon/{id}")
     public ResponseEntity<byte[]> inHoaDon(@PathVariable("id") long id) {
-        return inHoaDonService.hoaDonDatHangPdf(id,"Đã thanh toán trước");
+        return inHoaDonService.hoaDonDatHangPdf(id,"Thanh toán khi nhận hàng");
     }
     @GetMapping("/guiMail/{id}")
     public void guiMail(@PathVariable("id") long id) {

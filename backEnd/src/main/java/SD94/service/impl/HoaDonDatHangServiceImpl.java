@@ -75,6 +75,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         if (optionalTrangThai.isPresent()) {
             TrangThai trangThai = optionalTrangThai.get();
             hoaDon.setTrangThai(trangThai);
+            hoaDon.setGhiChu(ghiChu);
             hoaDonRepository.save(hoaDon);
         }
         return ResponseEntity.ok().build();
