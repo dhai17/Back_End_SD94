@@ -122,7 +122,7 @@
     </div>
     <div class="moDau">
         <h2>Xin chào <span th:text="${hoaDon.nguoiNhan}"></span>,</h2>
-        <p>Hoá đơn của bạn đã được nhân viên của shop cập nhật trạng thái <span th:text="${hoaDon.trangThai.getName()}"></span> </p>
+        <p>Hoá đơn của bạn đã được xử lý <span th:text="${hoaDon.trangThai.getName()}"></span> </p>
     </div>
 
     <h1>Thông tin đơn hàng</h1>
@@ -133,6 +133,7 @@
         <p>Số điện thoại: <span th:text="${hoaDon.getSDTNguoiNhan()}"></span></p>
         <p>Email: <span th:text="${hoaDon.emailNguoiNhan}"></span></p>
         <p>Trạng thái đơn: <span th:text="${hoaDon.trangThai.getName()}"></span> </p>
+        <p>Ghi chú: <span th:text="${hoaDon.ghiChu}"></span> </p>
     </div>
 
     <div class="order-details">

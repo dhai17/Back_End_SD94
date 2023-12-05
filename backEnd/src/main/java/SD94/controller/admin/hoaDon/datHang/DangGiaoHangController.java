@@ -45,6 +45,7 @@ public class DangGiaoHangController {
     @PostMapping("/capNhatTrangThai/huyDon5")
     public ResponseEntity<Map<String, Boolean>> updateStatus5(@RequestBody HoaDonDTO hoaDonDTO) {
         Long id = hoaDonDTO.getId();
+        String ghiChu = hoaDonDTO.getGhiChu();
         String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
         String nguoiThaoTac = null;
@@ -54,7 +55,7 @@ public class DangGiaoHangController {
             KhachHang khachHang = khachHangRepository.findByEmail(email);
             nguoiThaoTac = khachHang.getHoTen();
         }
-        hoaDonDatHangService.capNhatTrangThai(5, id);
+        hoaDonDatHangService.capNhatTrangThaiHuyDon(5, id, ghiChu);
         hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, nguoiThaoTac);
         return ResponseEntity.ok().build();
     }
