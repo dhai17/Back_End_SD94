@@ -23,6 +23,6 @@ public interface NhaSanXuatRepository extends JpaRepository<NhaSanXuat, Long> {
     @Query(value = "SELECT * FROM nha_san_xuat WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
     List<NhaSanXuat> findnha_san_xuatByDate(LocalDate ngayTao);
 
-    @Query(value = "select * from nha_san_xuat where name = ?", nativeQuery = true)
-    Optional<NhaSanXuat> findByName(String name);
+    @Query(value = "select * from nha_san_xuat where is_deleted = false and nha_san_xuat = ?;", nativeQuery = true)
+    NhaSanXuat findByName(String name);
 }

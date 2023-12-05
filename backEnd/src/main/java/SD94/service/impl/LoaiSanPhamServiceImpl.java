@@ -29,9 +29,15 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
 
     @Override
     public ResponseEntity<LoaiSanPham> saveEdit(LoaiSanPham loaiSanPhamUpdate) {
+        LoaiSanPham optionaLoaiSanPham = repository.findByName(loaiSanPhamUpdate.getLoaiSanPham());
         String errorMessage;
         Message errorResponse;
 
+        if (optionaLoaiSanPham != null) {
+            errorMessage = " Trùng loại sản phẩm";
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         if (loaiSanPhamUpdate.getLoaiSanPham() == null || !isValid(loaiSanPhamUpdate.getLoaiSanPham())) {
             errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
@@ -74,9 +80,15 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
 
     @Override
     public ResponseEntity<LoaiSanPham> saveCreate(LoaiSanPham loaiSanPhamCreate) {
+        LoaiSanPham optionaLoaiSanPham = repository.findByName(loaiSanPhamCreate.getLoaiSanPham());
         String errorMessage;
         Message errorResponse;
 
+        if (optionaLoaiSanPham != null) {
+            errorMessage = " Trùng loại sản phẩm";
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         if (loaiSanPhamCreate.getLoaiSanPham() == null || !isValid(loaiSanPhamCreate.getLoaiSanPham())) {
             errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
@@ -94,7 +106,7 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
     }
 
     private boolean isValid(String str) {
-        return str.matches("^(?=.*[a-zA-Z])[a-zA-Z\\d]+$");
+        return str.matches("^[a-zA-Z\\d\\s\\S]+$");
     }
 
     @Override

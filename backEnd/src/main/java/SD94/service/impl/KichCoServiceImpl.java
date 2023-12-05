@@ -29,9 +29,15 @@ public class KichCoServiceImpl implements KichCoService {
 
     @Override
     public ResponseEntity<KichCo> saveEdit(KichCo kichCoUpdate) {
+        KichCo optionalkichCo = kichCoRepository.findByName(kichCoUpdate.getKichCo());
         String errorMessage;
         Message errorResponse;
 
+        if (optionalkichCo != null) {
+            errorMessage = " Trùng kích cỡ";
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         if (kichCoUpdate.getKichCo() == null || !isNumeric(kichCoUpdate.getKichCo())) {
             errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
@@ -74,9 +80,15 @@ public class KichCoServiceImpl implements KichCoService {
 
     @Override
     public ResponseEntity<KichCo> saveCreate(KichCo kichCoCreate) {
+        KichCo optionalkichCo = kichCoRepository.findByName(kichCoCreate.getKichCo());
         String errorMessage;
         Message errorResponse;
 
+        if (optionalkichCo != null) {
+            errorMessage = " Trùng kích cỡ";
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         if (kichCoCreate.getKichCo() == null || !isNumeric(kichCoCreate.getKichCo())) {
             errorMessage = "Nhập kích cỡ không đúng định dạng";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
