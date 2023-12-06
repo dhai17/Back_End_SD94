@@ -80,12 +80,12 @@ public class DanhSachController {
     @PostMapping("/daNhanDuocHang")
     public ResponseEntity<?> daNhanDuocHang(@RequestBody HoaDonDTO dto){
         HoaDon hoaDon = hoaDonRepository.findByID(dto.getId());
-        TrangThai trangThai = trangThaiRepository.findByID(4L);
+        TrangThai trangThai = trangThaiRepository.findByID(9L);
         KhachHang khachHang = khachHangRepository.findByEmail(dto.getNguoi_thao_tac());
         hoaDon.setTrangThai(trangThai);
         hoaDonRepository.save(hoaDon);
 
-        hoaDonDatHangService.createTimeLine("Giao hàng thành công", 4L,hoaDon.getId(), khachHang.getHoTen());
+        hoaDonDatHangService.createTimeLine("Đã nhận được hàng", 9L,hoaDon.getId(), khachHang.getHoTen());
         List<HoaDon> hoaDonReturn = hoaDonRepository.getDSChoXacNhan(khachHang.getId(), 3L);
         return ResponseEntity.ok().body(hoaDonReturn);
     }
