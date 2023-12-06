@@ -28,9 +28,15 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public ResponseEntity<ChatLieu> saveEdit(ChatLieu chatLieuUpdate) {
+        ChatLieu optionalChatLieu = repository.findByName(chatLieuUpdate.getChatLieu());
         String errorMessage;
         Message errorResponse;
 
+        if (optionalChatLieu != null) {
+            errorMessage = " Trùng loại chất liệu";
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         if (chatLieuUpdate.getChatLieu() == null || !isValid(chatLieuUpdate.getChatLieu())) {
             errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
@@ -73,9 +79,15 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public ResponseEntity<?> saveCreate(ChatLieu chatLieuCreate) {
+        ChatLieu optionalChatLieu = repository.findByName(chatLieuCreate.getChatLieu());
         String errorMessage;
         Message errorResponse;
 
+        if (optionalChatLieu != null) {
+            errorMessage = " Trùng loại chất liệu";
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         if (chatLieuCreate.getChatLieu() == null || !isValid(chatLieuCreate.getChatLieu())) {
             errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
@@ -94,7 +106,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     }
 
     private boolean isValid(String str) {
-        return str.matches("^(?=.*[a-zA-Z])[a-zA-Z\\d]+$");
+        return str.matches("^[a-zA-Z\\d\\s\\S]+$");
     }
 
     @Override

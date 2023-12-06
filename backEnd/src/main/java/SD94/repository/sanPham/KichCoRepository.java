@@ -20,8 +20,8 @@ public interface KichCoRepository extends JpaRepository<KichCo, Long> {
     @Query(value = "SELECT * FROM kich_co WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
     List<KichCo> findByDate(LocalDate ngayTao);
 
-    @Query(value = "select * from kich_co where name = ?", nativeQuery = true)
-    Optional<KichCo> findByName(String name);
+    @Query(value = "select * from kich_co where is_deleted = false and kich_co = ?;", nativeQuery = true)
+    KichCo findByName(String name);
 
     @Query(value = "SELECT pc.kich_co AS ten_kich_co FROM san_pham_chi_tiet pd JOIN kich_co pc ON pd.kich_co_id = pc.id WHERE pd.san_pham_id = ? GROUP BY pd.kich_co_id", nativeQuery = true)
     List<String> getKichCo(long id_product);

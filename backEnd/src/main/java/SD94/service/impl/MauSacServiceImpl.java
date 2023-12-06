@@ -74,9 +74,21 @@ public class MauSacServiceImpl implements MauSacService {
 
     @Override
     public ResponseEntity<MauSac> saveCreate(MauSac productMauSac) {
+        MauSac optionalMauSac = repository.findByName(productMauSac.getTenMauSac(), productMauSac.getMaMauSac());
         String errorMessage;
         Message errorResponse;
 
+        if (optionalMauSac != null) {
+            if (optionalMauSac.getTenMauSac().equals(productMauSac.getTenMauSac())) {
+                errorMessage = "Trùng tên màu";
+            } else if (optionalMauSac.getMaMauSac().equals(productMauSac.getMaMauSac())) {
+                errorMessage = "Trùng mã màu";
+            } else {
+                errorMessage = "Trùng tên hoặc mã";
+            }
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         if (productMauSac.getTenMauSac() == null) {
             errorMessage = "Nhập đầy đủ thông tin";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);

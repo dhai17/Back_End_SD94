@@ -28,10 +28,15 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
 
     @Override
     public ResponseEntity<NhaSanXuat> saveEdit(NhaSanXuat nhaSanXuatUpdate) {
-
+        NhaSanXuat optionalNhaSanXuat = producerRepository.findByName(nhaSanXuatUpdate.getName());
         String errorMessage;
         Message errorResponse;
 
+        if (optionalNhaSanXuat != null) {
+            errorMessage = " Trùng hãng sản phẩm";
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         if (nhaSanXuatUpdate.getName() == null || !isValid(nhaSanXuatUpdate.getName())) {
             errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
@@ -43,7 +48,6 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
             if (optionalProducer.isPresent()){
                 NhaSanXuat nhaSanXuat = optionalProducer.get();
                 nhaSanXuat.setName(nhaSanXuatUpdate.getName());
-                nhaSanXuat.setDiaChi(nhaSanXuatUpdate.getDiaChi());
                 producerRepository.save(nhaSanXuat);
                 return ResponseEntity.ok(nhaSanXuat);
             } else {
@@ -74,10 +78,15 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
 
     @Override
     public ResponseEntity<NhaSanXuat> saveCreate(NhaSanXuat nhaSanXuatCreate) {
-
+        NhaSanXuat optionalNhaSanXuat = producerRepository.findByName(nhaSanXuatCreate.getName());
         String errorMessage;
         Message errorResponse;
 
+        if (optionalNhaSanXuat != null) {
+            errorMessage = " Trùng hãng sản phẩm";
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         if (nhaSanXuatCreate.getName() == null || !isValid(nhaSanXuatCreate.getName())) {
             errorMessage = "Nhập không hợp lệ";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
@@ -96,7 +105,7 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
     }
 
     private boolean isValid(String str) {
-        return str.matches("^(?=.*[a-zA-Z])[a-zA-Z\\d]+$");
+        return str.matches("^[a-zA-Z\\d\\s\\S]+$");
     }
 
     @Override

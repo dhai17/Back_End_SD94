@@ -23,6 +23,6 @@ public interface ChatLieuRepository extends JpaRepository<ChatLieu, Long> {
     @Query(value = "SELECT * FROM chat_lieu WHERE is_deleted = false AND DATE(started_date) = ?", nativeQuery = true)
     List<ChatLieu> findByDate(LocalDate ngayTao);
 
-    @Query(value = "select * from chat_lieu where name = ?", nativeQuery = true)
-    Optional<ChatLieu> findByName(String name);
+    @Query(value = "select * from chat_lieu where chat_lieu = ? and  is_deleted = false;", nativeQuery = true)
+    ChatLieu findByName(String name);
 }
