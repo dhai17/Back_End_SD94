@@ -19,4 +19,10 @@ public class GioHangChiTietDTO {
     private BigDecimal thanhTien;
 
     private String anh_san_pham;
+
+    private Integer soLuongBanDau;
+
+    private Integer soLuongCapNhat;
+
+    private String email_user;
 }
