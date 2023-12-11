@@ -12,6 +12,7 @@ import SD94.repository.gioHang.GioHangRepository;
 import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
+import SD94.service.service.GioHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -38,6 +40,9 @@ public class GioHangController {
 
     @Autowired
     HinhAnhRepository hinhAnhRepository;
+
+    @Autowired
+    GioHangService gioHangService;
 
     @RequestMapping("/danhSach/{email}")
     public ResponseEntity<?> listCart(@PathVariable("email") String email) {
@@ -98,4 +103,8 @@ public class GioHangController {
         return cartList;
     }
 
+    @PostMapping("/update/soLuongGioHangChiTiet")
+    public ResponseEntity<?> updateSoLuongGioHangChiTiet(@RequestBody GioHangChiTietDTO dto){
+        return gioHangService.updateSoLuong(dto);
+    }
 }
