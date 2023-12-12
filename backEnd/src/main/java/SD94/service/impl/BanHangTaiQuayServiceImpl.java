@@ -229,22 +229,28 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
     @Override
     public ResponseEntity thanhToan(HoaDonDTO hoaDonDTO) {
         HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
-        TrangThai trangThai = trangThaiRepository.findByID(7L);
-        NhanVien nhanVien = nhanVienRepository.findByEmail(hoaDonDTO.getEmail_user());
-
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDonDTO.getId());
-        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
-            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
-            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
-            sanPhamChiTietRepository.save(sanPhamChiTiet);
-        }
-
-        hoaDon.setTrangThai(trangThai);
-        hoaDon.setNhanVien(nhanVien);
-        hoaDonRepository.save(hoaDon);
         Map<String, String> response = new HashMap<>();
-        response.put("message", "Thanh toán thành công");
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        if(hoaDonChiTiets.isEmpty() || hoaDonChiTiets.size() == 0){
+            response.put("err", "hoa don chua co san pham");
+            return ResponseEntity.badRequest().body(response);
+        }else {
+            TrangThai trangThai = trangThaiRepository.findByID(7L);
+            NhanVien nhanVien = nhanVienRepository.findByEmail(hoaDonDTO.getEmail_user());
+
+            for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+                SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
+                sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
+                sanPhamChiTietRepository.save(sanPhamChiTiet);
+            }
+
+            hoaDon.setTrangThai(trangThai);
+            hoaDon.setNhanVien(nhanVien);
+            hoaDonRepository.save(hoaDon);
+            response.put("message", "Thanh toán thành công");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
     }
 
     @Override
