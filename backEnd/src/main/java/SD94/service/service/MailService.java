@@ -1,8 +1,14 @@
 package SD94.service.service;
 
+import SD94.dto.SanPhamDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.nhanVien.NhanVien;
+import SD94.entity.sanPham.SanPham;
+import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
+import SD94.repository.nhanVien.NhanVienRepository;
+import SD94.repository.sanPham.SanPhamChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -26,6 +32,12 @@ public class MailService {
 
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
+
+    @Autowired
+    SanPhamChiTietRepository sanPhamChiTietRepository;
+
+    @Autowired
+    NhanVienRepository nhanVienRepository;
 
     public void sendOrderConfirmationEmail(String recipientEmail,
                                            HoaDon hoaDon) throws MessagingException {
@@ -85,6 +97,28 @@ public class MailService {
         // Thêm các thông tin khác của đơn hàng vào context nếu cần
 
         String emailContent = templateEngine.process("mail/GuiMailKhiThaoTac", context);
+
+        helper.setText(emailContent, true);
+
+        javaMailSender.send(message);
+    }
+    public void guiMailThemSP(String recipientEmail,
+                                  SanPhamDTO sanPham) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        System.out.println(sanPham);
+        helper.setFrom("linhnkph22810@fpt.edu.vn");
+        helper.setTo(recipientEmail);
+        helper.setSubject("Nhân viên của bạn vùa thêm mới sản phẩm");
+
+        NhanVien nhanVien = nhanVienRepository.findByEmail(sanPham.getEmail_user());
+        // Tạo context và thêm thông tin đơn hàng vào mẫu email
+        Context context = new Context();
+        context.setVariable("nhanVien", nhanVien);
+        context.setVariable("tenSanPham", sanPham.getTenSanPham());
+        context.setVariable("gia", sanPham.getGia());
+
+        String emailContent = templateEngine.process("mail/GuiMailThemSP", context);
 
         helper.setText(emailContent, true);
 

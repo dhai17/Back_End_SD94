@@ -4,6 +4,7 @@ import SD94.dto.HoaDonDTO;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
+import SD94.service.service.MailService;
 import SD94.service.service.SanPhamService;
 import SD94.validator.DatHangCheckoutValidate;
 import SD94.validator.SanPhamValidate;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,9 @@ public class SanPhamController {
 
     @Autowired
     HinhAnhRepository hinhAnhRepository;
+
+    @Autowired
+    MailService mailService;
 
     @GetMapping("/danhSach")
     public ResponseEntity<?> getProduct() {
@@ -96,6 +101,14 @@ public class SanPhamController {
     public ResponseEntity<?> getAnhMacDinh(@PathVariable("id") long id_sanPham) {
         List<HinhAnh> hinhAnhs = hinhAnhRepository.getHinhAnhByProductID(id_sanPham);
         return ResponseEntity.ok().body(hinhAnhs);
+    }
+    @PostMapping("/guiMailThemSanPham")
+    public void guiMail(@RequestBody SanPhamDTO sanPhamDTO) {
+        try {
+            mailService.guiMailThemSP("oktoife2.0@gmail.com",sanPhamDTO);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
 }
