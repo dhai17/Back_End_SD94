@@ -119,7 +119,7 @@ public class SanPhamController {
         if (sanPhamChiTiet != null) {
             respone.put("err", "Sản phẩm này đã có");
             return ResponseEntity.badRequest().body(respone);
-        }else {
+        } else {
             SanPhamChiTiet spct = new SanPhamChiTiet();
             spct.setSanPham(sanPham);
             spct.setMauSac(mauSac);
