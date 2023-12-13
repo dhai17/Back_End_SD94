@@ -58,6 +58,6 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     @Query(value = "select so_luong from san_pham_chi_tiet where mau_sac_id = ?1 and kich_co_id = ?2 and san_pham_id = ?3", nativeQuery = true)
     Integer getSoLuongHienCp(long mau_sac_id, long kich_co_id, long san_pham_id);
 
-    @Query(value = "select * from san_pham_chi_tiet where mau_sac_id = ?1 and kich_co_id = ?2 and san_pham_id = ?3", nativeQuery = true)
+    @Query(value = "select * from san_pham_chi_tiet where mau_sac_id = ?1 and kich_co_id = ?2 and san_pham_id = ?3 and is_deleted = false", nativeQuery = true)
     SanPhamChiTiet getSanPhamChiTiet(long mau_sac_id, long kich_co_id, long san_pham_id);
 }

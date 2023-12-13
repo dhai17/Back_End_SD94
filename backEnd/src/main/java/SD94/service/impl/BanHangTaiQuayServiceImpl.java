@@ -99,7 +99,8 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
     }
 
     @Override
-    public ResponseEntity themSanPham(SanPhamDTO dto) {
+    public ResponseEntity<?> themSanPham(SanPhamDTO dto) {
+        Map<String, String> respone = new HashMap<>();
         MauSac mauSac = mauSacRepository.findByMaMauSac(dto.getMaMauSac());
         KichCo kichCo = kichCoRepository.findByKichCo(dto.getKichCoDaChon());
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.getSanPhamChiTiet(mauSac.getId(), kichCo.getId(), dto.getSan_pham_id());
@@ -107,37 +108,49 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         HoaDon hoaDon = hoaDonRepository.findByID(dto.getId_hoaDon());
         Optional<HoaDonChiTiet> optionalHDCT = hoaDonChiTietRepository.checkHDCT(hoaDon.getId(), sanPhamChiTiet.getId());
 
-        if (optionalHDCT.isPresent()) {
-            HoaDonChiTiet hoaDonChiTiet = optionalHDCT.get();
-            int soLuongMoi = hoaDonChiTiet.getSoLuong() + dto.getSoLuong();
-            int thanhTienMoi = (int) (sanPham.getGia() * soLuongMoi);
-            hoaDonChiTiet.setSoLuong(soLuongMoi);
-            hoaDonChiTiet.setThanhTien(thanhTienMoi);
-            hoaDonChiTietRepository.save(hoaDonChiTiet);
-        } else {
-            int thanhTien = (int) (dto.getSoLuong() * sanPham.getGia());
+        int soLuongBanDau = sanPhamChiTiet.getSoLuong();
+        int soLuongThem = dto.getSoLuong();
+        if(soLuongThem > soLuongBanDau){
+            respone.put("err", "So luong nhap vao lon hon so luong hien co");
+            return ResponseEntity.ok().body(respone);
+        }else {
+            if (optionalHDCT.isPresent()) {
+                HoaDonChiTiet hoaDonChiTiet = optionalHDCT.get();
+                int soLuongMoi = hoaDonChiTiet.getSoLuong() + dto.getSoLuong();
+                int thanhTienMoi = (int) (sanPham.getGia() * soLuongMoi);
+                hoaDonChiTiet.setSoLuong(soLuongMoi);
+                hoaDonChiTiet.setThanhTien(thanhTienMoi);
+                hoaDonChiTietRepository.save(hoaDonChiTiet);
 
-            HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-            hoaDonChiTiet.setHoaDon(hoaDon);
-            hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-            hoaDonChiTiet.setDonGia(dto.getDonGia());
-            hoaDonChiTiet.setSoLuong(dto.getSoLuong());
-            hoaDonChiTiet.setThanhTien(thanhTien);
-            hoaDonChiTietRepository.save(hoaDonChiTiet);
+                sanPhamChiTiet.setSoLuong(soLuongBanDau - soLuongThem);
+                sanPhamChiTietRepository.save(sanPhamChiTiet);
+            } else {
+                int thanhTien = (int) (dto.getSoLuong() * sanPham.getGia());
+                HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+                hoaDonChiTiet.setHoaDon(hoaDon);
+                hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                hoaDonChiTiet.setDonGia(dto.getDonGia());
+                hoaDonChiTiet.setSoLuong(dto.getSoLuong());
+                hoaDonChiTiet.setThanhTien(thanhTien);
+                hoaDonChiTietRepository.save(hoaDonChiTiet);
+
+                sanPhamChiTiet.setSoLuong(soLuongBanDau - soLuongThem);
+                sanPhamChiTietRepository.save(sanPhamChiTiet);
+            }
+
+            List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(dto.getId_hoaDon());
+
+            int totalAmount = 0;
+            for (HoaDonChiTiet hdct : hoaDonChiTiets) {
+                totalAmount += hdct.getThanhTien();
+            }
+
+            hoaDon.setTongTienHoaDon(totalAmount);
+            hoaDon.setTongTienDonHang(totalAmount);
+            hoaDonRepository.save(hoaDon);
+
+            return ResponseEntity.ok(HttpStatus.OK);
         }
-
-        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(dto.getId_hoaDon());
-
-        int totalAmount = 0;
-        for (HoaDonChiTiet hdct : hoaDonChiTiets) {
-            totalAmount += hdct.getThanhTien();
-        }
-
-        hoaDon.setTongTienHoaDon(totalAmount);
-        hoaDon.setTongTienDonHang(totalAmount);
-        hoaDonRepository.save(hoaDon);
-
-        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @Override
@@ -218,7 +231,12 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
     public ResponseEntity huyDon(HoaDonDTO hoaDonDTO) {
         HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
         TrangThai trangThai = trangThaiRepository.findByID(8L);
-
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+        }
         hoaDon.setTrangThai(trangThai);
         hoaDonRepository.save(hoaDon);
         Map<String, String> response = new HashMap<>();

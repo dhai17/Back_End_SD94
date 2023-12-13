@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public interface BanHangOnlineService {
-    Long checkout(GioHangDTO dto);
+    ResponseEntity<?> checkout(GioHangDTO dto);
 
     ResponseEntity<HoaDon> getHoaDon(long id_hoa_don);
 

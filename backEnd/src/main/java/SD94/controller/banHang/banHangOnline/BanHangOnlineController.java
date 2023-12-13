@@ -28,8 +28,7 @@ public class BanHangOnlineController {
         if (!response.getStatusCode().is2xxSuccessful()) {
             return response;
         } else {
-            Long id_hoaDon = banHangOnlineService.checkout(dto);
-            return ResponseEntity.ok(id_hoaDon);
+            return ResponseEntity.ok(banHangOnlineService.checkout(dto));
         }
     }
 
