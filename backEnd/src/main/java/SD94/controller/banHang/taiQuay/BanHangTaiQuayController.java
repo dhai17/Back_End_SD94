@@ -13,6 +13,7 @@ import SD94.repository.khuyenMai.KhuyenMaiRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.service.service.BanHangTaiQuayService;
 import SD94.service.service.InHoaDonService;
+import SD94.validator.TaiQuayValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -81,8 +82,13 @@ public class BanHangTaiQuayController {
     }
 
     @PostMapping("/themSanPham")
-    public ResponseEntity themSanPham(@RequestBody SanPhamDTO dto) {
-        return banHangTaiQuayService.themSanPham(dto);
+    public ResponseEntity<?> themSanPham(@RequestBody SanPhamDTO dto) {
+        ResponseEntity<?> response = TaiQuayValidate.Taiquay(dto);
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return response;
+        } else {
+            return banHangTaiQuayService.themSanPham(dto);
+        }
     }
 
     @GetMapping("/getHoaDon/{id}")
@@ -125,8 +131,9 @@ public class BanHangTaiQuayController {
 
     @PostMapping("/thanhToan")
     public ResponseEntity thanhToan(@RequestBody HoaDonDTO hoaDonDTO) {
-        return banHangTaiQuayService.thanhToan(hoaDonDTO);
-    }
+            return banHangTaiQuayService.thanhToan(hoaDonDTO);
+        }
+
 
     @GetMapping("/inHoaDon/{id}")
     public ResponseEntity<byte[]> inHoaDon(@PathVariable("id") long id) {

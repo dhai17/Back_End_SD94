@@ -69,6 +69,7 @@ public class MailService {
         helper.setSubject("Đơn hàng của bạn đang được nhân viên của chúng tôi xử lý");
 
         long idHoaDon = hoaDon.getId();
+
         // Lấy danh sách ảnh chính của tất cả sản phẩm và lưu vào List
         List<HoaDonChiTiet> hoaDonChiTiet = hoaDonChiTietRepository.findByIDBill(idHoaDon);
         List<String> tenAnhChinhList = new ArrayList<>();
