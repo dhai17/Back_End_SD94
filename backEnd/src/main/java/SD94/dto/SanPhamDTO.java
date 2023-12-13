@@ -66,9 +66,4 @@ public class SanPhamDTO {
 
     private String anh_san_pham;
 
-    private String email_user;
-
-    private String role_user;
-
-    private List<SanPhamChiTiet> sanPhamChiTiets;
 }

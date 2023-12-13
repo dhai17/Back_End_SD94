@@ -102,29 +102,6 @@ public class MailService {
 
         javaMailSender.send(message);
     }
-    public void guiMailThemSP(String recipientEmail,
-                                  SanPhamDTO sanPham) throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        System.out.println(sanPham);
-        helper.setFrom("linhnkph22810@fpt.edu.vn");
-        helper.setTo(recipientEmail);
-        helper.setSubject("Nhân viên của bạn vùa thêm mới sản phẩm");
-
-        NhanVien nhanVien = nhanVienRepository.findByEmail(sanPham.getEmail_user());
-        // Tạo context và thêm thông tin đơn hàng vào mẫu email
-        Context context = new Context();
-        context.setVariable("nhanVien", nhanVien);
-        context.setVariable("tenSanPham", sanPham.getTenSanPham());
-        context.setVariable("gia", sanPham.getGia());
-
-        String emailContent = templateEngine.process("mail/GuiMailThemSP", context);
-
-        helper.setText(emailContent, true);
-
-        javaMailSender.send(message);
-    }
-
     public SimpleMailMessage sendMailRanDom(String from, String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);

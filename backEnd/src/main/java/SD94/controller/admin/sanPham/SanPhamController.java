@@ -102,13 +102,5 @@ public class SanPhamController {
         List<HinhAnh> hinhAnhs = hinhAnhRepository.getHinhAnhByProductID(id_sanPham);
         return ResponseEntity.ok().body(hinhAnhs);
     }
-    @PostMapping("/guiMailThemSanPham")
-    public void guiMail(@RequestBody SanPhamDTO sanPhamDTO) {
-        try {
-            mailService.guiMailThemSP("oktoife2.0@gmail.com",sanPhamDTO);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
