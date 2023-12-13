@@ -368,7 +368,7 @@ public class InHoaDonService {
             htmlContentBuilder.append("<p>Số điện thoại khách hàng: ").append(hoaDon.getSDTNguoiNhan()).append("</p>");
             htmlContentBuilder.append("<p>Địa chỉ: ").append(hoaDon.getDiaChiGiaoHang()).append("</p>");
             htmlContentBuilder.append("<p>Trạng thái đơn: ").append(tinhTrangThanhToan).append("</p>");
-
+            htmlContentBuilder.append("<p>Ghi chú: ").append(hoaDon.getGhiChu()).append("</p>");
 
             String formattedTongTienDonHang = numberFormat.format(hoaDon.getTongTienDonHang());
             String formattedTongTienHoaDon = numberFormat.format(hoaDon.getTongTienHoaDon());

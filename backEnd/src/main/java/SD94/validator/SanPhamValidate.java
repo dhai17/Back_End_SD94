@@ -4,6 +4,7 @@ import SD94.dto.SanPhamDTO;
 import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SanPhamValidate {
@@ -25,7 +26,27 @@ public class SanPhamValidate {
 
         Null_id_hoaDon,
 
-        Null_soLuongHienCo
+        Null_soLuongHienCo,
+
+        Null_tenSanPham,
+
+        Null_loai_san_pham,
+
+        Null_nha_san_xuat,
+
+        Null_chat_lieu,
+
+        Null_gia_ban,
+
+        Null_so_luong,
+
+        Null_mau_sac,
+
+        Null_kich_co,
+
+        Invalid_gia_ban,
+
+        Invalid_so_luong
 
     }
 
@@ -96,46 +117,83 @@ public class SanPhamValidate {
         }
     }
 
-    public static ResponseEntity<?> checkTaoSP(SanPhamDTO sanPhamDTO) {
-        Map<String, Object> response = new HashMap<>();
+    public static ResponseEntity<?> checkTaoSanPham(SanPhamDTO sanPhamDTO) {
+        Map<String, String> errors = new HashMap<>();
+        checkTenSanPham(sanPhamDTO.getTenSanPham(), errors);
+        checkGiaBan(sanPhamDTO.getGia(), errors);
+        checkSoLuong(sanPhamDTO.getSoLuong(), errors);
+        checkLoaiSanPham(sanPhamDTO.getLoaiSanPham_id(), errors);
+        checkNhaSanXuat(sanPhamDTO.getNhaSanXuat_id(), errors);
+        checkChatLieu(sanPhamDTO.getChatLieu_id(), errors);
+        checkMauSac(sanPhamDTO.getMauSac(), errors);
+        checkKichCo(sanPhamDTO.getKichCo(), errors);
 
-        if (sanPhamDTO.getTenSanPham() == null || sanPhamDTO.getTenSanPham().isEmpty()) {
-            response.put("tenSanPham", "Vui lòng nhập tên sản phẩm");
-        } else if (!sanPhamDTO.getTenSanPham().matches("^(?=.*[a-zA-Z0-9])[a-zA-Z0-9@#$%^&+=]*$")) {
-            response.put("tenSanPham", "Tên sản phẩm không hợp lệ");
+        if (errors.isEmpty()) {
+            return ResponseEntity.ok().build();
         }
 
-        if (sanPhamDTO.getLoaiSanPham_id() == null) {
-            response.put("loaiSanPham", "Vui lòng chọn loại sản phẩm");
-        }
+        return ResponseEntity.badRequest().body(errors);
+    }
 
-        if (sanPhamDTO.getNhaSanXuat_id() == null) {
-            response.put("nhaSanXuat", "Vui lòng chọn hãng");
+    private static void checkKichCo(List<Long> kichCo, Map<String, String> errors) {
+        if (kichCo == null || kichCo.isEmpty()) {
+            errors.put(SanPhamValidate.ErrorCode.Null_kich_co.name(), "Vui lòng chọn kích cỡ");
         }
+    }
 
-        if (sanPhamDTO.getKichCo() == null || sanPhamDTO.getKichCo().isEmpty()) {
-            response.put("kichCo", "Vui lòng chọn kích cỡ sản phẩm");
+    private static void checkMauSac(List<Long> mauSac, Map<String, String> errors) {
+        if (mauSac == null || mauSac.isEmpty()) {
+            errors.put(SanPhamValidate.ErrorCode.Null_mau_sac.name(), "Vui lòng chọn màu sắc");
         }
+    }
 
-        if (sanPhamDTO.getMauSac() == null || sanPhamDTO.getMauSac().isEmpty()) {
-            response.put("mauSac", "Vui lòng chọn màu sắc sản phẩm");
+    private static void checkSoLuong(Integer soLuong, Map<String, String> errors) {
+        if (soLuong == 0) {
+            errors.put(SanPhamValidate.ErrorCode.Null_so_luong.name(), "Bạn chưa nhập số lượng sản phẩm");
+        } else {
+            if (soLuong < 0) {
+                errors.put(SanPhamValidate.ErrorCode.Invalid_so_luong.name(), "Số lượng sản phẩm phải lớn hơn 0");
+            }
         }
+    }
 
-        if (sanPhamDTO.getGia() == null) {
-            response.put("gia", "Vui lòng nhập giá sản phẩm");
-        } else if (Float.compare(sanPhamDTO.getGia(), 0.0f) <= 0) {
-            response.put("gia", "Giá tiền sản phẩm phải lớn hơn 0");
+    private static void checkGiaBan(Float gia, Map<String, String> errors) {
+        if (gia == null) {
+            errors.put("gia", "Bạn chưa nhập giá bán");
+        } else {
+            try {
+                Float giaFloat = gia;
+                if (giaFloat <= 0) {
+                    errors.put("gia", "Giá tiền phải lớn hơn 0");
+                }
+            } catch (NumberFormatException e) {
+                errors.put("gia", "Giá tiền không hợp lệ, vui lòng nhập số");
+            }
         }
+    }
 
-        if (sanPhamDTO.getSoLuong() <= 0) {
-            response.put("soLuong", "Số lượng sản phẩm phải lớn hơn 0");
+    private static void checkChatLieu(Long chatLieu_id, Map<String, String> errors) {
+        if (chatLieu_id == null) {
+            errors.put(SanPhamValidate.ErrorCode.Null_chat_lieu.name(), "Vui lòng chọn chất liệu");
         }
+    }
 
-        if (!response.isEmpty()) {
-            return ResponseEntity.badRequest().body(response);
+    private static void checkNhaSanXuat(Long nhaSanXuat_id, Map<String, String> errors) {
+        if (nhaSanXuat_id == null) {
+            errors.put(SanPhamValidate.ErrorCode.Null_nha_san_xuat.name(), "Vui lòng chọn nhà sản xuất");
         }
+    }
 
-        return ResponseEntity.ok().body(response);
+    private static void checkLoaiSanPham(Long loaiSanPham_id, Map<String, String> errors) {
+        if (loaiSanPham_id == null) {
+            errors.put(SanPhamValidate.ErrorCode.Null_loai_san_pham.name(), "Vui lòng chọn loại sản phẩm");
+        }
+    }
+
+    private static void checkTenSanPham(String tenSanPham, Map<String, String> errors) {
+        if (tenSanPham == null || tenSanPham == "") {
+            errors.put(SanPhamValidate.ErrorCode.Null_tenSanPham.name(), "Bạn chưa nhập tên sản phẩm");
+        }
     }
 
 }

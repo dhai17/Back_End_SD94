@@ -40,9 +40,10 @@ public class DaGiaoHangController {
     @PostMapping("/capNhatTrangThai/huyDon")
     public ResponseEntity<Map<String, Boolean>> updateStatus5(@RequestBody HoaDonDTO hoaDonDTO) {
         Long id = hoaDonDTO.getId();
+        String ghiChu = hoaDonDTO.getGhiChu();
         String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
-        hoaDonDatHangService.capNhatTrangThai(5, id);
+        hoaDonDatHangService.capNhatTrangThaiHuyDon(5, id, ghiChu);
         hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, nhanVien.getHoTen());
         return ResponseEntity.ok().build();
     }

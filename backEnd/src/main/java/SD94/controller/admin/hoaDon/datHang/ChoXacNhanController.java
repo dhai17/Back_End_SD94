@@ -52,9 +52,10 @@ public class ChoXacNhanController {
     @PostMapping("/capNhatTrangThai/huyDon")
     public ResponseEntity<Map<String, Boolean>> updateStatus5(@RequestBody HoaDonDTO hoaDonDTO) {
         Long id = hoaDonDTO.getId();
+        String ghiChu = hoaDonDTO.getGhiChu();
         String email = hoaDonDTO.getEmail_user();
         NhanVien nhanVien = nhanVienRepository.findByEmail(email);
-        hoaDonDatHangService.capNhatTrangThai(5, id);
+        hoaDonDatHangService.capNhatTrangThaiHuyDon(5, id, ghiChu);
         hoaDonDatHangService.createTimeLine("Huỷ đơn", 5, id, nhanVien.getHoTen());
         return ResponseEntity.ok().build();
     }
@@ -76,8 +77,9 @@ public class ChoXacNhanController {
     @PutMapping("/huyDon/daChon")
     public List<HoaDon> updateStatusSelect5(@RequestBody HoaDonDTO hoaDonDTO) {
             String email = hoaDonDTO.getEmail_user();
+            String ghiChu= hoaDonDTO.getGhiChu();
             NhanVien nhanVien = nhanVienRepository.findByEmail(email);
-        return hoaDonDatHangService.capNhatTrangThaiHuy_DaChon(hoaDonDTO, nhanVien.getHoTen());
+        return hoaDonDatHangService.capNhatTrangThaiHuy_DaChon(hoaDonDTO, nhanVien.getHoTen(),ghiChu);
     }
 
     @RequestMapping("/timKiem={search}")
@@ -91,7 +93,7 @@ public class ChoXacNhanController {
     }
     @GetMapping("/inHoaDon/{id}")
     public ResponseEntity<byte[]> inHoaDon(@PathVariable("id") long id) {
-        return inHoaDonService.hoaDonDatHangPdf(id,"Đã thanh toán trước");
+        return inHoaDonService.hoaDonDatHangPdf(id,"Thanh toán khi nhận hàng");
     }
     @GetMapping("/guiMail/{id}")
     public void guiMail(@PathVariable("id") long id) {

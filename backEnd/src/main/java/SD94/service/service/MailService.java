@@ -66,7 +66,7 @@ public class MailService {
 
         helper.setFrom("linhnkph22810@fpt.edu.vn");
         helper.setTo(recipientEmail);
-        helper.setSubject("Đơn hàng của bạn đang được nhân viên của chúng tôi xử lý");
+        helper.setSubject("Đơn hàng của bạn đã được nhân viên của chúng tôi xử lý");
 
         long idHoaDon = hoaDon.getId();
         // Lấy danh sách ảnh chính của tất cả sản phẩm và lưu vào List

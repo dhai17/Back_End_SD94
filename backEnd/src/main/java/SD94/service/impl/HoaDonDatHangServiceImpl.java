@@ -69,6 +69,20 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
+    public ResponseEntity<Map<String, Boolean>> capNhatTrangThaiHuyDon(long trang_thai_id, long id_bill, String ghiChu) {
+        HoaDon hoaDon = hoaDonRepository.findByID(id_bill);
+        Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id);
+        if (optionalTrangThai.isPresent()) {
+            TrangThai trangThai = optionalTrangThai.get();
+            hoaDon.setTrangThai(trangThai);
+            hoaDon.setGhiChu(ghiChu);
+            hoaDonRepository.save(hoaDon);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+
+    @Override
     public ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id, long trang_thai_id_sau, String thaoTac, String nguoiThaoTac) {
         List<HoaDon> list = hoaDonRepository.findHoaDonByTrangThai(trang_thai_id);
         for (HoaDon hoaDon : list) {
@@ -105,13 +119,14 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public List<HoaDon> capNhatTrangThaiHuy_DaChon(HoaDonDTO hoaDonDTO, String nguoiThaoTac) {
+    public List<HoaDon> capNhatTrangThaiHuy_DaChon(HoaDonDTO hoaDonDTO, String nguoiThaoTac, String ghiChu) {
         for (Long id_hoaDon : hoaDonDTO.getId_hoaDon()) {
             HoaDon hoaDon = hoaDonRepository.findByID(id_hoaDon);
             Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(5L);
             if (optionalTrangThai.isPresent()) {
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
+                hoaDon.setGhiChu(ghiChu);
                 createTimeLine("Huỷ đơn", 5L, id_hoaDon, nguoiThaoTac);
                 hoaDonRepository.save(hoaDon);
             }
@@ -322,6 +337,45 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         response.put("timeLine_DaHuy", timeLine_DaHuy);
         return ResponseEntity.ok().body(response);
     }
+
+    @Override
+    public ResponseEntity<?> CTXacNhanDaGiao(long id_hoa_don) {
+        HoaDon hoaDon = hoaDonRepository.findByID(id_hoa_don);
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        LichSuHoaDon timeLine_ChoXacNhan = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 1L);
+        LichSuHoaDon timeLine_ChoGiaoHang = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 2L);
+        LichSuHoaDon timeLine_DangGiaoHang = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 3L);
+        LichSuHoaDon timeLine_XacNhanDaGiao = lichSuHoaDonRepository.getTimeLine(hoaDon.getId(), 9L);
+        List<HoaDonChiTietDTO> dto = new ArrayList<>();
+        for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            HoaDon hoaDon2 = hoaDonChiTiet.getHoaDon();
+            String anh_san_pham = hinhAnhRepository.getAnhSPByMauSacAndSPID(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+
+            HoaDonChiTietDTO hoaDonChiTietDTO = new HoaDonChiTietDTO();
+            hoaDonChiTietDTO.setId(hoaDonChiTiet.getId());
+            hoaDonChiTietDTO.setIdProduct(sanPhamChiTiet.getSanPham().getId());
+            hoaDonChiTietDTO.setIdColor(sanPhamChiTiet.getMauSac().getId());
+            hoaDonChiTietDTO.setIdSize(sanPhamChiTiet.getKichCo().getId());
+            hoaDonChiTietDTO.setSoLuong(hoaDonChiTiet.getSoLuong());
+            hoaDonChiTietDTO.setDonGia(hoaDonChiTiet.getDonGia());
+            hoaDonChiTietDTO.setThanhTien(hoaDonChiTiet.getThanhTien());
+            hoaDonChiTietDTO.setHoaDon(hoaDon2);
+            hoaDonChiTietDTO.setSanPhamChiTiet(sanPhamChiTiet);
+            hoaDonChiTietDTO.setAnhSanPham(anh_san_pham);
+
+            dto.add(hoaDonChiTietDTO);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("list_HDCT", dto);
+        response.put("hoaDon", hoaDon);
+        response.put("timeLine_ChoXacNhan", timeLine_ChoXacNhan);
+        response.put("timeLine_ChoGiaoHang", timeLine_ChoGiaoHang);
+        response.put("timeLine_DangGiaoHang", timeLine_DangGiaoHang);
+        response.put("timeLine_XacNhanDaGiao", timeLine_XacNhanDaGiao);
+        return ResponseEntity.ok().body(response);
+    }
+
     @Override
     public ResponseEntity<?> TaiQuay(long id_hoa_don) {
         HoaDon hoaDon = hoaDonRepository.findByID(id_hoa_don);
