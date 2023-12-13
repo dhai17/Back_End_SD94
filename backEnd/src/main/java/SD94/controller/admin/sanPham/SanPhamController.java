@@ -65,7 +65,7 @@ public class SanPhamController {
     //Tạo mới và gen ra sản phẩm chi tiết
     @PostMapping("/TaoSanPham")
     public ResponseEntity<?> saveCreate(@RequestBody SanPhamDTO sanPhamDTO) {
-        ResponseEntity<?> response = SanPhamValidate.checkTaoSP(sanPhamDTO);
+        ResponseEntity<?> response = SanPhamValidate.checkTaoSanPham(sanPhamDTO);
         if (!response.getStatusCode().is2xxSuccessful()) {
             return response;
         } else {

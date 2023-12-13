@@ -65,7 +65,7 @@ public class NhanVienServiceImpl implements NhanVienService {
                 staffCreate.getGioiTinh() == null ||
                 staffCreate.getDiaChi() == null || staffCreate.getSoDienThoai() == null ||
                 staffCreate.getNgaySinh() == null || staffCreate.getEmail() == null) {
-            errorMessage = "Nhap day du thong tin";
+            errorMessage = "Nhập đầy đủ thông tin";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
         }
@@ -231,7 +231,6 @@ public class NhanVienServiceImpl implements NhanVienService {
         LocalDate searchdate = LocalDate.parse(searchDate);
         List<NhanVien> staffList = staffRepository.findStaffDate(searchdate);
         return staffList;
-
     }
 
 

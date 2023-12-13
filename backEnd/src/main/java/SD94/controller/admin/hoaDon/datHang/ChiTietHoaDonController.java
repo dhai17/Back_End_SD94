@@ -59,6 +59,11 @@ public class ChiTietHoaDonController {
         return hoaDonDatHangService.CTDaHuy(hoa_don_id);
     }
 
+    @GetMapping("/xacNhanDaGiao/id={id}")
+    public ResponseEntity<?> CTXacNhanDaGiao(@PathVariable("id") long hoa_don_id) {
+        return hoaDonDatHangService.CTXacNhanDaGiao(hoa_don_id);
+    }
+
 
     //Trả ra hoá đơn theo ID, danh sách hoá đn, lịch s của hoá ơn đó
     @GetMapping("/taiQuay/id={id}")

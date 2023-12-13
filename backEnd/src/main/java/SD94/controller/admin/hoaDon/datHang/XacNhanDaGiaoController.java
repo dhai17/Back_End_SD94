@@ -16,8 +16,8 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/hoaDon/datHang/dangGiaoHang")
-public class DangGiaoHangController {
+@RequestMapping("/hoaDon/datHang/xacNhanDaGiao")
+public class XacNhanDaGiaoController {
     @Autowired
     HoaDonDatHangService hoaDonDatHangService;
 
@@ -28,8 +28,8 @@ public class DangGiaoHangController {
     KhachHangRepository khachHangRepository;
 
     @GetMapping("/danhSach")
-    public List<HoaDon> listBill3() {
-        return hoaDonDatHangService.findHoaDonByTrangThai(3);
+    public List<HoaDon> listBill9() {
+        return hoaDonDatHangService.findHoaDonByTrangThai(9);
     }
 
     @PostMapping("/capNhatTrangThai/daGiaoHang")
@@ -62,11 +62,11 @@ public class DangGiaoHangController {
 
     @RequestMapping("/timKiem={search}")
     public List<HoaDon> searchAllBill3(@PathVariable("search") String search) {
-        return hoaDonDatHangService.searchAllBill(3, search);
+        return hoaDonDatHangService.searchAllBill(9, search);
     }
 
     @RequestMapping("/timKiemNgay={searchDate}")
     public List<HoaDon> searchDateBill3(@PathVariable("searchDate") String searchDate) {
-        return hoaDonDatHangService.searchDateBill(3, searchDate);
+        return hoaDonDatHangService.searchDateBill(9, searchDate);
     }
 }
