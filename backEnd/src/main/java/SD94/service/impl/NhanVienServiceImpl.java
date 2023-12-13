@@ -219,7 +219,6 @@ public class NhanVienServiceImpl implements NhanVienService {
         LocalDate searchdate = LocalDate.parse(searchDate);
         List<NhanVien> staffList = staffRepository.findStaffDate(searchdate);
         return staffList;
-
     }
 
 
