@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -90,6 +92,16 @@ public class NhanVienServiceImpl implements NhanVienService {
         //dateOfbirth
         Date dateC = new Date();
         Date dateOfBirth = staffCreate.getNgaySinh();
+        LocalDate currentDate = LocalDate.now();
+        LocalDate birthDate = dateOfBirth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int age = Period.between(birthDate, currentDate).getYears();
+
+        if(age <= 16){
+            errorMessage = "Nhan vien duoi 16 tuoi";
+            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
+        }
+
 
         if (dateOfBirth.after(dateC)) {
             errorMessage = "Ngày sinh không được vượt qua thời gian hiện tại";
@@ -175,9 +187,9 @@ public class NhanVienServiceImpl implements NhanVienService {
                 staff.setEmail(staffEdit.getEmail());
                 staff.setDiaChi(staffEdit.getDiaChi());
                 staff.setNgaySinh(staffEdit.getNgaySinh());
-                staff.setMatKhau(staffEdit.getMatKhau());
                 staff.setSoDienThoai(staffEdit.getSoDienThoai());
                 staff.setGioiTinh(staffEdit.getGioiTinh());
+                staff.setTrangThai(staffEdit.getTrangThai());
                 staffRepository.save(staff);
                 return ResponseEntity.ok(staff);
             } else {

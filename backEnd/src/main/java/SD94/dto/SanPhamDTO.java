@@ -64,4 +64,8 @@ public class SanPhamDTO {
     private Long anh_id;
 
     private String anh_san_pham;
+
+    private Long mauSac_id;
+
+    private Long kichCo_id;
 }
