@@ -51,7 +51,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             Optional<SanPhamChiTiet> optional = repository.findById(sanPhamChiTietUpdate.getId());
             if (optional.isPresent()) {
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
-                if (sanPhamChiTietUpdate.getSoLuong() == 0) {
+                if (sanPhamChiTietUpdate.getSoLuong() <= 0) {
                     sanPhamChiTiet.setTrangThai(false);
                 } else {
                     sanPhamChiTiet.setTrangThai(true);

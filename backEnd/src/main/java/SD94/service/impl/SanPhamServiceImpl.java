@@ -133,7 +133,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         SanPham sanPham = new SanPham();
         sanPham.setTenSanPham(sanPhamDTO.getTenSanPham());
         sanPham.setGia(sanPhamDTO.getGia());
-        sanPham.setTrangThai(0);
+        sanPham.setTrangThai(1);
         sanPham.setLoaiSanPham(loaiSanPham);
         sanPham.setNhaSanXuat(nhaSanXuat);
         sanPham.setChatLieu(chatLieu);

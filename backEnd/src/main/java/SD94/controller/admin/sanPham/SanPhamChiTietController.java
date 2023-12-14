@@ -5,6 +5,7 @@ import SD94.dto.HoaDonChiTietDTO;
 import SD94.dto.SanPhamChiTietDTO;
 import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.KichCo;
+import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.sanPham.*;
 import SD94.service.service.SanPhamChiTietService;
@@ -143,12 +144,19 @@ public class SanPhamChiTietController {
     public ResponseEntity<?> setAnhMacDinh(@RequestBody HinhAnhDTO hinhAnhDTO) {
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hinhAnhDTO.getId_spct());
         HinhAnh check = hinhAnhRepository.findAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+
         if (check != null) {
             check.setAnhMacDinh(false);
             hinhAnhRepository.save(check);
             HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId_hinh_anh());
             hinhAnh.setAnhMacDinh(true);
             hinhAnhRepository.save(hinhAnh);
+
+            // Cập nhật trạng thái của sản phẩm
+            SanPham sanPham = sanPhamChiTiet.getSanPham();
+            sanPham.setTrangThai(0); // Giả sử trạng thái mới là 1
+            sanPhamRepository.save(sanPham);
+
             Map<String, Object> response = new HashMap<>();
             response.put("mess", "Đặt ảnh mặc định thành công");
             return ResponseEntity.ok().body(response);
@@ -156,6 +164,12 @@ public class SanPhamChiTietController {
             HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId_hinh_anh());
             hinhAnh.setAnhMacDinh(true);
             hinhAnhRepository.save(hinhAnh);
+
+            // Cập nhật trạng thái của sản phẩm
+            SanPham sanPham = sanPhamChiTiet.getSanPham();
+            sanPham.setTrangThai(0); // Giả sử trạng thái mới là 1
+            sanPhamRepository.save(sanPham);
+
             Map<String, Object> response = new HashMap<>();
             response.put("mess", "Đặt ảnh mặc định thành công");
             return ResponseEntity.ok().body(response);
