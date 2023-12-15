@@ -90,7 +90,7 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
                 GioHangChiTiet gioHangChiTiet = optionalcart.get();
                 SanPhamChiTiet sanPhamChiTiet = gioHangChiTiet.getSanPhamChiTiet();
                 if(gioHangChiTiet.getSoLuong() > sanPhamChiTiet.getSoLuong()){
-                    respone.put("err", "So luong khong duoc vuot qua " + sanPhamChiTiet.getSoLuong());
+                    respone.put("err", "Số lượng của sản phẩm đã về " + sanPhamChiTiet.getSoLuong());
                     return ResponseEntity.badRequest().body(respone);
                 }
                 HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
