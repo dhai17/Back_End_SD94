@@ -162,6 +162,16 @@ public class InHoaDonService {
                     formattedTienGiam = tienGiamHoaDon + " đ";
                 }
             }
+            // kiem tra thong tin khach hang
+            String khach;
+            String soDienthoai;
+            if(hoaDon.getNguoiNhan()==null){
+                khach = "";
+                soDienthoai= "";
+            }else{
+                khach = hoaDon.getNguoiNhan();
+                soDienthoai = hoaDon.getSDTNguoiNhan();
+            }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String formattedNgayTao = dateFormat.format(ngayTao);
@@ -169,8 +179,8 @@ public class InHoaDonService {
             htmlContentBuilder.append("<h3>").append("Thông tin đơn hàng").append("</h1>");
             htmlContentBuilder.append("<p>Mã đơn hàng: ").append(hoaDon.getMaHoaDon()).append("</p>");
             htmlContentBuilder.append("<p>Ngày mua: ").append(formattedNgayTao).append("</p>");
-            htmlContentBuilder.append("<p>Khách hàng: ").append(hoaDon.getNguoiNhan()).append("</p>");
-            htmlContentBuilder.append("<p>Số điện thoại khách hàng: ").append(hoaDon.getSDTNguoiNhan()).append("</p>");
+            htmlContentBuilder.append("<p>Khách hàng: ").append(khach).append("</p>");
+            htmlContentBuilder.append("<p>Số điện thoại khách hàng: ").append(soDienthoai).append("</p>");
             htmlContentBuilder.append("<p>Trạng thái đơn: Đã thanh toán</p>");
             htmlContentBuilder.append("<p>Nhân viên bán hàng: ").append(hoaDon.getNhanVien().getHoTen()).append("</p>");
 
