@@ -5,6 +5,7 @@ import SD94.dto.HoaDonChiTietDTO;
 import SD94.dto.SanPhamChiTietDTO;
 import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.KichCo;
+import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.sanPham.*;
 import SD94.service.service.SanPhamChiTietService;
@@ -55,6 +56,13 @@ public class SanPhamChiTietController {
     @GetMapping("/dsCTSP")
     public ResponseEntity<List<SanPhamChiTiet>> getProduct(@RequestParam("san_pham_id") Long id) {
         List<SanPhamChiTiet> product = sanPhamChiTietRepository.findSpctByIdSp(id);
+        for (SanPhamChiTiet sanPhamChiTiet : product) {
+            HinhAnh hinhAnh = hinhAnhRepository.findAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+            if (hinhAnh == null) {
+                sanPhamChiTiet.setTrangThai(false);
+                sanPhamChiTietRepository.save(sanPhamChiTiet);
+            }
+        }
         return ResponseEntity.ok().body(product);
     }
 

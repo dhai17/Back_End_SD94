@@ -148,18 +148,18 @@ public class InHoaDonService {
 
             // Kiểm tra nếu khuyến mãi là null hoặc không có id
             if (km == null || km.getId() == null) {
-                formattedTienGiam = "0 VNĐ";
+                formattedTienGiam = "0 đ";
             } else {
                 BigDecimal tienGiamToiDa = BigDecimal.valueOf(km.getTienGiamToiDa());
 
                 BigDecimal tienGiamHoaDon = BigDecimal.valueOf(hoaDon.getTienGiam());
 
                 if (tienGiamHoaDon == null) {
-                    formattedTienGiam = "0 VNĐ";
+                    formattedTienGiam = "0 đ";
                 } else if (tienGiamHoaDon.compareTo(tienGiamToiDa) >= 0) {
                     formattedTienGiam = numberFormat.format(tienGiamHoaDon);
                 } else {
-                    formattedTienGiam = tienGiamHoaDon + "VNĐ";
+                    formattedTienGiam = tienGiamHoaDon + " đ";
                 }
             }
 
@@ -340,22 +340,38 @@ public class InHoaDonService {
             Date ngayTao = hoaDon.getCreatedDate();
             String formattedTienGiam;
             KhuyenMai km = hoaDon.getKhuyenMai();
+            String formattedTienShip;
+            String ghiChu;
+            //Kiem tra gi chu
+            if (hoaDon.getGhiChu()==null){
+                ghiChu="Không";
+            }else{
+                ghiChu = hoaDon.getGhiChu();
+            }
 
             // Kiểm tra nếu khuyến mãi là null hoặc không có id
             if (km == null || km.getId() == null) {
-                formattedTienGiam = "0 VNĐ";
+                formattedTienGiam = "0 đ";
             } else {
                 BigDecimal tienGiamToiDa = BigDecimal.valueOf(km.getTienGiamToiDa());
 
                 BigDecimal tienGiamHoaDon = BigDecimal.valueOf(hoaDon.getTienGiam());
 
+
                 if (tienGiamHoaDon == null) {
-                    formattedTienGiam = "0 VNĐ";
+                    formattedTienGiam = "0 đ";
                 } else if (tienGiamHoaDon.compareTo(tienGiamToiDa) >= 0) {
                     formattedTienGiam = numberFormat.format(tienGiamHoaDon);
                 } else {
-                    formattedTienGiam = tienGiamHoaDon + "VNĐ";
+                    formattedTienGiam = tienGiamHoaDon + "đ";
                 }
+            }
+            BigDecimal tienShip =BigDecimal.valueOf(hoaDon.getTienShip());
+
+            if (tienShip == null){
+                formattedTienShip = "0 đ";
+            }else{
+                formattedTienShip = tienShip + " đ";
             }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -368,7 +384,7 @@ public class InHoaDonService {
             htmlContentBuilder.append("<p>Số điện thoại khách hàng: ").append(hoaDon.getSDTNguoiNhan()).append("</p>");
             htmlContentBuilder.append("<p>Địa chỉ: ").append(hoaDon.getDiaChiGiaoHang()).append("</p>");
             htmlContentBuilder.append("<p>Trạng thái đơn: ").append(tinhTrangThanhToan).append("</p>");
-            htmlContentBuilder.append("<p>Ghi chú: ").append(hoaDon.getGhiChu()).append("</p>");
+            htmlContentBuilder.append("<p>Ghi chú: ").append(ghiChu).append("</p>");
 
             String formattedTongTienDonHang = numberFormat.format(hoaDon.getTongTienDonHang());
             String formattedTongTienHoaDon = numberFormat.format(hoaDon.getTongTienHoaDon());
@@ -392,9 +408,10 @@ public class InHoaDonService {
             htmlContentBuilder.append("</table>");
 
             // Thêm tổng tiền và các thông tin khác của hóa đơn nếu cần
-            htmlContentBuilder.append("<p>Tổng giá trị đơn hàng: ").append(formattedTongTienDonHang).append("</p>");
+            htmlContentBuilder.append("<p>Tổng giá trị đơn hàng: ").append(formattedTongTienHoaDon).append("</p>");
             htmlContentBuilder.append("<p>Tiền giảm: ").append(formattedTienGiam).append("</p>");
-            htmlContentBuilder.append("<p>Tổng tiền thanh toán: ").append(formattedTongTienHoaDon).append("</p>");
+            htmlContentBuilder.append("<p>Tiền giao hàng: ").append(formattedTienShip).append("</p>");
+            htmlContentBuilder.append("<p>Tổng tiền thanh toán: ").append(formattedTongTienDonHang).append("</p>");
 
             htmlContentBuilder.append("<h3>Xin chân thành cảm ơn sự ủng hộ của bạn dành cho ADUDAS STUDIO!</h3>");
             htmlContentBuilder.append("</body></html>");

@@ -72,7 +72,8 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
 
 
     @Override
-    public Long checkout(GioHangDTO dto) {
+    public ResponseEntity<?> checkout(GioHangDTO dto) {
+        Map<String, String> respone = new HashMap<>();
         HoaDon hoaDon = new HoaDon();
         hoaDon.setCreatedDate(new Date());
         hoaDon.setCreatedby("hduong");
@@ -87,6 +88,11 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
             Optional<GioHangChiTiet> optionalcart = cartDetailsRepository.findById(id);
             if (optionalcart.isPresent()) {
                 GioHangChiTiet gioHangChiTiet = optionalcart.get();
+                SanPhamChiTiet sanPhamChiTiet = gioHangChiTiet.getSanPhamChiTiet();
+                if(gioHangChiTiet.getSoLuong() > sanPhamChiTiet.getSoLuong()){
+                    respone.put("err", "Số lượng của sản phẩm đã về " + sanPhamChiTiet.getSoLuong());
+                    return ResponseEntity.badRequest().body(respone);
+                }
                 HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
                 hoaDonChiTiet.setSanPhamChiTiet(gioHangChiTiet.getSanPhamChiTiet());
                 hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
@@ -97,7 +103,8 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
             }
         }
         idBill = hoaDon.getId();
-        return hoaDon.getId();
+        respone.put("id_bill", String.valueOf(hoaDon.getId()));
+        return ResponseEntity.ok().body(hoaDon.getId());
     }
 
     @Override

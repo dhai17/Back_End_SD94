@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin("*")
@@ -25,13 +27,19 @@ public class SanPhamController {
     SanPhamRepository sanPhamRepository;
 
     @Autowired
+    SanPhamChiTietRepository sanPhamChiTietRepository;
+
+    @Autowired
     SanPhamService sanPhamService;
 
     @Autowired
     HinhAnhRepository hinhAnhRepository;
 
     @Autowired
-    MailService mailService;
+    MauSacRepository mauSacRepository;
+
+    @Autowired
+    KichCoRepository kichCoRepository;
 
     @GetMapping("/danhSach")
     public ResponseEntity<?> getProduct() {
@@ -103,4 +111,27 @@ public class SanPhamController {
         return ResponseEntity.ok().body(hinhAnhs);
     }
 
+    @PostMapping("/themSanPhamTuongTu")
+    public ResponseEntity<?> themSanPhamTuongTu(@RequestBody SanPhamDTO sanPhamDTO) {
+        Map<String, String> respone = new HashMap<>();
+        SanPham sanPham = sanPhamRepository.findByID(sanPhamDTO.getId());
+        MauSac mauSac = mauSacRepository.findByID(sanPhamDTO.getMauSac_id());
+        KichCo kichCo = kichCoRepository.findByID(sanPhamDTO.getKichCo_id());
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.getSanPhamChiTiet(sanPhamDTO.getMauSac_id(), sanPhamDTO.getKichCo_id(), sanPhamDTO.getId());
+        if (sanPhamChiTiet != null) {
+            respone.put("err", "Sản phẩm này đã có");
+            return ResponseEntity.badRequest().body(respone);
+        } else {
+            SanPhamChiTiet spct = new SanPhamChiTiet();
+            spct.setSanPham(sanPham);
+            spct.setMauSac(mauSac);
+            spct.setKichCo(kichCo);
+            spct.setTrangThai(true);
+            spct.setSoLuong(sanPhamDTO.getSoLuong());
+            sanPhamChiTietRepository.save(spct);
+
+            respone.put("success", "Tao moi thanh cong");
+            return ResponseEntity.ok().body(respone);
+        }
+    }
 }
