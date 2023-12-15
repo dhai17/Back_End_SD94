@@ -227,9 +227,10 @@ public class InHoaDonService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<byte[]> hoaDonDatHangPdf(Long hoaDonId, String tinhTrangThanhToan) {
+    public ResponseEntity<byte[]> hoaDonDatHangPdf(Long hoaDonId) {
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDonId);
         Optional<HoaDon> optHoaDon = hoaDonRepository.findById(hoaDonId);
+        String tinhTrangThanhToan= "";
         if (optHoaDon.isPresent()) {
             HoaDon hoaDon = optHoaDon.get();
             // Tạo nội dung HTML cho hóa đơn (thay đổi cho phù hợp với mẫu HTML của bạn)
@@ -373,7 +374,13 @@ public class InHoaDonService {
             }else{
                 formattedTienShip = tienShip + " đ";
             }
-
+            //lấy ra tình trạng thanh toán
+            if(hoaDon.getLoaiHoaDon() ==0){
+                tinhTrangThanhToan = "Thanh toán khi nhận hàng";
+            }
+            if(hoaDon.getLoaiHoaDon() ==2){
+                tinhTrangThanhToan = "Đã thanh toán";
+            }
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String formattedNgayTao = dateFormat.format(ngayTao);
 
@@ -383,7 +390,7 @@ public class InHoaDonService {
             htmlContentBuilder.append("<p>Khách hàng: ").append(hoaDon.getNguoiNhan()).append("</p>");
             htmlContentBuilder.append("<p>Số điện thoại khách hàng: ").append(hoaDon.getSDTNguoiNhan()).append("</p>");
             htmlContentBuilder.append("<p>Địa chỉ: ").append(hoaDon.getDiaChiGiaoHang()).append("</p>");
-            htmlContentBuilder.append("<p>Trạng thái đơn: ").append(tinhTrangThanhToan).append("</p>");
+            htmlContentBuilder.append("<p>Trạng thái thanh toán: ").append(tinhTrangThanhToan).append("</p>");
             htmlContentBuilder.append("<p>Ghi chú: ").append(ghiChu).append("</p>");
 
             String formattedTongTienDonHang = numberFormat.format(hoaDon.getTongTienDonHang());
