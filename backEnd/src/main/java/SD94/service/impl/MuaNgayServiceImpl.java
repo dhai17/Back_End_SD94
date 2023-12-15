@@ -106,17 +106,17 @@ public class MuaNgayServiceImpl implements MuaNgayService {
         HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
         int phanTramGiam = khuyenMai.getPhanTramGiam();
         int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
-        int tongTienBill = hoaDon.getTongTienDonHang();
+        int tongTienBill = hoaDon.getTongTienHoaDon();
 
         int tongTienSauGiamCheck = (tongTienBill * phanTramGiam) / 100;
         if (tongTienSauGiamCheck > tienGiamToiDa) {
-            int tongTienSauGiam = hoaDon.getTongTienDonHang() - khuyenMai.getTienGiamToiDa();
-            hoaDon.setTienGiam(hoaDon.getTongTienDonHang() - tongTienSauGiam);
+            int tongTienSauGiam = hoaDon.getTongTienHoaDon() - khuyenMai.getTienGiamToiDa();
+            hoaDon.setTienGiam(hoaDon.getTongTienHoaDon() - tongTienSauGiam);
             hoaDon.setTongTienDonHang(tongTienSauGiam);
             hoaDon.setKhuyenMai(khuyenMai);
             hoaDonRepository.save(hoaDon);
         } else {
-            int tongTien = hoaDon.getTongTienDonHang() - tongTienSauGiamCheck;
+            int tongTien = hoaDon.getTongTienHoaDon() - tongTienSauGiamCheck;
             hoaDon.setTongTienDonHang(tongTien);
             hoaDon.setTienGiam(tongTienSauGiamCheck);
             hoaDon.setKhuyenMai(khuyenMai);
