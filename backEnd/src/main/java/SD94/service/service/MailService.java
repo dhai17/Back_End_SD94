@@ -1,8 +1,14 @@
 package SD94.service.service;
 
+import SD94.dto.SanPhamDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.nhanVien.NhanVien;
+import SD94.entity.sanPham.SanPham;
+import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
+import SD94.repository.nhanVien.NhanVienRepository;
+import SD94.repository.sanPham.SanPhamChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -26,6 +32,12 @@ public class MailService {
 
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
+
+    @Autowired
+    SanPhamChiTietRepository sanPhamChiTietRepository;
+
+    @Autowired
+    NhanVienRepository nhanVienRepository;
 
     public void sendOrderConfirmationEmail(String recipientEmail,
                                            HoaDon hoaDon) throws MessagingException {
@@ -91,7 +103,6 @@ public class MailService {
 
         javaMailSender.send(message);
     }
-
     public SimpleMailMessage sendMailRanDom(String from, String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);

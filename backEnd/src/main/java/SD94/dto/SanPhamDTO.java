@@ -3,6 +3,7 @@ package SD94.dto;
 import SD94.entity.sanPham.NhaSanXuat;
 import SD94.entity.sanPham.LoaiSanPham;
 import SD94.entity.sanPham.ChatLieu;
+import SD94.entity.sanPham.SanPhamChiTiet;
 import lombok.Data;
 import lombok.extern.java.Log;
 
@@ -68,4 +69,5 @@ public class SanPhamDTO {
     private Long mauSac_id;
 
     private Long kichCo_id;
+
 }

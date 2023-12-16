@@ -1,5 +1,6 @@
 package SD94.service.service;
 
+import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.khuyenMai.KhuyenMai;
@@ -32,12 +33,11 @@ public class InHoaDonService {
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
 
-    public ResponseEntity<byte[]> generatePdf(Long hoaDonId) {
-        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDonId);
-        Optional<HoaDon> optHoaDon = hoaDonRepository.findById(hoaDonId);
+    public ResponseEntity<byte[]> generatePdf(HoaDonDTO hoaDonDTO) {
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDonDTO.getId());
+        Optional<HoaDon> optHoaDon = hoaDonRepository.findById(hoaDonDTO.getId());
         if (optHoaDon.isPresent()) {
             HoaDon hoaDon = optHoaDon.get();
-            // Tạo nội dung HTML cho hóa đơn (thay đổi cho phù hợp với mẫu HTML của bạn)
             StringBuilder htmlContentBuilder = new StringBuilder();
             htmlContentBuilder.append("<html><head>");
             htmlContentBuilder.append("<meta charset=\"UTF-8\">");
@@ -148,19 +148,29 @@ public class InHoaDonService {
 
             // Kiểm tra nếu khuyến mãi là null hoặc không có id
             if (km == null || km.getId() == null) {
-                formattedTienGiam = "0 VNĐ";
+                formattedTienGiam = "0 đ";
             } else {
                 BigDecimal tienGiamToiDa = BigDecimal.valueOf(km.getTienGiamToiDa());
 
                 BigDecimal tienGiamHoaDon = BigDecimal.valueOf(hoaDon.getTienGiam());
 
                 if (tienGiamHoaDon == null) {
-                    formattedTienGiam = "0 VNĐ";
+                    formattedTienGiam = "0 đ";
                 } else if (tienGiamHoaDon.compareTo(tienGiamToiDa) >= 0) {
                     formattedTienGiam = numberFormat.format(tienGiamHoaDon);
                 } else {
-                    formattedTienGiam = tienGiamHoaDon + "VNĐ";
+                    formattedTienGiam = tienGiamHoaDon + " đ";
                 }
+            }
+            // kiem tra thong tin khach hang
+            String khach;
+            String soDienthoai;
+            if(hoaDon.getNguoiNhan()==null){
+                khach = "";
+                soDienthoai= "";
+            }else{
+                khach = hoaDon.getNguoiNhan();
+                soDienthoai = hoaDon.getSDTNguoiNhan();
             }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -169,8 +179,9 @@ public class InHoaDonService {
             htmlContentBuilder.append("<h3>").append("Thông tin đơn hàng").append("</h1>");
             htmlContentBuilder.append("<p>Mã đơn hàng: ").append(hoaDon.getMaHoaDon()).append("</p>");
             htmlContentBuilder.append("<p>Ngày mua: ").append(formattedNgayTao).append("</p>");
-            htmlContentBuilder.append("<p>Khách hàng: ").append(hoaDon.getNguoiNhan()).append("</p>");
-            htmlContentBuilder.append("<p>Số điện thoại khách hàng: ").append(hoaDon.getSDTNguoiNhan()).append("</p>");
+            htmlContentBuilder.append("<p>Khách hàng: ").append(khach).append("</p>");
+            htmlContentBuilder.append("<p>Số điện thoại khách hàng: ").append(soDienthoai).append("</p>");
+            htmlContentBuilder.append("<p>Tien tra lai: ").append(hoaDonDTO.getTienTraLai()).append("</p>");
             htmlContentBuilder.append("<p>Trạng thái đơn: Đã thanh toán</p>");
             htmlContentBuilder.append("<p>Nhân viên bán hàng: ").append(hoaDon.getNhanVien().getHoTen()).append("</p>");
 
@@ -208,7 +219,7 @@ public class InHoaDonService {
             byte[] pdfBytes = createPdfFromHtml(htmlContentBuilder);
 
             // Lưu file PDF vào thư mục dự án
-            String filePath = "D:\\DATN_SD94\\Back_End_SD94\\backEnd\\hoa_don_" + hoaDonId + ".pdf";
+            String filePath = "D:\\DATN_SD94\\Back_End_SD94\\backEnd\\hoa_don_" + hoaDonDTO.getId() + ".pdf";
             try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
                 fileOutputStream.write(pdfBytes);
             } catch (IOException e) {
@@ -227,9 +238,10 @@ public class InHoaDonService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<byte[]> hoaDonDatHangPdf(Long hoaDonId, String tinhTrangThanhToan) {
+    public ResponseEntity<byte[]> hoaDonDatHangPdf(Long hoaDonId) {
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDonId);
         Optional<HoaDon> optHoaDon = hoaDonRepository.findById(hoaDonId);
+        String tinhTrangThanhToan= "";
         if (optHoaDon.isPresent()) {
             HoaDon hoaDon = optHoaDon.get();
             // Tạo nội dung HTML cho hóa đơn (thay đổi cho phù hợp với mẫu HTML của bạn)
@@ -340,24 +352,46 @@ public class InHoaDonService {
             Date ngayTao = hoaDon.getCreatedDate();
             String formattedTienGiam;
             KhuyenMai km = hoaDon.getKhuyenMai();
+            String formattedTienShip;
+            String ghiChu;
+            //Kiem tra gi chu
+            if (hoaDon.getGhiChu()==null){
+                ghiChu="Không";
+            }else{
+                ghiChu = hoaDon.getGhiChu();
+            }
 
             // Kiểm tra nếu khuyến mãi là null hoặc không có id
             if (km == null || km.getId() == null) {
-                formattedTienGiam = "0 VNĐ";
+                formattedTienGiam = "0 đ";
             } else {
                 BigDecimal tienGiamToiDa = BigDecimal.valueOf(km.getTienGiamToiDa());
 
                 BigDecimal tienGiamHoaDon = BigDecimal.valueOf(hoaDon.getTienGiam());
 
+
                 if (tienGiamHoaDon == null) {
-                    formattedTienGiam = "0 VNĐ";
+                    formattedTienGiam = "0 đ";
                 } else if (tienGiamHoaDon.compareTo(tienGiamToiDa) >= 0) {
                     formattedTienGiam = numberFormat.format(tienGiamHoaDon);
                 } else {
-                    formattedTienGiam = tienGiamHoaDon + "VNĐ";
+                    formattedTienGiam = tienGiamHoaDon + "đ";
                 }
             }
+            BigDecimal tienShip =BigDecimal.valueOf(hoaDon.getTienShip());
 
+            if (tienShip == null){
+                formattedTienShip = "0 đ";
+            }else{
+                formattedTienShip = tienShip + " đ";
+            }
+            //lấy ra tình trạng thanh toán
+            if(hoaDon.getLoaiHoaDon() ==0){
+                tinhTrangThanhToan = "Thanh toán khi nhận hàng";
+            }
+            if(hoaDon.getLoaiHoaDon() ==2){
+                tinhTrangThanhToan = "Đã thanh toán";
+            }
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String formattedNgayTao = dateFormat.format(ngayTao);
 
@@ -367,8 +401,8 @@ public class InHoaDonService {
             htmlContentBuilder.append("<p>Khách hàng: ").append(hoaDon.getNguoiNhan()).append("</p>");
             htmlContentBuilder.append("<p>Số điện thoại khách hàng: ").append(hoaDon.getSDTNguoiNhan()).append("</p>");
             htmlContentBuilder.append("<p>Địa chỉ: ").append(hoaDon.getDiaChiGiaoHang()).append("</p>");
-            htmlContentBuilder.append("<p>Trạng thái đơn: ").append(tinhTrangThanhToan).append("</p>");
-            htmlContentBuilder.append("<p>Ghi chú: ").append(hoaDon.getGhiChu()).append("</p>");
+            htmlContentBuilder.append("<p>Trạng thái thanh toán: ").append(tinhTrangThanhToan).append("</p>");
+            htmlContentBuilder.append("<p>Ghi chú: ").append(ghiChu).append("</p>");
 
             String formattedTongTienDonHang = numberFormat.format(hoaDon.getTongTienDonHang());
             String formattedTongTienHoaDon = numberFormat.format(hoaDon.getTongTienHoaDon());
@@ -392,9 +426,10 @@ public class InHoaDonService {
             htmlContentBuilder.append("</table>");
 
             // Thêm tổng tiền và các thông tin khác của hóa đơn nếu cần
-            htmlContentBuilder.append("<p>Tổng giá trị đơn hàng: ").append(formattedTongTienDonHang).append("</p>");
+            htmlContentBuilder.append("<p>Tổng giá trị đơn hàng: ").append(formattedTongTienHoaDon).append("</p>");
             htmlContentBuilder.append("<p>Tiền giảm: ").append(formattedTienGiam).append("</p>");
-            htmlContentBuilder.append("<p>Tổng tiền thanh toán: ").append(formattedTongTienHoaDon).append("</p>");
+            htmlContentBuilder.append("<p>Tiền giao hàng: ").append(formattedTienShip).append("</p>");
+            htmlContentBuilder.append("<p>Tổng tiền thanh toán: ").append(formattedTongTienDonHang).append("</p>");
 
             htmlContentBuilder.append("<h3>Xin chân thành cảm ơn sự ủng hộ của bạn dành cho ADUDAS STUDIO!</h3>");
             htmlContentBuilder.append("</body></html>");
