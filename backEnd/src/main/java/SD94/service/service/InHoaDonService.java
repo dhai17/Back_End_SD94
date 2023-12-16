@@ -1,5 +1,6 @@
 package SD94.service.service;
 
+import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.khuyenMai.KhuyenMai;
@@ -32,12 +33,11 @@ public class InHoaDonService {
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
 
-    public ResponseEntity<byte[]> generatePdf(Long hoaDonId) {
-        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDonId);
-        Optional<HoaDon> optHoaDon = hoaDonRepository.findById(hoaDonId);
+    public ResponseEntity<byte[]> generatePdf(HoaDonDTO hoaDonDTO) {
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDonDTO.getId());
+        Optional<HoaDon> optHoaDon = hoaDonRepository.findById(hoaDonDTO.getId());
         if (optHoaDon.isPresent()) {
             HoaDon hoaDon = optHoaDon.get();
-            // Tạo nội dung HTML cho hóa đơn (thay đổi cho phù hợp với mẫu HTML của bạn)
             StringBuilder htmlContentBuilder = new StringBuilder();
             htmlContentBuilder.append("<html><head>");
             htmlContentBuilder.append("<meta charset=\"UTF-8\">");
@@ -181,6 +181,7 @@ public class InHoaDonService {
             htmlContentBuilder.append("<p>Ngày mua: ").append(formattedNgayTao).append("</p>");
             htmlContentBuilder.append("<p>Khách hàng: ").append(khach).append("</p>");
             htmlContentBuilder.append("<p>Số điện thoại khách hàng: ").append(soDienthoai).append("</p>");
+            htmlContentBuilder.append("<p>Tien tra lai: ").append(hoaDonDTO.getTienTraLai()).append("</p>");
             htmlContentBuilder.append("<p>Trạng thái đơn: Đã thanh toán</p>");
             htmlContentBuilder.append("<p>Nhân viên bán hàng: ").append(hoaDon.getNhanVien().getHoTen()).append("</p>");
 
@@ -218,7 +219,7 @@ public class InHoaDonService {
             byte[] pdfBytes = createPdfFromHtml(htmlContentBuilder);
 
             // Lưu file PDF vào thư mục dự án
-            String filePath = "D:\\DATN_SD94\\Back_End_SD94\\backEnd\\hoa_don_" + hoaDonId + ".pdf";
+            String filePath = "D:\\DATN_SD94\\Back_End_SD94\\backEnd\\hoa_don_" + hoaDonDTO.getId() + ".pdf";
             try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
                 fileOutputStream.write(pdfBytes);
             } catch (IOException e) {
