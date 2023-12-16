@@ -18,6 +18,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -173,6 +175,7 @@ public class InHoaDonService {
                 soDienthoai = hoaDon.getSDTNguoiNhan();
             }
 
+            DecimalFormat currencyFormatter = new DecimalFormat("###,### ₫", new DecimalFormatSymbols(Locale.getDefault()));
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String formattedNgayTao = dateFormat.format(ngayTao);
 
@@ -181,7 +184,8 @@ public class InHoaDonService {
             htmlContentBuilder.append("<p>Ngày mua: ").append(formattedNgayTao).append("</p>");
             htmlContentBuilder.append("<p>Khách hàng: ").append(khach).append("</p>");
             htmlContentBuilder.append("<p>Số điện thoại khách hàng: ").append(soDienthoai).append("</p>");
-            htmlContentBuilder.append("<p>Tien tra lai: ").append(hoaDonDTO.getTienTraLai()).append("</p>");
+            htmlContentBuilder.append("<p>Tiền khách đưa: ").append(currencyFormatter.format(hoaDonDTO.getTienKhachDua())).append("</p>");
+            htmlContentBuilder.append("<p>Tiền trả lại: ").append(currencyFormatter.format(hoaDonDTO.getTienTraLai())).append("</p>");
             htmlContentBuilder.append("<p>Trạng thái đơn: Đã thanh toán</p>");
             htmlContentBuilder.append("<p>Nhân viên bán hàng: ").append(hoaDon.getNhanVien().getHoTen()).append("</p>");
 

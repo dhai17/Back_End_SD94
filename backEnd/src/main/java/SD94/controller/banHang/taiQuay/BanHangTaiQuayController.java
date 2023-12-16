@@ -137,6 +137,7 @@ public class BanHangTaiQuayController {
 
     @PostMapping("/inHoaDon")
     public ResponseEntity<?> inHoaDon(@RequestBody HoaDonDTO hoaDonDTO) {
+        System.out.println(hoaDonDTO);
         return inHoaDonService.generatePdf(hoaDonDTO);
     }
 
