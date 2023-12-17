@@ -5,6 +5,7 @@ import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -26,5 +27,7 @@ public interface SanPhamService {
     List<Object> chiTietSanPham(long id_SanPham);
 
     List<SanPhamChiTiet> spct_list();
+
+    ResponseEntity<?> getSanPhamTheoGia(Float gia1, Float gia2);
 
 }

@@ -33,7 +33,7 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
         Message errorResponse;
 
         if (optionalNhaSanXuat != null) {
-            errorMessage = " Trùng hãng sản phẩm";
+            errorMessage = " Trùng nhà sản xuất";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
@@ -83,7 +83,7 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
         Message errorResponse;
 
         if (optionalNhaSanXuat != null) {
-            errorMessage = " Trùng hãng sản phẩm";
+            errorMessage = " Trùng nhà sản xuất";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }

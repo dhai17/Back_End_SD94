@@ -38,6 +38,9 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     @Query(value = "select * from san_pham_chi_tiet where san_pham_id = ? and is_deleted = false", nativeQuery = true)
     List<SanPhamChiTiet> findByProductID(Long id);
 
+    @Query(value = "select * from san_pham_chi_tiet where id = ? and is_deleted = false", nativeQuery = true)
+    List<SanPhamChiTiet> findByProduct(Long id);
+
     @Query(value = "select * from san_pham_chi_tiet spct where spct.san_pham_id = ? and spct.is_deleted = false", nativeQuery = true)
     List<SanPhamChiTiet> getProductD(@Param("san_pham_id") long san_pham_id);
 

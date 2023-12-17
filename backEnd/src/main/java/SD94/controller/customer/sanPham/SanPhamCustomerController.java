@@ -3,6 +3,7 @@ package SD94.controller.customer.sanPham;
 import SD94.dto.*;
 import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
+import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,9 @@ public class SanPhamCustomerController {
 
     @Autowired
     SanPhamRepository sanPhamRepository;
+
+    @Autowired
+    SanPhamService sanPhamService;
 
     @Autowired
     SanPhamChiTietRepository sanPhamChiTietRepository;
@@ -81,25 +85,7 @@ public class SanPhamCustomerController {
     //Loc san pham
     @GetMapping("/loc/gia")
     public ResponseEntity<?> getSanPhamTheoGia(@RequestParam Float gia1, @RequestParam Float gia2) {
-        List<SanPham> sanPhams = sanPhamRepository.findTheoGia(gia1, gia2);
-        List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
-
-        for (SanPham pham : sanPhams) {
-            SanPhamDTO sanPhamDTO = new SanPhamDTO();
-            sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
-            sanPhamDTO.setId(pham.getId());
-            sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
-            sanPhamDTO.setSan_pham_id(pham.getId());
-            sanPhamDTO.setTenSanPham(pham.getTenSanPham());
-            sanPhamDTO.setGia(pham.getGia());
-            sanPhamDTO.setChatLieu(pham.getChatLieu());
-
-            String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
-            sanPhamDTO.setAnh_san_pham(anhSanPham);
-
-            sanPhamDTOList.add(sanPhamDTO);
-        }
-        return ResponseEntity.ok().body(sanPhamDTOList);
+        return sanPhamService.getSanPhamTheoGia(gia1, gia2);
     }
 
     @GetMapping("/loc/loai_san_pham")

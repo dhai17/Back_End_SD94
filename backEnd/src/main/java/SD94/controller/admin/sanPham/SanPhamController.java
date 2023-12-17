@@ -128,7 +128,7 @@ public class SanPhamController {
             spct.setSoLuong(sanPhamDTO.getSoLuong());
             sanPhamChiTietRepository.save(spct);
 
-            respone.put("success", "Tao moi thanh cong");
+            respone.put("success", "Tạo mới thành công");
             return ResponseEntity.ok().body(respone);
         }
     }
