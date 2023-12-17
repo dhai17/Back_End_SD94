@@ -17,6 +17,7 @@ import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.KichCoRepository;
 import SD94.repository.sanPham.MauSacRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
+import SD94.service.service.MailService;
 import SD94.service.service.MuaNgayService;
 import SD94.service.service.HoaDonDatHangService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.util.*;
 
 @Service
@@ -55,6 +57,9 @@ public class MuaNgayServiceImpl implements MuaNgayService {
 
     @Autowired
     HinhAnhRepository hinhAnhRepository;
+
+    @Autowired
+    MailService mailService;
 
     private Long idBill;
 
@@ -150,6 +155,12 @@ public class MuaNgayServiceImpl implements MuaNgayService {
         hoaDon.setTrangThai(trangThai);
         hoaDon.setNguoiNhan(dto.getNguoiTao());
         hoaDonRepository.save(hoaDon);
+
+        try {
+            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), dto.getNguoiTao());
         return ResponseEntity.ok(HttpStatus.OK);

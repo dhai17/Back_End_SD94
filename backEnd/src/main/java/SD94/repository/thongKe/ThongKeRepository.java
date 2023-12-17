@@ -25,7 +25,7 @@ public interface ThongKeRepository {
     @Procedure(name = "thongKeAll_offline()")
     List<ThongKeAllOff> getThongKe_offline();
 
-    @Procedure(name = "thongKeTheoNgay();")
+    @Procedure(name = "thongKeTheoNgay()")
     List<TamTinhTongTienDaBanTheoNgay> getThongKeTheoNgay();
 
     @Procedure(name = "thongKeTheoThang()")
