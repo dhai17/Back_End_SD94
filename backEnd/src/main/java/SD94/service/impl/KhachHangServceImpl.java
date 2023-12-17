@@ -49,12 +49,12 @@ public class KhachHangServceImpl implements KhachHangService {
 
     @Override
     public ResponseEntity<KhachHang> createCustomer(KhachHang khachHangCreate) {
-        Optional<KhachHang> optionalCustomer = customerRepository.findByName(khachHangCreate.getHoTen());
         String errorMessage;
         Message errprResponse;
 
-        if (optionalCustomer.isPresent()) {
-            errorMessage = "trùng mã khách hàng";
+        Optional<KhachHang> checkEmail = Optional.ofNullable(customerRepository.findByEmail(khachHangCreate.getEmail()));
+        if (checkEmail.isPresent()) {
+            errorMessage = "trùng email khách hàng";
             errprResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errprResponse, HttpStatus.BAD_REQUEST);
         }
