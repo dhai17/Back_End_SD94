@@ -221,8 +221,8 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         hoaDon.setTrangThai(trangThai);
         hoaDon.setKhachHang(khachHang);
         hoaDon.setNguoiNhan(khachHang.getHoTen());
+        hoaDon.setLoaiHoaDon(0);
         billRepository.save(hoaDon);
-
         try {
             mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
         } catch (MessagingException e) {

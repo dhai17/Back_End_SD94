@@ -1,11 +1,15 @@
 package SD94.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
 
 @Data
+@Getter
+@Setter
 public class HoaDonDTO {
 
     private Long id;
@@ -35,4 +39,10 @@ public class HoaDonDTO {
     private String nguoiTao;
 
     private String nguoi_thao_tac;
+
+    private int loaiHoaDon;
+
+    private int tienTraLai;
+
+    private int tienKhachDua;
 }

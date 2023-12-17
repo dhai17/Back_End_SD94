@@ -135,9 +135,10 @@ public class BanHangTaiQuayController {
         }
 
 
-    @GetMapping("/inHoaDon/{id}")
-    public ResponseEntity<byte[]> inHoaDon(@PathVariable("id") long id) {
-        return inHoaDonService.generatePdf(id);
+    @PostMapping("/inHoaDon")
+    public ResponseEntity<?> inHoaDon(@RequestBody HoaDonDTO hoaDonDTO) {
+        System.out.println(hoaDonDTO);
+        return inHoaDonService.generatePdf(hoaDonDTO);
     }
 
     @PostMapping("/xoaHDCT")

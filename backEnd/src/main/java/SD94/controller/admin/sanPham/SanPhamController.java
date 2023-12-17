@@ -4,6 +4,7 @@ import SD94.dto.HoaDonDTO;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
+import SD94.service.service.MailService;
 import SD94.service.service.SanPhamService;
 import SD94.validator.DatHangCheckoutValidate;
 import SD94.validator.SanPhamValidate;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
