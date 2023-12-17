@@ -7,6 +7,7 @@ import SD94.entity.nhanVien.NhanVien;
 import SD94.helper.UserNotFoundException;
 import SD94.model.request.JwtRequest;
 import SD94.model.response.JwtResponse;
+import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.service.impl.StaffDetailsServiceImpl;
 import lombok.SneakyThrows;
@@ -35,7 +36,11 @@ public class AuthenticateController {
     private JwtUtils jwtUtils;
 
     @Autowired
-    NhanVienRepository nhanVienRepository;
+    private NhanVienRepository nhanVienRepository;
+
+    @Autowired
+    private KhachHangRepository khachHangRepository;
+
     // generte token
     @SneakyThrows
     @PostMapping("/login")
@@ -43,7 +48,6 @@ public class AuthenticateController {
         try {
             authenticate(jwtRequest.getEmail(), jwtRequest.getPassword());
             UserDetails userDetails = this.staffDetailsService.loadUserByUsername(jwtRequest.getEmail());
-
             String token = this.jwtUtils.generateToken(userDetails);
             return ResponseEntity.ok(new JwtResponse(token));
         } catch (UserNotFoundException e) {
@@ -52,12 +56,21 @@ public class AuthenticateController {
     }
 
     private void authenticate(String username, String password) throws Exception {
+        NhanVien nhanVien = this.nhanVienRepository.findByEmail(username);
+        if (nhanVien != null) {
+            if (nhanVien.getTrangThai() == 1) {
+                throw new DisabledException("Nhân viên đã nghỉ việc");
+            }
+        } else {
+            KhachHang khachHang = this.khachHangRepository.findByEmail(username);
+            if (khachHang == null) {
+                throw new BadCredentialsException("Sai thông tin đăng nhập");
+            }
+        }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("User disabled ");
         } catch (BadCredentialsException e) {
-            throw new Exception("Invalid Credentials");
+            throw new BadCredentialsException("Error");
         }
     }
 
@@ -66,6 +79,4 @@ public class AuthenticateController {
     public NhanVien getCurrentUser(Principal principal) {
         return (NhanVien) this.staffDetailsService.loadUserByUsername(principal.getName());
     }
-
-
 }
