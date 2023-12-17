@@ -51,7 +51,6 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     public ResponseEntity<NhanVien> createStaff(NhanVien staffCreate) {
-
         NhanVien optionalStaff = staffRepository.findByName(staffCreate.getHoTen());
         String errorMessage;
         Message errorRespone;
