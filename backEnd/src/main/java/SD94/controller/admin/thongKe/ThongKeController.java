@@ -20,6 +20,16 @@ public class ThongKeController {
         return ResponseEntity.ok().body(thongKeRepository.getThongKe());
     }
 
+    @GetMapping("/tongDoanhSoonline")
+    public ResponseEntity<?> thongKeAllOnl() {
+        return ResponseEntity.ok().body(thongKeRepository.getThongKe_online());
+    }
+
+    @GetMapping("/tongDoanhSooffline")
+    public ResponseEntity<?> ThongKeAllOff() {
+        return ResponseEntity.ok().body(thongKeRepository.getThongKe_offline());
+    }
+
     @GetMapping("/thongKeTheoNgay")
     public ResponseEntity<?> thongKeTheoNgay() {
         return ResponseEntity.ok().body(thongKeRepository.getThongKeTheoNgay());

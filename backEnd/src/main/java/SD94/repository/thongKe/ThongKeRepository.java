@@ -16,8 +16,14 @@ import java.util.Objects;
 
 @Repository
 public interface ThongKeRepository {
+
     @Procedure(name = "thongKeAll()")
     List<ThongKeAll> getThongKe();
+    @Procedure(name = "thongKeAll_online()")
+    List<ThongKeAllOnl> getThongKe_online();
+
+    @Procedure(name = "thongKeAll_offline()")
+    List<ThongKeAllOff> getThongKe_offline();
 
     @Procedure(name = "thongKeTheoNgay();")
     List<TamTinhTongTienDaBanTheoNgay> getThongKeTheoNgay();

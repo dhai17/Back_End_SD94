@@ -27,6 +27,31 @@ public class ThongKeRepositoryImpl implements ThongKeRepository {
     }
 
     @Override
+    public List<ThongKeAllOnl> getThongKe_online() {
+        return jdbcTemplate.query(
+                "call thongKeAll_online()",
+                ((rs, rowNum) -> new ThongKeAllOnl(
+                        rs.getLong("trangThai_id"),
+                        rs.getLong("tong_so_hoadon"),
+                        rs.getBigDecimal("tong_tien_hoadon")
+                ))
+        );
+    }
+
+    @Override
+    public List<ThongKeAllOff> getThongKe_offline() {
+        return jdbcTemplate.query(
+                "call thongKeAll_offline()",
+                ((rs, rowNum) -> new ThongKeAllOff(
+                        rs.getLong("trangThai_id"),
+                        rs.getLong("tong_so_hoadon"),
+                        rs.getBigDecimal("tong_tien_hoadon")
+                ))
+        );
+    }
+
+
+    @Override
     public List<TamTinhTongTienDaBanTheoNgay> getThongKeTheoNgay() {
         return jdbcTemplate.query(
                 "call thongKeTheoNgay();",
