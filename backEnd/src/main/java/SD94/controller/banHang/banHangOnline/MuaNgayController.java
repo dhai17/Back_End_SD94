@@ -87,9 +87,8 @@ public class MuaNgayController {
     }
 
     @PostMapping("/add/khuyenMai")
-    public HoaDon addDiscount(@RequestBody HoaDonDTO hoaDonDTO) {
-        HoaDon hoaDon = muaNgayService.addDiscount(hoaDonDTO);
-        return hoaDon;
+    public ResponseEntity<?> addDiscount(@RequestBody HoaDonDTO hoaDonDTO) {
+        return ResponseEntity.ok().body(muaNgayService.addDiscount(hoaDonDTO));
     }
 
     @PostMapping("/datHang")
