@@ -151,6 +151,11 @@ public class MuaNgayServiceImpl implements MuaNgayService {
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
+            if (sanPhamChiTiet.getSoLuong() <= 0) {
+                sanPhamChiTiet.setTrangThai(false);
+            } else {
+                sanPhamChiTiet.setTrangThai(true);
+            }
             sanPhamChiTietRepository.save(sanPhamChiTiet);
         }
 
