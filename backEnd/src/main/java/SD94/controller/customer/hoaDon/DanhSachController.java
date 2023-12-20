@@ -80,6 +80,7 @@ public class DanhSachController {
         TrangThai trangThai = trangThaiRepository.findByID(5L);
         KhachHang khachHang = khachHangRepository.findByEmail(dto.getNguoi_thao_tac());
         hoaDon.setTrangThai(trangThai);
+        hoaDon.setGhiChu("Khách huỷ");
         hoaDonRepository.save(hoaDon);
 
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());

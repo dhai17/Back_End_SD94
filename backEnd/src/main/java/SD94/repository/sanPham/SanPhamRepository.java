@@ -29,7 +29,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Long> {
     @Query(value = "SELECT * FROM san_pham WHERE is_deleted = false AND ten_san_pham LIKE %?1% and trang_thai = 0", nativeQuery = true)
     List<SanPham> findByName(String name);
 
-    @Query(value = "SELECT * FROM san_pham WHERE is_deleted = false AND ten_san_pham = ?;", nativeQuery = true)
+    @Query(value = "SELECT * FROM san_pham WHERE is_deleted = false AND ten_san_pham = ? and trang_thai = 0;", nativeQuery = true)
     SanPham checkLap(String tenSP);
 
     @Query(value = "select * from san_pham where loai_san_pham_id = ? and is_deleted = false and trang_thai = 0", nativeQuery = true)
