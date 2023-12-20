@@ -23,6 +23,4 @@ public interface BanHangOnlineService {
 
     ResponseEntity datHang(HoaDonDTO dto);
 
-
-
 }
