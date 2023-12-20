@@ -72,6 +72,12 @@ public class SanPhamChiTietController {
         return ResponseEntity.ok().body(product);
     }
 
+    @GetMapping("/themAnhSpctId/{id}")
+    public ResponseEntity<?> getHinhAnhBSpct(@PathVariable("id") long id) {
+        List<SanPhamChiTiet> product = sanPhamChiTietRepository.findByProduct(id);
+        return ResponseEntity.ok().body(product);
+    }
+
     //Hien thi theo id
     @GetMapping("/chinhSua/{id}")
     public SanPhamChiTiet editProductDetails(@PathVariable("id") Long id) {
@@ -151,12 +157,21 @@ public class SanPhamChiTietController {
     public ResponseEntity<?> setAnhMacDinh(@RequestBody HinhAnhDTO hinhAnhDTO) {
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hinhAnhDTO.getId_spct());
         HinhAnh check = hinhAnhRepository.findAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
+
         if (check != null) {
             check.setAnhMacDinh(false);
             hinhAnhRepository.save(check);
             HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId_hinh_anh());
             hinhAnh.setAnhMacDinh(true);
             hinhAnhRepository.save(hinhAnh);
+
+            SanPham sanPham = sanPhamChiTiet.getSanPham();
+            sanPham.setTrangThai(0);
+            sanPhamRepository.save(sanPham);
+
+            sanPhamChiTiet.setTrangThai(true);
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+
             Map<String, Object> response = new HashMap<>();
             response.put("mess", "Đặt ảnh mặc định thành công");
             return ResponseEntity.ok().body(response);
@@ -164,6 +179,14 @@ public class SanPhamChiTietController {
             HinhAnh hinhAnh = hinhAnhRepository.findByID(hinhAnhDTO.getId_hinh_anh());
             hinhAnh.setAnhMacDinh(true);
             hinhAnhRepository.save(hinhAnh);
+
+            SanPham sanPham = sanPhamChiTiet.getSanPham();
+            sanPham.setTrangThai(0);
+            sanPhamRepository.save(sanPham);
+
+            sanPhamChiTiet.setTrangThai(true);
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+
             Map<String, Object> response = new HashMap<>();
             response.put("mess", "Đặt ảnh mặc định thành công");
             return ResponseEntity.ok().body(response);

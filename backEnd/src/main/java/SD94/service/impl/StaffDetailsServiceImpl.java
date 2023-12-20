@@ -1,14 +1,18 @@
 package SD94.service.impl;
+
 import SD94.dto.UserDTO;
 import SD94.entity.khachHang.KhachHang;
 import SD94.entity.nhanVien.NhanVien;
 import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.nhanVien.NhanVienRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
 @Service
 public class StaffDetailsServiceImpl implements UserDetailsService {
 
@@ -43,5 +47,6 @@ public class StaffDetailsServiceImpl implements UserDetailsService {
         }
 
         throw new UsernameNotFoundException("Thông tin đăng nhập không hợp lệ !!");
+
     }
 }

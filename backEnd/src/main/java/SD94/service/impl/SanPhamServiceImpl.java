@@ -4,7 +4,6 @@ import SD94.controller.message.Message;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
-//import SD94.service.service.HinhAnhService;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -133,7 +132,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         SanPham sanPham = new SanPham();
         sanPham.setTenSanPham(sanPhamDTO.getTenSanPham());
         sanPham.setGia(sanPhamDTO.getGia());
-        sanPham.setTrangThai(0);
+        sanPham.setTrangThai(1);
         sanPham.setLoaiSanPham(loaiSanPham);
         sanPham.setNhaSanXuat(nhaSanXuat);
         sanPham.setChatLieu(chatLieu);
@@ -175,6 +174,31 @@ public class SanPhamServiceImpl implements SanPhamService {
     public List<SanPhamChiTiet> spct_list() {
         List<SanPhamChiTiet> list = sanPhamChiTietRepository.findSpctByIdSp(id_product);
         return list;
+    }
+
+    @Override
+    public ResponseEntity<?> getSanPhamTheoGia(Float gia1, Float gia2) {
+        try {
+            List<SanPham> sanPhams = repository.findTheoGia(gia1, gia2);
+            List<SanPhamDTO> sanPhamDTOList = new ArrayList<>();
+
+            for (SanPham pham : sanPhams) {
+                SanPhamDTO sanPhamDTO = new SanPhamDTO();
+                sanPhamDTO.setLoaiSanPham(pham.getLoaiSanPham());
+                sanPhamDTO.setId(pham.getId());
+                sanPhamDTO.setNhaSanXuat(pham.getNhaSanXuat());
+                sanPhamDTO.setSan_pham_id(pham.getId());
+                sanPhamDTO.setTenSanPham(pham.getTenSanPham());
+                sanPhamDTO.setGia(pham.getGia());
+                sanPhamDTO.setChatLieu(pham.getChatLieu());
+
+                String anhSanPham = hinhAnhRepository.getTenAnhSanPham_HienThiDanhSach(pham.getId());
+                sanPhamDTO.setAnh_san_pham(anhSanPham);
+                sanPhamDTOList.add(sanPhamDTO);
+            }
+            return ResponseEntity.ok().body(sanPhamDTOList);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());        }
     }
 
 }

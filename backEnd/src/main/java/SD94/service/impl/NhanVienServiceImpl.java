@@ -51,16 +51,9 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     public ResponseEntity<NhanVien> createStaff(NhanVien staffCreate) {
-
-        NhanVien optionalStaff = staffRepository.findByName(staffCreate.getHoTen());
         String errorMessage;
         Message errorRespone;
 
-        if (optionalStaff != null) {
-            errorMessage = " Trùng mã nhân viên";
-            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
-            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
-        }
         if (staffCreate.getHoTen() == null ||
                 staffCreate.getGioiTinh() == null ||
                 staffCreate.getDiaChi() == null || staffCreate.getSoDienThoai() == null ||
@@ -117,6 +110,7 @@ public class NhanVienServiceImpl implements NhanVienService {
             staff.setNgaySinh(staffCreate.getNgaySinh());
             staff.setMatKhau(passwordEncoder.encode(staffCreate.getMatKhau()));
             staff.setSoDienThoai(staffCreate.getSoDienThoai());
+            staff.setSoCanCuoc(staffCreate.getSoCanCuoc());
             staffRepository.save(staff);
 
             Role role = roleRepository.find("STAFF");

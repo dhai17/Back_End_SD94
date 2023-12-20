@@ -13,7 +13,7 @@ public interface MuaNgayService {
 
     ResponseEntity<HoaDon> getBill();
 
-    HoaDon addDiscount(HoaDonDTO hoaDonDTO);
+    ResponseEntity<?> addDiscount(HoaDonDTO hoaDonDTO);
 
     ResponseEntity datHang(HoaDonDTO dto);
 

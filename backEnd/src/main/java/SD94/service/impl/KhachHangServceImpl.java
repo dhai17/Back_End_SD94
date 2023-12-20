@@ -49,12 +49,12 @@ public class KhachHangServceImpl implements KhachHangService {
 
     @Override
     public ResponseEntity<KhachHang> createCustomer(KhachHang khachHangCreate) {
-        Optional<KhachHang> optionalCustomer = customerRepository.findByName(khachHangCreate.getHoTen());
         String errorMessage;
         Message errprResponse;
 
-        if (optionalCustomer.isPresent()) {
-            errorMessage = "trùng mã khách hàng";
+        Optional<KhachHang> checkEmail = Optional.ofNullable(customerRepository.findByEmail(khachHangCreate.getEmail()));
+        if (checkEmail.isPresent()) {
+            errorMessage = "trùng email khách hàng";
             errprResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errprResponse, HttpStatus.BAD_REQUEST);
         }
@@ -118,7 +118,7 @@ public class KhachHangServceImpl implements KhachHangService {
         Message errprResponse;
 
         if (khachHangEdit.getHoTen() == null || khachHangEdit.getSoDienThoai() == null || khachHangEdit.getEmail() == null
-                || khachHangEdit.getNgaySinh() == null || khachHangEdit.getDiaChi() == null || khachHangEdit.getMatKhau() == null) {
+                || khachHangEdit.getNgaySinh() == null || khachHangEdit.getDiaChi() == null) {
             errorMessage = "Nhập thông tin đầy đủ";
             errprResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errprResponse, HttpStatus.BAD_REQUEST);
@@ -161,7 +161,7 @@ public class KhachHangServceImpl implements KhachHangService {
                 khachHang.setEmail(khachHangEdit.getEmail());
                 khachHang.setNgaySinh(khachHangEdit.getNgaySinh());
                 khachHang.setDiaChi(khachHangEdit.getDiaChi());
-                khachHang.setMatKhau(khachHangEdit.getMatKhau());
+//                khachHang.setMatKhau(khachHangEdit.getMatKhau());
                 customerRepository.save(khachHang);
                 return ResponseEntity.ok(khachHang);
             } else {

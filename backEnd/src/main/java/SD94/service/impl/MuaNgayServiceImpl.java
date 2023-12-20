@@ -17,6 +17,7 @@ import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.KichCoRepository;
 import SD94.repository.sanPham.MauSacRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
+import SD94.service.service.MailService;
 import SD94.service.service.MuaNgayService;
 import SD94.service.service.HoaDonDatHangService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.util.*;
 
 @Service
@@ -55,6 +57,9 @@ public class MuaNgayServiceImpl implements MuaNgayService {
 
     @Autowired
     HinhAnhRepository hinhAnhRepository;
+
+    @Autowired
+    MailService mailService;
 
     private Long idBill;
 
@@ -101,30 +106,41 @@ public class MuaNgayServiceImpl implements MuaNgayService {
     }
 
     @Override
-    public HoaDon addDiscount(HoaDonDTO hoaDonDTO) {
+    public ResponseEntity<?> addDiscount(HoaDonDTO hoaDonDTO) {
         KhuyenMai khuyenMai = khuyenMaiRepository.findByNameKM(hoaDonDTO.getTenMaGiamGia());
-        HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
-        int phanTramGiam = khuyenMai.getPhanTramGiam();
-        int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
-        int tongTienBill = hoaDon.getTongTienDonHang();
 
-        int tongTienSauGiamCheck = (tongTienBill * phanTramGiam) / 100;
-        if (tongTienSauGiamCheck > tienGiamToiDa) {
-            int tongTienSauGiam = hoaDon.getTongTienDonHang() - khuyenMai.getTienGiamToiDa();
-            hoaDon.setTienGiam(hoaDon.getTongTienDonHang() - tongTienSauGiam);
-            hoaDon.setTongTienDonHang(tongTienSauGiam);
-            hoaDon.setKhuyenMai(khuyenMai);
-            hoaDonRepository.save(hoaDon);
+        if (khuyenMai == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("mess", "Khuyen mai khong ton tai");
+            return ResponseEntity.badRequest().body(response);
+        } else if (khuyenMai.getTrangThai() == 1 || khuyenMai.getTrangThai() == 2) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("mess", "Khuyến mãi đã hết hạn hoặc chưa bắt đầu");
+            return ResponseEntity.badRequest().body(response);
         } else {
-            int tongTien = hoaDon.getTongTienDonHang() - tongTienSauGiamCheck;
-            hoaDon.setTongTienDonHang(tongTien);
-            hoaDon.setTienGiam(tongTienSauGiamCheck);
-            hoaDon.setKhuyenMai(khuyenMai);
-            hoaDonRepository.save(hoaDon);
-        }
+            HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
+            int phanTramGiam = khuyenMai.getPhanTramGiam();
+            int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
+            int tongTienBill = hoaDon.getTongTienHoaDon();
 
-        HoaDon hoaDon2 = hoaDonRepository.findByID(hoaDonDTO.getId());
-        return hoaDon2;
+            int tongTienSauGiamCheck = (tongTienBill * phanTramGiam) / 100;
+            if (tongTienSauGiamCheck > tienGiamToiDa) {
+                int tongTienSauGiam = hoaDon.getTongTienHoaDon() - khuyenMai.getTienGiamToiDa();
+                hoaDon.setTienGiam(hoaDon.getTongTienHoaDon() - tongTienSauGiam);
+                hoaDon.setTongTienDonHang(tongTienSauGiam);
+                hoaDon.setKhuyenMai(khuyenMai);
+                hoaDonRepository.save(hoaDon);
+            } else {
+                int tongTien = hoaDon.getTongTienHoaDon() - tongTienSauGiamCheck;
+                hoaDon.setTongTienDonHang(tongTien);
+                hoaDon.setTienGiam(tongTienSauGiamCheck);
+                hoaDon.setKhuyenMai(khuyenMai);
+                hoaDonRepository.save(hoaDon);
+            }
+
+            HoaDon hoaDon2 = hoaDonRepository.findByID(hoaDonDTO.getId());
+            return ResponseEntity.ok().body(hoaDon2);
+        }
     }
 
     @Transactional
@@ -150,6 +166,12 @@ public class MuaNgayServiceImpl implements MuaNgayService {
         hoaDon.setTrangThai(trangThai);
         hoaDon.setNguoiNhan(dto.getNguoiTao());
         hoaDonRepository.save(hoaDon);
+
+        try {
+            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), dto.getNguoiTao());
         return ResponseEntity.ok(HttpStatus.OK);

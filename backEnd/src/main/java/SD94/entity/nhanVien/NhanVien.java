@@ -54,6 +54,9 @@ public class NhanVien extends Base implements UserDetails {
     @JsonIgnore
     private Set<UserRole> userRoles = new HashSet<>();
 
+    @Column(name = "soCanCuoc", columnDefinition = "nvarchar(256)")
+    private String soCanCuoc;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<Authority> set = new HashSet<>();
