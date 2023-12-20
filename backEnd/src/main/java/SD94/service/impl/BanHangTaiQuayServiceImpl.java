@@ -111,7 +111,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         int soLuongBanDau = sanPhamChiTiet.getSoLuong();
         int soLuongThem = dto.getSoLuong();
         if (soLuongThem > soLuongBanDau) {
-            respone.put("err", "So luong nhap vao lon hon so luong hien co");
+            respone.put("err", "Số lượng nhập vào lớn hơn số lượng hiện có");
             return ResponseEntity.ok().body(respone);
         } else {
             if (optionalHDCT.isPresent()) {
@@ -252,7 +252,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         Map<String, String> response = new HashMap<>();
 
         if (hoaDonChiTiets.isEmpty() || hoaDonChiTiets.size() == 0) {
-            response.put("err", "hoa don chua co san pham");
+            response.put("err", "Hóa đơn chưa có sản phẩm");
             return ResponseEntity.badRequest().body(response);
         } else {
             for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
