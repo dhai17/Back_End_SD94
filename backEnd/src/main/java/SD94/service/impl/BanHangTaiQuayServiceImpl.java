@@ -255,9 +255,16 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
             response.put("err", "hoa don chua co san pham");
             return ResponseEntity.badRequest().body(response);
         } else {
+            for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+                SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+                if (sanPhamChiTiet.getSoLuong() == 0) {
+                    sanPhamChiTiet.setTrangThai(false);
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
+                }
+
+            }
             TrangThai trangThai = trangThaiRepository.findByID(7L);
             NhanVien nhanVien = nhanVienRepository.findByEmail(hoaDonDTO.getEmail_user());
-
             hoaDon.setTrangThai(trangThai);
             hoaDon.setNhanVien(nhanVien);
             hoaDonRepository.save(hoaDon);

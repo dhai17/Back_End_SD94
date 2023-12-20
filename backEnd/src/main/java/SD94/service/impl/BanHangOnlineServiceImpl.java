@@ -70,7 +70,6 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
 
     private Long idBill;
 
-
     @Override
     public ResponseEntity<?> checkout(GioHangDTO dto) {
         Map<String, String> respone = new HashMap<>();
@@ -89,17 +88,22 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
             if (optionalcart.isPresent()) {
                 GioHangChiTiet gioHangChiTiet = optionalcart.get();
                 SanPhamChiTiet sanPhamChiTiet = gioHangChiTiet.getSanPhamChiTiet();
-                if (gioHangChiTiet.getSoLuong() > sanPhamChiTiet.getSoLuong()) {
-                    respone.put("err", "Số lượng của sản phẩm đã về " + sanPhamChiTiet.getSoLuong());
+                if (sanPhamChiTiet.isTrangThai() == false) {
+                    respone.put("err", "Sản phẩm đã ngừng kinh doanh");
                     return ResponseEntity.badRequest().body(respone);
+                } else {
+                    if (gioHangChiTiet.getSoLuong() > sanPhamChiTiet.getSoLuong()) {
+                        respone.put("err", "Số lượng của sản phẩm đã về " + sanPhamChiTiet.getSoLuong());
+                        return ResponseEntity.badRequest().body(respone);
+                    }
+                    HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+                    hoaDonChiTiet.setSanPhamChiTiet(gioHangChiTiet.getSanPhamChiTiet());
+                    hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
+                    hoaDonChiTiet.setDonGia(gioHangChiTiet.getDonGia());
+                    hoaDonChiTiet.setThanhTien(gioHangChiTiet.getThanhTien().setScale(0, RoundingMode.HALF_UP).intValue());
+                    hoaDonChiTiet.setHoaDon(hoaDon);
+                    billDetailsRepository.save(hoaDonChiTiet);
                 }
-                HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-                hoaDonChiTiet.setSanPhamChiTiet(gioHangChiTiet.getSanPhamChiTiet());
-                hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
-                hoaDonChiTiet.setDonGia(gioHangChiTiet.getDonGia());
-                hoaDonChiTiet.setThanhTien(gioHangChiTiet.getThanhTien().setScale(0, RoundingMode.HALF_UP).intValue());
-                hoaDonChiTiet.setHoaDon(hoaDon);
-                billDetailsRepository.save(hoaDonChiTiet);
             }
         }
         idBill = hoaDon.getId();
@@ -209,6 +213,11 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
+            if (sanPhamChiTiet.getSoLuong() <= 0) {
+                sanPhamChiTiet.setTrangThai(false);
+            } else {
+                sanPhamChiTiet.setTrangThai(true);
+            }
             sanPhamChiTietRepository.save(sanPhamChiTiet);
         }
 

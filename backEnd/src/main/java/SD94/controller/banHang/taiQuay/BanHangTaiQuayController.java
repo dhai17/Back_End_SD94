@@ -54,7 +54,7 @@ public class BanHangTaiQuayController {
     public ResponseEntity<?> getHoaDonChiTiet(@PathVariable("id") long id) {
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(id);
         List<HoaDonChiTietDTO> dto = new ArrayList<>();
-        for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
+        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
             HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
             String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
@@ -131,14 +131,15 @@ public class BanHangTaiQuayController {
 
     @PostMapping("/thanhToan")
     public ResponseEntity thanhToan(@RequestBody HoaDonDTO hoaDonDTO) {
-            return banHangTaiQuayService.thanhToan(hoaDonDTO);
-        }
+        return banHangTaiQuayService.thanhToan(hoaDonDTO);
+    }
 
 
     @PostMapping("/inHoaDon")
     public ResponseEntity<?> inHoaDon(@RequestBody HoaDonDTO hoaDonDTO) {
         return inHoaDonService.generatePdf(hoaDonDTO);
     }
+
     @PostMapping("/inHoaDon/daThanhToan")
     public ResponseEntity<?> inHoaDonDaThanhToan(@RequestBody HoaDonDTO hoaDonDTO) {
         return inHoaDonService.HdDaThanhToanPdf(hoaDonDTO);
