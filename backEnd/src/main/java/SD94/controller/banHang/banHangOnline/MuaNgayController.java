@@ -59,7 +59,7 @@ public class MuaNgayController {
     public ResponseEntity<?> getHoaDonChiTiet(@PathVariable("id") long id_HoaDon) {
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(id_HoaDon);
         List<HoaDonChiTietDTO> dto = new ArrayList<>();
-        for(HoaDonChiTiet hoaDonChiTiet: hoaDonChiTiets){
+        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
             HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
             String anh_san_pham = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
@@ -88,7 +88,7 @@ public class MuaNgayController {
 
     @PostMapping("/add/khuyenMai")
     public ResponseEntity<?> addDiscount(@RequestBody HoaDonDTO hoaDonDTO) {
-        return ResponseEntity.ok().body(muaNgayService.addDiscount(hoaDonDTO));
+        return muaNgayService.addDiscount(hoaDonDTO);
     }
 
     @PostMapping("/datHang")

@@ -153,21 +153,18 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
 
     @Override
     public ResponseEntity<?> addDiscount(HoaDonDTO hoaDonDTO) {
-        Map<String, String> respone = new HashMap<>();
+        Map<String, String> response = new HashMap<>();
         KhuyenMai khuyenMai = discountRepository.findByNameKM(hoaDonDTO.getTenMaGiamGia());
         if (khuyenMai == null) {
-            Map<String, Object> response = new HashMap<>();
             response.put("mess", "Khuyen mai khong ton tai");
             return ResponseEntity.badRequest().body(response);
         } else if (khuyenMai.getTrangThai() == 1 || khuyenMai.getTrangThai() == 2) {
-            Map<String, Object> response = new HashMap<>();
             response.put("mess", "Khuyến mãi đã hết hạn hoặc chưa bắt đầu");
             return ResponseEntity.badRequest().body(response);
         } else {
             long now = new Date().getTime();
             long a = khuyenMai.getNgayKetThuc().getTime();
             if (a < now) {
-                Map<String, Object> response = new HashMap<>();
                 response.put("mess", "Khuyen mai da het han");
                 return ResponseEntity.badRequest().body(response);
             } else {
