@@ -159,7 +159,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches()) {
-            errorMessage = "Mail is not in the correct format";
+            errorMessage = "Mail không đúng định dạng";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
         }
