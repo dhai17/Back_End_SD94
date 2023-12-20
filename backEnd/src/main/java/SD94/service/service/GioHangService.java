@@ -45,6 +45,9 @@ public class GioHangService {
         if (soLuongSanPhamHienCo < soLuongUpdate) {
             respone.put("err", "Số lượng nhập vào không được vượt quá " + soLuongSanPhamHienCo);
             return ResponseEntity.badRequest().body(respone);
+        } else if (sanPhamChiTiet.isTrangThai() == false) {
+            respone.put("err", "Sản phẩm đã ngừng kinh doanh ");
+            return ResponseEntity.badRequest().body(respone);
         } else {
             gioHangChiTiet.setSoLuong(soLuongUpdate);
             gioHangChiTiet.setThanhTien(BigDecimal.valueOf(soLuongUpdate * sanPhamChiTiet.getSanPham().getGia()));

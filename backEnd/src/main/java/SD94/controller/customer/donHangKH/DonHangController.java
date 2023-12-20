@@ -24,7 +24,6 @@ public class DonHangController {
 
     @GetMapping("/danhSach")
     public List<HoaDon> listBill1() {
-
         return hoaDonDatHangService.findHoaDonByLoai(0);
     }
 }
