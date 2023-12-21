@@ -51,7 +51,7 @@ public interface HinhAnhRepository extends JpaRepository<HinhAnh, Long> {
     @Query(value = "select * from hinh_anh where id_product = ?", nativeQuery = true)
     List<HinhAnh> getHinhAnhByProductID(long sanPham_id);
 
-    @Query(value = "select * from hinh_anh where id_product = ?1 and id_color = ?2 and anh_mac_dinh = true", nativeQuery = true)
+    @Query(value = "select * from hinh_anh where id_product = ?1 and id_color = ?2", nativeQuery = true)
     List<HinhAnh> getHinhAnhs(long sanPham_id, long id_mauSac);
 
 }
