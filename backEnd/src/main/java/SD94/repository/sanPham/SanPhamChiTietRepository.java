@@ -2,6 +2,7 @@ package SD94.repository.sanPham;
 
 import SD94.entity.sanPham.SanPhamChiTiet;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -63,4 +64,8 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
     @Query(value = "select * from san_pham_chi_tiet where mau_sac_id = ?1 and kich_co_id = ?2 and san_pham_id = ?3 and is_deleted = false", nativeQuery = true)
     SanPhamChiTiet getSanPhamChiTiet(long mau_sac_id, long kich_co_id, long san_pham_id);
+
+    @Modifying
+    @Query(value = "delete from san_pham_chi_tiet where id = ?", nativeQuery = true)
+    void deleteByIDSPT(long id);
 }
