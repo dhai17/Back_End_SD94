@@ -70,7 +70,6 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
 
     private Long idBill;
 
-
     @Override
     public ResponseEntity<?> checkout(GioHangDTO dto) {
         Map<String, String> respone = new HashMap<>();
@@ -89,17 +88,22 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
             if (optionalcart.isPresent()) {
                 GioHangChiTiet gioHangChiTiet = optionalcart.get();
                 SanPhamChiTiet sanPhamChiTiet = gioHangChiTiet.getSanPhamChiTiet();
-                if (gioHangChiTiet.getSoLuong() > sanPhamChiTiet.getSoLuong()) {
-                    respone.put("err", "Số lượng của sản phẩm đã về " + sanPhamChiTiet.getSoLuong());
+                if (sanPhamChiTiet.isTrangThai() == false) {
+                    respone.put("err", "Sản phẩm đã ngừng kinh doanh");
                     return ResponseEntity.badRequest().body(respone);
+                } else {
+                    if (gioHangChiTiet.getSoLuong() > sanPhamChiTiet.getSoLuong()) {
+                        respone.put("err", "Số lượng của sản phẩm đã về " + sanPhamChiTiet.getSoLuong());
+                        return ResponseEntity.badRequest().body(respone);
+                    }
+                    HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+                    hoaDonChiTiet.setSanPhamChiTiet(gioHangChiTiet.getSanPhamChiTiet());
+                    hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
+                    hoaDonChiTiet.setDonGia(gioHangChiTiet.getDonGia());
+                    hoaDonChiTiet.setThanhTien(gioHangChiTiet.getThanhTien().setScale(0, RoundingMode.HALF_UP).intValue());
+                    hoaDonChiTiet.setHoaDon(hoaDon);
+                    billDetailsRepository.save(hoaDonChiTiet);
                 }
-                HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-                hoaDonChiTiet.setSanPhamChiTiet(gioHangChiTiet.getSanPhamChiTiet());
-                hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
-                hoaDonChiTiet.setDonGia(gioHangChiTiet.getDonGia());
-                hoaDonChiTiet.setThanhTien(gioHangChiTiet.getThanhTien().setScale(0, RoundingMode.HALF_UP).intValue());
-                hoaDonChiTiet.setHoaDon(hoaDon);
-                billDetailsRepository.save(hoaDonChiTiet);
             }
         }
         idBill = hoaDon.getId();
@@ -153,22 +157,19 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
 
     @Override
     public ResponseEntity<?> addDiscount(HoaDonDTO hoaDonDTO) {
-        Map<String, String> respone = new HashMap<>();
+        Map<String, String> response = new HashMap<>();
         KhuyenMai khuyenMai = discountRepository.findByNameKM(hoaDonDTO.getTenMaGiamGia());
         if (khuyenMai == null) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("mess", "Khuyen mai khong ton tai");
+            response.put("mess", "Khuyến mại không tồn tại");
             return ResponseEntity.badRequest().body(response);
         } else if (khuyenMai.getTrangThai() == 1 || khuyenMai.getTrangThai() == 2) {
-            Map<String, Object> response = new HashMap<>();
             response.put("mess", "Khuyến mãi đã hết hạn hoặc chưa bắt đầu");
             return ResponseEntity.badRequest().body(response);
         } else {
             long now = new Date().getTime();
             long a = khuyenMai.getNgayKetThuc().getTime();
             if (a < now) {
-                Map<String, Object> response = new HashMap<>();
-                response.put("mess", "Khuyen mai da het han");
+                response.put("mess", "Khuyến mại đã hết hạn");
                 return ResponseEntity.badRequest().body(response);
             } else {
                 HoaDon hoaDon = billRepository.findByID(hoaDonDTO.getId());
@@ -212,6 +213,11 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
+            if (sanPhamChiTiet.getSoLuong() <= 0) {
+                sanPhamChiTiet.setTrangThai(false);
+            } else {
+                sanPhamChiTiet.setTrangThai(true);
+            }
             sanPhamChiTietRepository.save(sanPhamChiTiet);
         }
 

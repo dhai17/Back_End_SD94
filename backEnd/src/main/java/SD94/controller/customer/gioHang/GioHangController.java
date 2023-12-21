@@ -18,10 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/gioHang")
@@ -51,8 +48,8 @@ public class GioHangController {
         long idCart = gioHang.getId();
         List<GioHangChiTietDTO> gioHangChiTietDTOS = new ArrayList<>();
         List<GioHangChiTiet> cartList = cartDetailsRepository.findByCartID(idCart);
-        for(GioHangChiTiet gioHangChiTiet: cartList){
-            SanPhamChiTiet sanPhamChiTiet =  gioHangChiTiet.getSanPhamChiTiet();
+        for (GioHangChiTiet gioHangChiTiet : cartList) {
+            SanPhamChiTiet sanPhamChiTiet = gioHangChiTiet.getSanPhamChiTiet();
             GioHangChiTietDTO dto = new GioHangChiTietDTO();
             String hinhAnhs = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
 
@@ -85,26 +82,8 @@ public class GioHangController {
         return cartList;
     }
 
-    @PostMapping("/sua/soLuong/sanPham")
-    public List<GioHangChiTiet> updateSoLuong(@RequestBody GioHangChiTiet request) {
-        Long id_cart_details = request.getId();
-        int quantity = request.getSoLuong();
-        Optional<GioHangChiTiet> shoppingCart = cartDetailsRepository.findById(id_cart_details);
-        if (shoppingCart.isPresent()) {
-            GioHangChiTiet gioHangChiTiet = shoppingCart.get();
-            gioHangChiTiet.setSoLuong(quantity);
-            gioHangChiTiet.setThanhTien(BigDecimal.valueOf(2502));
-            cartDetailsRepository.save(gioHangChiTiet);
-        }
-
-        long idCart = shoppingCart.get().getGioHang().getId();
-        List<GioHangChiTiet> cartList = cartDetailsRepository.findByCartID(idCart);
-
-        return cartList;
-    }
-
     @PostMapping("/update/soLuongGioHangChiTiet")
-    public ResponseEntity<?> updateSoLuongGioHangChiTiet(@RequestBody GioHangChiTietDTO dto){
+    public ResponseEntity<?> updateSoLuongGioHangChiTiet(@RequestBody GioHangChiTietDTO dto) {
         return gioHangService.updateSoLuong(dto);
     }
 }

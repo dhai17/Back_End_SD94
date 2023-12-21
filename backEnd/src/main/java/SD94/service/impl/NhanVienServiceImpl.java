@@ -54,6 +54,20 @@ public class NhanVienServiceImpl implements NhanVienService {
         String errorMessage;
         Message errorRespone;
 
+        Optional<NhanVien> checkEmail = Optional.ofNullable(staffRepository.findByEmail(staffCreate.getEmail()));
+        if (checkEmail.isPresent()){
+            errorMessage = "Trùng email nhân viên";
+            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<NhanVien> checksdt = Optional.ofNullable(staffRepository.findBySdt(staffCreate.getSoDienThoai()));
+        if (checksdt.isPresent()){
+            errorMessage = "SDT đã bị trùng";
+            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
+        }
+
         if (staffCreate.getHoTen() == null ||
                 staffCreate.getGioiTinh() == null ||
                 staffCreate.getDiaChi() == null || staffCreate.getSoDienThoai() == null ||
@@ -71,9 +85,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         }
         //email
         String email = staffCreate.getEmail();
-        //dinh dang email
         String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-        //partern de ktra email
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches()) {
@@ -141,6 +153,13 @@ public class NhanVienServiceImpl implements NhanVienService {
                 staffEdit.getNgaySinh() == null || staffEdit.getEmail() == null
         ) {
             errorMessage = "Nhập đầy đủ thông tin";
+            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<NhanVien> checksdt = Optional.ofNullable(staffRepository.findBySdt(staffEdit.getSoDienThoai()));
+        if (checksdt.isPresent()){
+            errorMessage = "SDT đã bị trùng";
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
         }

@@ -2,11 +2,15 @@ package SD94.controller.customer.hoaDon;
 
 import SD94.dto.HoaDonDTO;
 import SD94.entity.hoaDon.HoaDon;
+import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.hoaDon.TrangThai;
 import SD94.entity.khachHang.KhachHang;
+import SD94.entity.sanPham.SanPhamChiTiet;
+import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.khachHang.KhachHangRepository;
+import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.HoaDonDatHangService;
 import SD94.service.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,12 @@ public class DanhSachController {
 
     @Autowired
     KhachHangRepository khachHangRepository;
+
+    @Autowired
+    HoaDonChiTietRepository hoaDonChiTietRepository;
+
+    @Autowired
+    SanPhamChiTietRepository sanPhamChiTietRepository;
 
     @GetMapping("/choXacNhan/{email}")
     public ResponseEntity<?> getDSChoXacNhan(@PathVariable("email") String email){
@@ -70,7 +80,15 @@ public class DanhSachController {
         TrangThai trangThai = trangThaiRepository.findByID(5L);
         KhachHang khachHang = khachHangRepository.findByEmail(dto.getNguoi_thao_tac());
         hoaDon.setTrangThai(trangThai);
+        hoaDon.setGhiChu("Khách huỷ");
         hoaDonRepository.save(hoaDon);
+
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+        }
 
         hoaDonDatHangService.createTimeLine("Huy don", 5L,hoaDon.getId(), khachHang.getHoTen());
         List<HoaDon> hoaDonReturn = hoaDonRepository.getDSChoXacNhan(khachHang.getId(), 1L);
