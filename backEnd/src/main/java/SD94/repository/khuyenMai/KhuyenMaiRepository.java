@@ -35,4 +35,7 @@ public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai, Long> {
 
     @Query(value = "select * from khuyen_mai where ten_Khuyen_Mai = ? and is_deleted = false", nativeQuery = true)
     KhuyenMai findByNameKM(String ten_Khuyen_Mai);
+
+    @Query(value = "select * from khuyen_mai where trang_thai = 0 and is_deleted = false", nativeQuery = true)
+    List<KhuyenMai> findALl2();
 }

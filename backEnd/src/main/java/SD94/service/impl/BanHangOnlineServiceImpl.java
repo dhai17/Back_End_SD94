@@ -93,7 +93,7 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
                     return ResponseEntity.badRequest().body(respone);
                 } else {
                     if (gioHangChiTiet.getSoLuong() > sanPhamChiTiet.getSoLuong()) {
-                        respone.put("err", "Số lượng của sản phẩm đã về " + sanPhamChiTiet.getSoLuong());
+                        respone.put("err", "Số lượng của sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không được vượt quá " + sanPhamChiTiet.getSoLuong());
                         return ResponseEntity.badRequest().body(respone);
                     }
                     HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
@@ -158,7 +158,7 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
     @Override
     public ResponseEntity<?> addDiscount(HoaDonDTO hoaDonDTO) {
         Map<String, String> response = new HashMap<>();
-        KhuyenMai khuyenMai = discountRepository.findByNameKM(hoaDonDTO.getTenMaGiamGia());
+        KhuyenMai khuyenMai = discountRepository.findByID(hoaDonDTO.getId_khuyenMai());
         if (khuyenMai == null) {
             response.put("mess", "Khuyến mại không tồn tại");
             return ResponseEntity.badRequest().body(response);
@@ -200,7 +200,6 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
     @Transactional
     @Override
     public ResponseEntity datHang(HoaDonDTO dto) {
-
         HoaDon hoaDon = billRepository.findByID(dto.getId());
         KhachHang khachHang = khachHangRepository.findByEmail(dto.getEmail_user());
         GioHang gioHang = gioHangRepository.findbyCustomerID(khachHang.getId());

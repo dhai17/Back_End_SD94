@@ -49,8 +49,8 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate) {
         String errorMessage;
         Message errorResponse;
-        if (sanPhamChiTietUpdate.getSoLuong() <= 0) {
-            errorMessage = "Số lượng phải lớn hơn 0";
+        if (sanPhamChiTietUpdate.getSoLuong() < 0) {
+            errorMessage = "Số lượng không được nhỏ hơn 0";
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }

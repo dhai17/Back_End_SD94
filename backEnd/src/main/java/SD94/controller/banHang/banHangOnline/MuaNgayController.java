@@ -108,7 +108,7 @@ public class MuaNgayController {
 
     @GetMapping("/khuyenMai/list")
     public ResponseEntity<List<KhuyenMai>> listKhuyenMai() {
-        List<KhuyenMai> khuyenMais = khuyenMaiRepository.findAll();
+        List<KhuyenMai> khuyenMais = khuyenMaiRepository.findALl2();
         return ResponseEntity.ok(khuyenMais);
     }
 }

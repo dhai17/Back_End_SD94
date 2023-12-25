@@ -112,18 +112,20 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         int soLuongThem = dto.getSoLuong();
         if (soLuongThem > soLuongBanDau) {
             respone.put("err", "Số lượng nhập vào lớn hơn số lượng hiện có");
-            return ResponseEntity.ok().body(respone);
+            return ResponseEntity.badRequest().body(respone);
         } else {
             if (optionalHDCT.isPresent()) {
                 HoaDonChiTiet hoaDonChiTiet = optionalHDCT.get();
-                int soLuongMoi = hoaDonChiTiet.getSoLuong() + dto.getSoLuong();
-                int thanhTienMoi = (int) (sanPham.getGia() * soLuongMoi);
-                hoaDonChiTiet.setSoLuong(soLuongMoi);
-                hoaDonChiTiet.setThanhTien(thanhTienMoi);
-                hoaDonChiTietRepository.save(hoaDonChiTiet);
-
-                sanPhamChiTiet.setSoLuong(soLuongBanDau - soLuongThem);
-                sanPhamChiTietRepository.save(sanPhamChiTiet);
+                if (hoaDonChiTiet.getSoLuong() == sanPhamChiTiet.getSoLuong()) {
+                    respone.put("err", "Bạn đã có " + sanPhamChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
+                    return ResponseEntity.badRequest().body(respone);
+                } else {
+                    int soLuongMoi = hoaDonChiTiet.getSoLuong() + dto.getSoLuong();
+                    int thanhTienMoi = (int) (sanPham.getGia() * soLuongMoi);
+                    hoaDonChiTiet.setSoLuong(soLuongMoi);
+                    hoaDonChiTiet.setThanhTien(thanhTienMoi);
+                    hoaDonChiTietRepository.save(hoaDonChiTiet);
+                }
             } else {
                 int thanhTien = (int) (dto.getSoLuong() * sanPham.getGia());
                 HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
@@ -133,9 +135,6 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                 hoaDonChiTiet.setSoLuong(dto.getSoLuong());
                 hoaDonChiTiet.setThanhTien(thanhTien);
                 hoaDonChiTietRepository.save(hoaDonChiTiet);
-
-                sanPhamChiTiet.setSoLuong(soLuongBanDau - soLuongThem);
-                sanPhamChiTietRepository.save(sanPhamChiTiet);
             }
 
             List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(dto.getId_hoaDon());
@@ -160,6 +159,12 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         hoaDon.setTrangThai(trangThai);
         hoaDonRepository.save(hoaDon);
 
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+        }
         List<HoaDon> hoaDon2 = hoaDonRepository.getDanhSachHoaDonCho();
         return hoaDon2;
     }
@@ -257,11 +262,21 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         } else {
             for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
                 SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+                int soLuongBanDau = sanPhamChiTiet.getSoLuong();
+                int soLuongHoaDon = hoaDonChiTiet.getSoLuong();
+                int soLuongCapNhat = soLuongBanDau - soLuongHoaDon;
+                if (soLuongCapNhat < 0) {
+                    response.put("err", "Không thể thanh toán, số lượng sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " vượt quá số lượng hiện có");
+                    return ResponseEntity.badRequest().body(response);
+                } else {
+                    sanPhamChiTiet.setSoLuong(soLuongBanDau - soLuongHoaDon);
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
+                }
+
                 if (sanPhamChiTiet.getSoLuong() == 0) {
                     sanPhamChiTiet.setTrangThai(false);
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
                 }
-
             }
             TrangThai trangThai = trangThaiRepository.findByID(7L);
             NhanVien nhanVien = nhanVienRepository.findByEmail(hoaDonDTO.getEmail_user());
