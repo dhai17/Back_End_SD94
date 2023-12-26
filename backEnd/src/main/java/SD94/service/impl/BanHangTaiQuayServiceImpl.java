@@ -116,8 +116,13 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         } else {
             if (optionalHDCT.isPresent()) {
                 HoaDonChiTiet hoaDonChiTiet = optionalHDCT.get();
+                int soLuongDuocThemTiep = sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong();
+                int check = soLuongDuocThemTiep - dto.getSoLuong();
                 if (hoaDonChiTiet.getSoLuong() == sanPhamChiTiet.getSoLuong()) {
                     respone.put("err", "Bạn đã có " + sanPhamChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
+                    return ResponseEntity.badRequest().body(respone);
+                } else if (check <= 0) {
+                    respone.put("err", "Bạn đã có " + hoaDonChiTiet.getSoLuong() + " sản phẩm này trong hóa đơn, bạn chỉ có thể thêm tiếp được tối đa " + soLuongDuocThemTiep + " sản phẩm này");
                     return ResponseEntity.badRequest().body(respone);
                 } else {
                     int soLuongMoi = hoaDonChiTiet.getSoLuong() + dto.getSoLuong();
