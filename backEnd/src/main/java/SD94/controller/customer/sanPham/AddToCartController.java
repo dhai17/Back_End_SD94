@@ -75,8 +75,6 @@ public class AddToCartController {
                     GioHangChiTiet gioHangChiTiet = optionalGioHangChiTiet.get();
                     int soLuongDuocThemTiep = sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong();
                     int check = soLuongDuocThemTiep - dto.getSoLuong();
-                    System.out.println(soLuongDuocThemTiep);
-                    System.out.println(dto.getSoLuong());
                     if (gioHangChiTiet.getSoLuong() == sanPhamChiTiet.getSoLuong()) {
                         Map<String, String> respone = new HashMap<>();
                         respone.put("err", "Bạn đã có " + sanPhamChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");

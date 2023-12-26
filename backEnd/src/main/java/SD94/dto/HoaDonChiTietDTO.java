@@ -29,4 +29,6 @@ public class HoaDonChiTietDTO {
     private SanPhamChiTiet sanPhamChiTiet;
 
     private String anhSanPham;
+
+    private int soLuongcapNhat;
 }
