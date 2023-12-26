@@ -126,7 +126,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                 if (hoaDonChiTiet.getSoLuong() == sanPhamChiTiet.getSoLuong()) {
                     respone.put("err", "Bạn đã có " + sanPhamChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
                     return ResponseEntity.badRequest().body(respone);
-                } else if (check <= 0) {
+                } else if (check < 0) {
                     respone.put("err", "Bạn đã có " + hoaDonChiTiet.getSoLuong() + " sản phẩm này trong hóa đơn, bạn chỉ có thể thêm tiếp được tối đa " + soLuongDuocThemTiep + " sản phẩm này");
                     return ResponseEntity.badRequest().body(respone);
                 } else {
@@ -247,13 +247,6 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
     public ResponseEntity huyDon(HoaDonDTO hoaDonDTO) {
         HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
         TrangThai trangThai = trangThaiRepository.findByID(8L);
-        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
-
-        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
-            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
-            sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
-            sanPhamChiTietRepository.save(sanPhamChiTiet);
-        }
         hoaDon.setTrangThai(trangThai);
         hoaDonRepository.save(hoaDon);
         Map<String, String> response = new HashMap<>();
@@ -319,16 +312,11 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
             hoaDonChiTiet.setDeleted(true);
             hoaDonChiTietRepository.save(hoaDonChiTiet);
 
-            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
-            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
-            sanPhamChiTietRepository.save(sanPhamChiTiet);
-
             HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
             int tongTienHoaDon = 0;
             List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
             for (HoaDonChiTiet hoaDonChiTiet1 : hoaDonChiTiets) {
                 tongTienHoaDon += hoaDonChiTiet1.getThanhTien();
-
             }
 
             hoaDon.setTongTienHoaDon(tongTienHoaDon);
