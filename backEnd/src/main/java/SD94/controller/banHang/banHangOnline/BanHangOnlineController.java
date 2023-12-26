@@ -5,6 +5,8 @@ import SD94.dto.HoaDonDTO;
 
 import SD94.entity.hoaDon.HoaDon;
 
+import SD94.entity.khuyenMai.KhuyenMai;
+import SD94.repository.khuyenMai.KhuyenMaiRepository;
 import SD94.service.service.BanHangOnlineService;
 
 import SD94.validator.DatHangCheckoutValidate;
@@ -15,12 +17,17 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/banHang/online")
 public class BanHangOnlineController {
 
     @Autowired
     BanHangOnlineService banHangOnlineService;
+
+    @Autowired
+    KhuyenMaiRepository khuyenMaiRepository;
 
     @PostMapping("/checkOut")
     public ResponseEntity<?> checkout(@RequestBody GioHangDTO dto) {
@@ -60,5 +67,10 @@ public class BanHangOnlineController {
         } else {
             return banHangOnlineService.datHang(dto);
         }
+    }
+    @GetMapping("/khuyenMai/list")
+    public ResponseEntity<List<KhuyenMai>> listKhuyenMai() {
+        List<KhuyenMai> khuyenMais = khuyenMaiRepository.findALl2();
+        return ResponseEntity.ok(khuyenMais);
     }
 }

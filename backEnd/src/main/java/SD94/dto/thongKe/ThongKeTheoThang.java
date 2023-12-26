@@ -15,5 +15,4 @@ public class ThongKeTheoThang {
     private BigDecimal tong_tien_hoadon;
 
     private int so_san_pham_da_ban;
-
 }

@@ -41,6 +41,9 @@ public class GioHangController {
     @Autowired
     GioHangService gioHangService;
 
+    @Autowired
+    GioHangChiTietRepository gioHangChiTietRepository;
+
     @RequestMapping("/danhSach/{email}")
     public ResponseEntity<?> listCart(@PathVariable("email") String email) {
         KhachHang khachHang = khachHangRepository.findByEmail(email);
@@ -49,10 +52,15 @@ public class GioHangController {
         List<GioHangChiTietDTO> gioHangChiTietDTOS = new ArrayList<>();
         List<GioHangChiTiet> cartList = cartDetailsRepository.findByCartID(idCart);
         for (GioHangChiTiet gioHangChiTiet : cartList) {
+
             SanPhamChiTiet sanPhamChiTiet = gioHangChiTiet.getSanPhamChiTiet();
+            if(sanPhamChiTiet.getSoLuong() == 0){
+                gioHangChiTiet.setSoLuong(0);
+                gioHangChiTiet.setThanhTien(BigDecimal.ZERO);
+                gioHangChiTietRepository.save(gioHangChiTiet);
+            }
             GioHangChiTietDTO dto = new GioHangChiTietDTO();
             String hinhAnhs = hinhAnhRepository.getAnhMacDinh(sanPhamChiTiet.getSanPham().getId(), sanPhamChiTiet.getMauSac().getId());
-
             dto.setId(gioHangChiTiet.getId());
             dto.setSanPhamChiTiet(sanPhamChiTiet);
             dto.setSoLuong(gioHangChiTiet.getSoLuong());

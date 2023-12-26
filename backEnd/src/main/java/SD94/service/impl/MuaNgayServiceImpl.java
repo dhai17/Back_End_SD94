@@ -107,7 +107,7 @@ public class MuaNgayServiceImpl implements MuaNgayService {
 
     @Override
     public ResponseEntity<?> addDiscount(HoaDonDTO hoaDonDTO) {
-        KhuyenMai khuyenMai = khuyenMaiRepository.findByNameKM(hoaDonDTO.getTenMaGiamGia());
+        KhuyenMai khuyenMai = khuyenMaiRepository.findByID(hoaDonDTO.getId_khuyenMai());
 
         if (khuyenMai == null) {
             Map<String, Object> response = new HashMap<>();

@@ -18,6 +18,7 @@ import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.HoaDonDatHangService;
+import SD94.service.service.MailService;
 import SD94.service.service.VnpayService;
 import SD94.validator.ThanhToanValidate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
@@ -59,6 +61,9 @@ public class VnpayController {
 
     @Autowired
     SanPhamChiTietRepository sanPhamChiTietRepository;
+
+    @Autowired
+    MailService mailService;
 
 
     HoaDonDTO dto = null;
@@ -120,6 +125,11 @@ public class VnpayController {
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());
+        try {
+            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
         if (paymentStatus == 1) {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Success.html"));
@@ -159,6 +169,11 @@ public class VnpayController {
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), dto.getNguoiTao());
+        try {
+            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
         if (paymentStatus == 1) {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Success.html"));

@@ -5,9 +5,11 @@ import SD94.dto.HoaDonDTO;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.khuyenMai.KhuyenMai;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
+import SD94.repository.khuyenMai.KhuyenMaiRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.KichCoRepository;
 import SD94.repository.sanPham.MauSacRepository;
@@ -37,6 +39,9 @@ public class MuaNgayController {
 
     @Autowired
     HinhAnhRepository hinhAnhRepository;
+
+    @Autowired
+    KhuyenMaiRepository khuyenMaiRepository;
 
     @PostMapping("/check-out")
     public ResponseEntity<?> muaNgayCheckOut(@RequestBody SanPhamDTO dto) {
@@ -99,5 +104,11 @@ public class MuaNgayController {
         } else {
             return muaNgayService.datHang(dto);
         }
+    }
+
+    @GetMapping("/khuyenMai/list")
+    public ResponseEntity<List<KhuyenMai>> listKhuyenMai() {
+        List<KhuyenMai> khuyenMais = khuyenMaiRepository.findALl2();
+        return ResponseEntity.ok(khuyenMais);
     }
 }

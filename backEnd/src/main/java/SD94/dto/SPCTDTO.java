@@ -4,7 +4,11 @@ import lombok.Data;
 
 @Data
 public class SPCTDTO {
-    private long sanPhamId;
+    private Long sanPhamId;
+
+    private Long spctId;
+
+    private int soLuong;
 
     private String maMauSac;
 

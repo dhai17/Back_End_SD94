@@ -53,6 +53,13 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public ResponseEntity<SanPham> saveEdit(SanPhamDTO sanPhamDTO) {
+        String errorMessage;
+        Message errorResponse;
+        if (sanPhamDTO.getGia() <= 0) {
+            errorMessage = "Giá tiền phải lớn hơn 0";
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         try {
             Optional<SanPham> optional = repository.findById(sanPhamDTO.getId());
             if (optional.isPresent()) {
@@ -123,6 +130,17 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public ResponseEntity<?> taoSanPham(SanPhamDTO sanPhamDTO) {
+        SanPham optionalSanPham = repository.checkLap(sanPhamDTO.getTenSanPham());
+        String errorMessage;
+        Message errors;
+
+        if (optionalSanPham != null) {
+            errorMessage = "Trùng tên sản phẩm";
+            errors = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("message", errorMessage);
+            return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
+        }
         Map<String, Object> response = new HashMap<>();
 
         ChatLieu chatLieu = chatLieuRepository.findByID(sanPhamDTO.getChatLieu_id());

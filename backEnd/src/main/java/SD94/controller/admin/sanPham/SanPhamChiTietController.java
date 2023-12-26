@@ -66,6 +66,9 @@ public class SanPhamChiTietController {
             if(sanPhamChiTiet.getSoLuong() == 0){
                 sanPhamChiTiet.setTrangThai(false);
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
+            }else {
+                sanPhamChiTiet.setTrangThai(true);
+                sanPhamChiTietRepository.save(sanPhamChiTiet);
             }
         }
         return ResponseEntity.ok().body(product);

@@ -47,6 +47,13 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate) {
+        String errorMessage;
+        Message errorResponse;
+        if (sanPhamChiTietUpdate.getSoLuong() < 0) {
+            errorMessage = "Số lượng không được nhỏ hơn 0";
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         try {
             Optional<SanPhamChiTiet> optional = repository.findById(sanPhamChiTietUpdate.getId());
             if (optional.isPresent()) {
@@ -63,6 +70,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
                 if (sanPham != null) {
                     sanPhamChiTiet.setSanPham(sanPham);
+                }
+                if (sanPham.getGia() <= 0) {
+                    errorMessage = "Giá tiền phải lớn hơn 0";
+                    errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+                    return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
                 }
                 repository.save(sanPhamChiTiet);
                 return ResponseEntity.ok(sanPhamChiTiet);
