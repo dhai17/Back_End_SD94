@@ -45,4 +45,6 @@ public class HoaDonDTO {
     private int tienTraLai;
 
     private int tienKhachDua;
+
+    private long id_khuyenMai;
 }

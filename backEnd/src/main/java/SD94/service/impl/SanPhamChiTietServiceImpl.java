@@ -2,10 +2,14 @@ package SD94.service.impl;
 
 import SD94.controller.message.Message;
 import SD94.dto.HinhAnhDTO;
+import SD94.entity.gioHang.GioHangChiTiet;
+import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
+import SD94.repository.gioHang.GioHangChiTietRepository;
+import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.repository.sanPham.SanPhamRepository;
@@ -32,6 +36,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Autowired
     SanPhamRepository sanPhamRepository;
 
+    @Autowired
+    GioHangChiTietRepository gioHangChiTietRepository;
+
+    @Autowired
+    HoaDonChiTietRepository hoaDonChiTietRepository;
 
     @Override
     public List<SanPhamChiTiet> findAllProductDetails() {
@@ -47,6 +56,13 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public ResponseEntity<SanPhamChiTiet> saveEdit(SanPhamChiTiet sanPhamChiTietUpdate) {
+        String errorMessage;
+        Message errorResponse;
+        if (sanPhamChiTietUpdate.getSoLuong() < 0) {
+            errorMessage = "Số lượng không được nhỏ hơn 0";
+            errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
         try {
             Optional<SanPhamChiTiet> optional = repository.findById(sanPhamChiTietUpdate.getId());
             if (optional.isPresent()) {
@@ -64,12 +80,17 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 if (sanPham != null) {
                     sanPhamChiTiet.setSanPham(sanPham);
                 }
+                if (sanPham.getGia() <= 0) {
+                    errorMessage = "Giá tiền phải lớn hơn 0";
+                    errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+                    return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+                }
                 repository.save(sanPhamChiTiet);
                 return ResponseEntity.ok(sanPhamChiTiet);
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
     }
@@ -78,16 +99,27 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         try {
             Optional<SanPhamChiTiet> optional = repository.findById(id);
             SanPham sp = sanPhamRepository.findByID(optional.get().getSanPham().getId());
-            if (optional.isPresent()){
+            if (optional.isPresent()) {
                 SanPhamChiTiet sanPhamChiTiet = optional.get();
                 sanPhamChiTiet.setDeleted(true);
                 repository.save(sanPhamChiTiet);
+                List<GioHangChiTiet> gioHangChiTiets = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
+                    gioHangChiTiet.setDeleted(true);
+                    gioHangChiTietRepository.save(gioHangChiTiet);
+                }
+
+                List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
+                for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+                    hoaDonChiTiet.setDeleted(true);
+                    hoaDonChiTietRepository.save(hoaDonChiTiet);
+                }
                 List<SanPhamChiTiet> list = repository.findSpctByIdSp(sp.getId());
                 return ResponseEntity.ok(list);
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -100,7 +132,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
 
             return ResponseEntity.ok(sanPhamChiTiet);
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(new Message(e.getMessage(), TrayIcon.MessageType.ERROR), HttpStatus.BAD_REQUEST);
         }
     }

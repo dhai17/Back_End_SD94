@@ -1,6 +1,7 @@
 package SD94.controller.admin.sanPham;
 
 import SD94.dto.HoaDonDTO;
+import SD94.dto.SPCTDTO;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
@@ -10,6 +11,7 @@ import SD94.validator.DatHangCheckoutValidate;
 import SD94.validator.SanPhamValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -133,5 +135,23 @@ public class SanPhamController {
             respone.put("success", "Tạo mới thành công");
             return ResponseEntity.ok().body(respone);
         }
+    }
+
+    //Chỉnh sửa ở phần tạo mới
+    @PostMapping("/chinhSua-soLuong-SanPhamChiTiet")
+    public ResponseEntity<?> ChinhSuaSoLuongSanPhamChiTiet(@RequestBody SPCTDTO spctdto) {
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(spctdto.getSpctId());
+        sanPhamChiTiet.setSoLuong(spctdto.getSoLuong());
+        sanPhamChiTietRepository.save(sanPhamChiTiet);
+        List<SanPhamChiTiet> sanPhamChiTiets = sanPhamChiTietRepository.findByProductID(spctdto.getSanPhamId());
+        return ResponseEntity.ok().body(sanPhamChiTiets);
+    }
+
+    @Transactional
+    @PostMapping("/xoa-SanPhamChiTiet")
+    public ResponseEntity<?> XoaSanPhamChiTiet(@RequestBody SPCTDTO spctdto) {
+        sanPhamChiTietRepository.deleteByIDSPT(spctdto.getSpctId());
+        List<SanPhamChiTiet> sanPhamChiTiets = sanPhamChiTietRepository.findByProductID(spctdto.getSanPhamId());
+        return ResponseEntity.ok().body(sanPhamChiTiets);
     }
 }

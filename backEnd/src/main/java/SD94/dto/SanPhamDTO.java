@@ -15,6 +15,8 @@ public class SanPhamDTO {
 
     private Long id;
 
+    private Long id_SPCT;
+
     private String tenSanPham;
 
     private Float gia;

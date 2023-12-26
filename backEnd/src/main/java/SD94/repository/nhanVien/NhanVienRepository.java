@@ -28,7 +28,6 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Long> {
     @Query(value =  "select * from nhan_vien where is_deleted = false and date(ngay_sinh) = ?", nativeQuery = true)
     List<NhanVien> findStaffDate(LocalDate ngaySinh);
 
-    //    Staff findByUsername(String username);
     @Query(value = "select * from nhan_vien where email = ?", nativeQuery = true)
     NhanVien findByEmail(String username);
 

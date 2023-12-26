@@ -64,7 +64,8 @@ public class AddToCartController {
             MauSac mauSac = mauSacRepository.findByMaMauSac(dto.getMaMauSac());
             KichCo kichCo = kichCoRepository.findByKichCo(dto.getKichCo());
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.getSanPhamChiTiet(mauSac.getId(), kichCo.getId(), dto.getSan_pham_id());
-            if(sanPhamChiTiet.isTrangThai() == true){
+            if (sanPhamChiTiet.isTrangThai() == true) {
+
                 KhachHang khachHang = khachHangRepository.findByEmail(dto.getEmail());
                 SanPham sanPham = sanPhamRepository.findByID(dto.getSan_pham_id());
                 GioHang gioHang = gioHangRepository.findbyCustomerID(khachHang.getId());
@@ -72,14 +73,27 @@ public class AddToCartController {
 
                 if (optionalGioHangChiTiet.isPresent()) {
                     GioHangChiTiet gioHangChiTiet = optionalGioHangChiTiet.get();
-                    int soLuongMoi = gioHangChiTiet.getSoLuong() + dto.getSoLuong();
-                    float thanhTienMoi = sanPham.getGia() * soLuongMoi;
-                    gioHangChiTiet.setSoLuong(soLuongMoi);
-                    gioHangChiTiet.setThanhTien(BigDecimal.valueOf(thanhTienMoi));
-                    gioHangChiTietRepository.save(gioHangChiTiet);
+                    int soLuongDuocThemTiep = sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong();
+                    int check = soLuongDuocThemTiep - dto.getSoLuong();
+                    System.out.println(soLuongDuocThemTiep);
+                    System.out.println(dto.getSoLuong());
+                    if (gioHangChiTiet.getSoLuong() == sanPhamChiTiet.getSoLuong()) {
+                        Map<String, String> respone = new HashMap<>();
+                        respone.put("err", "Bạn đã có " + sanPhamChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
+                        return ResponseEntity.badRequest().body(respone);
+                    } else if (check < 0) {
+                        Map<String, String> respone = new HashMap<>();
+                        respone.put("err", "Bạn đã có " + gioHangChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn chỉ có thể thêm tiếp được tối đa " + soLuongDuocThemTiep + " sản phẩm này");
+                        return ResponseEntity.badRequest().body(respone);
+                    } else {
+                        int soLuongMoi = gioHangChiTiet.getSoLuong() + dto.getSoLuong();
+                        float thanhTienMoi = sanPham.getGia() * soLuongMoi;
+                        gioHangChiTiet.setSoLuong(soLuongMoi);
+                        gioHangChiTiet.setThanhTien(BigDecimal.valueOf(thanhTienMoi));
+                        gioHangChiTietRepository.save(gioHangChiTiet);
+                    }
                 } else {
                     float thanhTien = dto.getSoLuong() * sanPham.getGia();
-
                     GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
                     gioHangChiTiet.setGioHang(gioHang);
                     gioHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
@@ -91,7 +105,7 @@ public class AddToCartController {
                 Map<String, String> respone = new HashMap<>();
                 respone.put("done", "Thêm sản phẩm vào giỏ hàng thành công");
                 return ResponseEntity.ok().body(respone);
-            }else {
+            } else {
                 Map<String, String> respone = new HashMap<>();
                 respone.put("err", "Chúng tôi đã ngừng kinh doanh sản phẩm này");
                 return ResponseEntity.ok().body(respone);

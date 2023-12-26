@@ -65,7 +65,6 @@ public class VnpayController {
     @Autowired
     MailService mailService;
 
-
     HoaDonDTO dto = null;
 
     @PostMapping("/payment/create")
@@ -106,7 +105,22 @@ public class VnpayController {
         for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
-            sanPhamChiTietRepository.save(sanPhamChiTiet);
+            if (sanPhamChiTiet.getSoLuong() <= 0) {
+                sanPhamChiTiet.setTrangThai(false);
+
+                List<HoaDonChiTiet> hdct = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
+                for (HoaDonChiTiet ListHDCT : hdct) {
+                    hoaDonChiTietRepository.deleteById(ListHDCT.getId());
+                }
+
+                List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                for (GioHangChiTiet gioHangChiTiet1 : ghct) {
+                    gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
+                }
+
+            } else {
+                sanPhamChiTiet.setTrangThai(true);
+            }
         }
 
         TrangThai trangThai = trangThaiRepository.findByID(1L);
@@ -150,6 +164,22 @@ public class VnpayController {
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
+            if (sanPhamChiTiet.getSoLuong() <= 0) {
+                sanPhamChiTiet.setTrangThai(false);
+
+                List<HoaDonChiTiet> hdct = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
+                for (HoaDonChiTiet ListHDCT : hdct) {
+                    hoaDonChiTietRepository.deleteById(ListHDCT.getId());
+                }
+
+                List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                for (GioHangChiTiet gioHangChiTiet1 : ghct) {
+                    gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
+                }
+
+            } else {
+                sanPhamChiTiet.setTrangThai(true);
+            }
             sanPhamChiTietRepository.save(sanPhamChiTiet);
         }
 

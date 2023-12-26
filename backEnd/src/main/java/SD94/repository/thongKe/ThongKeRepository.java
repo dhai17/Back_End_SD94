@@ -19,6 +19,7 @@ public interface ThongKeRepository {
 
     @Procedure(name = "thongKeAll()")
     List<ThongKeAll> getThongKe();
+
     @Procedure(name = "thongKeAll_online()")
     List<ThongKeAllOnl> getThongKe_online();
 
