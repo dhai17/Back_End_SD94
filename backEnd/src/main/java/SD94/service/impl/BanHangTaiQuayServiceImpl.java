@@ -5,6 +5,7 @@ import SD94.dto.HoaDonDTO;
 import SD94.dto.KhachHangDTO;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.gioHang.GioHang;
+import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.hoaDon.TrangThai;
@@ -15,6 +16,7 @@ import SD94.entity.sanPham.KichCo;
 import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
+import SD94.repository.gioHang.GioHangChiTietRepository;
 import SD94.repository.gioHang.GioHangRepository;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
@@ -72,6 +74,9 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
 
     @Autowired
     InHoaDonService inHoaDonService;
+
+    @Autowired
+    GioHangChiTietRepository gioHangChiTietRepository;
 
     @Override
     public ResponseEntity<?> taoHoaDon(HoaDonDTO hoaDonDTO) {
@@ -170,6 +175,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
             sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
             sanPhamChiTietRepository.save(sanPhamChiTiet);
         }
+
         List<HoaDon> hoaDon2 = hoaDonRepository.getDanhSachHoaDonCho();
         return hoaDon2;
     }
@@ -278,11 +284,22 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
                 }
 
-                if (sanPhamChiTiet.getSoLuong() == 0) {
+                if (sanPhamChiTiet.getSoLuong() <= 0) {
                     sanPhamChiTiet.setTrangThai(false);
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+                    List<HoaDonChiTiet> hdct = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
+                    for (HoaDonChiTiet ListHDCT : hdct) {
+                        hoaDonChiTietRepository.deleteById(ListHDCT.getId());
+                    }
+
+                    List<GioHangChiTiet> gioHangChiTiets = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                    for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
+                        gioHangChiTietRepository.deleteById(gioHangChiTiet.getId());
+                    }
                 }
             }
+
             TrangThai trangThai = trangThaiRepository.findByID(7L);
             NhanVien nhanVien = nhanVienRepository.findByEmail(hoaDonDTO.getEmail_user());
             hoaDon.setTrangThai(trangThai);
@@ -302,11 +319,16 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
             hoaDonChiTiet.setDeleted(true);
             hoaDonChiTietRepository.save(hoaDonChiTiet);
 
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+
             HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
             int tongTienHoaDon = 0;
             List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
             for (HoaDonChiTiet hoaDonChiTiet1 : hoaDonChiTiets) {
                 tongTienHoaDon += hoaDonChiTiet1.getThanhTien();
+
             }
 
             hoaDon.setTongTienHoaDon(tongTienHoaDon);
