@@ -60,7 +60,12 @@ public class NhanVienServiceImpl implements NhanVienService {
             errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
         }
-
+Optional<NhanVien> checksdt = Optional.ofNullable(staffRepository.findBySdt(staffCreate.getSoDienThoai()));
+        if (checksdt.isPresent()){
+            errorMessage = "SDT đã bị trùng";
+            errorRespone = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+            return new ResponseEntity(errorRespone, HttpStatus.BAD_REQUEST);
+        }
         if (staffCreate.getHoTen() == null ||
                 staffCreate.getGioiTinh() == null ||
                 staffCreate.getDiaChi() == null || staffCreate.getSoDienThoai() == null ||
