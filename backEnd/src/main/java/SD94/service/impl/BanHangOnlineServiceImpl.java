@@ -68,6 +68,9 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
     @Autowired
     HinhAnhRepository hinhAnhRepository;
 
+    @Autowired
+    GioHangChiTietRepository gioHangChiTietRepository;
+
     private Long idBill;
 
     @Override
@@ -214,6 +217,17 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
             if (sanPhamChiTiet.getSoLuong() <= 0) {
                 sanPhamChiTiet.setTrangThai(false);
+
+                List<HoaDonChiTiet> hdct = billDetailsRepository.findBySPCTID(sanPhamChiTiet.getId());
+                for (HoaDonChiTiet ListHDCT : hdct) {
+                    billDetailsRepository.deleteById(ListHDCT.getId());
+                }
+
+                List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                for (GioHangChiTiet gioHangChiTiet1 : ghct) {
+                    gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
+                }
+
             } else {
                 sanPhamChiTiet.setTrangThai(true);
             }

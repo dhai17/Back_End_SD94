@@ -3,10 +3,14 @@ package SD94.controller.admin.sanPham;
 import SD94.dto.HinhAnhDTO;
 import SD94.dto.HoaDonChiTietDTO;
 import SD94.dto.SanPhamChiTietDTO;
+import SD94.entity.gioHang.GioHangChiTiet;
+import SD94.entity.hoaDon.HoaDonChiTiet;
 import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.KichCo;
 import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
+import SD94.repository.gioHang.GioHangChiTietRepository;
+import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.sanPham.*;
 import SD94.service.service.SanPhamChiTietService;
 import SD94.service.service.SanPhamService;
@@ -44,6 +48,12 @@ public class SanPhamChiTietController {
     @Autowired
     HinhAnhRepository hinhAnhRepository;
 
+    @Autowired
+    HoaDonChiTietRepository hoaDonChiTietRepository;
+
+    @Autowired
+    GioHangChiTietRepository gioHangChiTietRepository;
+
     Long spct_id;
 
     //Hien thi
@@ -63,10 +73,10 @@ public class SanPhamChiTietController {
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
             }
 
-            if(sanPhamChiTiet.getSoLuong() == 0){
+            if (sanPhamChiTiet.getSoLuong() == 0) {
                 sanPhamChiTiet.setTrangThai(false);
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
-            }else {
+            } else {
                 sanPhamChiTiet.setTrangThai(true);
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
             }
@@ -213,6 +223,31 @@ public class SanPhamChiTietController {
     public ResponseEntity<?> updateTrangThai(@RequestBody SanPhamChiTietDTO dto) {
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(dto.getId());
         sanPhamChiTiet.setTrangThai(dto.isStatus());
+        if (dto.isStatus() == false) {
+            List<GioHangChiTiet> gioHangChiTiets = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+            for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
+                gioHangChiTiet.setDeleted(true);
+                gioHangChiTietRepository.save(gioHangChiTiet);
+            }
+
+            List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
+            for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+                hoaDonChiTiet.setDeleted(true);
+                hoaDonChiTietRepository.save(hoaDonChiTiet);
+            }
+        } else if (dto.isStatus() == true) {
+            List<GioHangChiTiet> gioHangChiTiets = gioHangChiTietRepository.findCartBySPCTIDDeleteTrue(sanPhamChiTiet.getId());
+            for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
+                gioHangChiTiet.setDeleted(false);
+                gioHangChiTietRepository.save(gioHangChiTiet);
+            }
+
+            List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findBySPCTIDDeleteTrue(sanPhamChiTiet.getId());
+            for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+                hoaDonChiTiet.setDeleted(false);
+                hoaDonChiTietRepository.save(hoaDonChiTiet);
+            }
+        }
         sanPhamChiTietRepository.save(sanPhamChiTiet);
         Map<String, String> respone = new HashMap<>();
         respone.put("Mess", "done");

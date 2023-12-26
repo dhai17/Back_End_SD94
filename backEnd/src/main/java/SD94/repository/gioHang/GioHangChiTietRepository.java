@@ -23,4 +23,10 @@ public interface GioHangChiTietRepository extends JpaRepository<GioHangChiTiet, 
 
     @Query(value = "select * from gio_hang_chi_tiet where san_pham_chi_tiet_id = ?1 and gio_hang_id = ?2 and is_deleted = false", nativeQuery = true)
     Optional<GioHangChiTiet> checkGioHangChiTiet(long san_pham_chi_tiet_id, long gio_hang_id);
+
+    @Query(value = "select * from gio_hang_chi_tiet where san_pham_chi_tiet_id = ? and is_deleted = false", nativeQuery = true)
+    List<GioHangChiTiet> findCartBySPCTID(long san_pham_chi_tiet_id);
+
+    @Query(value = "select * from gio_hang_chi_tiet where san_pham_chi_tiet_id = ? and is_deleted = true", nativeQuery = true)
+    List<GioHangChiTiet> findCartBySPCTIDDeleteTrue(long san_pham_chi_tiet_id);
 }

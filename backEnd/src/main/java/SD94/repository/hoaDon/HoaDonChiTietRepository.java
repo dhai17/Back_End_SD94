@@ -19,4 +19,10 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, Lo
 
     @Query(value = "select * from hoa_don_chi_tiet where hoa_don_id = ? and san_pham_chi_tiet_id=? and is_deleted = false", nativeQuery = true)
     Optional<HoaDonChiTiet> checkHDCT(long hoa_don_id, long san_pham_chi_tiet_id);
+
+    @Query(value = "select * from hoa_don_chi_tiet where san_pham_chi_tiet_id = ? and is_deleted = false", nativeQuery = true)
+    List<HoaDonChiTiet> findBySPCTID(long san_pham_chi_tiet_id);
+
+    @Query(value = "select * from hoa_don_chi_tiet where san_pham_chi_tiet_id = ? and is_deleted = true", nativeQuery = true)
+    List<HoaDonChiTiet> findBySPCTIDDeleteTrue(long san_pham_chi_tiet_id);
 }
