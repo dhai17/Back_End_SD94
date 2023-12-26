@@ -179,11 +179,7 @@
             <span th:if="${hoaDon.tienGiam >= hoaDon.khuyenMai.tienGiamToiDa}"
                   th:utext="${#numbers.formatDecimal(hoaDon.tienGiam, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
             <span th:if="${hoaDon.tienGiam < hoaDon.khuyenMai.tienGiamToiDa}"
-<<<<<<< HEAD
                   th:text="${hoaDon.tienGiam} + 'VNĐ'"></span>
-=======
-                  th:text="${hoaDon.tienGiam} + ' VNĐ'"></span>
->>>>>>> 8599ae0764d492680bbcf787d00fa78d582cbb6b
             </span>
         </p>
         <p>Tổng tiền thanh toán: <span
