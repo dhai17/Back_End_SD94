@@ -20,7 +20,7 @@ public interface BanHangTaiQuayService {
 
     List<HoaDon> xoaHoaDon(HoaDonDTO hoaDonDTO);
 
-    HoaDon themMaGiamGiaTaiQuay(HoaDonDTO hoaDonDTO);
+    ResponseEntity<?> themMaGiamGiaTaiQuay(HoaDonDTO hoaDonDTO);
 
     ResponseEntity<?> addKhachHang(KhachHangDTO dto);
 
