@@ -141,6 +141,13 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                 hoaDon.setGhiChu(ghiChu);
                 createTimeLine("Huỷ đơn", 5L, id_hoaDon, nguoiThaoTac);
                 hoaDonRepository.save(hoaDon);
+
+                List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+                for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+                    SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+                    sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
+                }
             }
         }
         List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByTrangThai(1L);

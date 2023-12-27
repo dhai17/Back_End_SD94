@@ -10,6 +10,7 @@ import SD94.entity.sanPham.KichCo;
 import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPham;
 import SD94.entity.sanPham.SanPhamChiTiet;
+import SD94.repository.gioHang.GioHangChiTietRepository;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.sanPham.KichCoRepository;
@@ -51,6 +52,9 @@ public class ChinhSuaHoaDonController {
 
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
+
+    @Autowired
+    GioHangChiTietRepository gioHangChiTietRepository;
 
     @PostMapping("/themSanPham")
     public ResponseEntity<?> themSanPham(@RequestBody SanPhamDTO dto) {
@@ -170,6 +174,21 @@ public class ChinhSuaHoaDonController {
 
             sanPhamChiTiet.setSoLuong(soLuongSanPhamHienCo - soLuongUpdate);
             sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+            if (sanPhamChiTiet.getSoLuong() <= 0) {
+                sanPhamChiTiet.setTrangThai(false);
+                sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+                List<HoaDonChiTiet> hdct = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
+                for (HoaDonChiTiet ListHDCT : hdct) {
+                    hoaDonChiTietRepository.deleteById(ListHDCT.getId());
+                }
+
+                List<GioHangChiTiet> gioHangChiTiets = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
+                    gioHangChiTietRepository.deleteById(gioHangChiTiet.getId());
+                }
+            }
             respone.put("success", "Cập nhật số lượng thành công");
             return ResponseEntity.ok().body(respone);
         }
