@@ -77,7 +77,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     public ResponseEntity<Map<String, Boolean>> capNhatTrangThaiHuyDon(long trang_thai_id, long id_bill, String ghiChu) {
         HoaDon hoaDon = hoaDonRepository.findByID(id_bill);
         Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id);
-        if (optionalTrangThai.isPresent()) {
+        if (optionalTrangThai.isPresent()) {dia_chi
             TrangThai trangThai = optionalTrangThai.get();
             hoaDon.setTrangThai(trangThai);
             hoaDon.setGhiChu(ghiChu);
