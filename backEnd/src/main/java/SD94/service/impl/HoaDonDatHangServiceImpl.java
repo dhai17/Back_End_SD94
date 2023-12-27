@@ -77,7 +77,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     public ResponseEntity<Map<String, Boolean>> capNhatTrangThaiHuyDon(long trang_thai_id, long id_bill, String ghiChu) {
         HoaDon hoaDon = hoaDonRepository.findByID(id_bill);
         Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id);
-        if (optionalTrangThai.isPresent()) {dia_chi
+        if (optionalTrangThai.isPresent()) {
             TrangThai trangThai = optionalTrangThai.get();
             hoaDon.setTrangThai(trangThai);
             hoaDon.setGhiChu(ghiChu);
@@ -141,6 +141,13 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                 hoaDon.setGhiChu(ghiChu);
                 createTimeLine("Huỷ đơn", 5L, id_hoaDon, nguoiThaoTac);
                 hoaDonRepository.save(hoaDon);
+
+                List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+                for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+                    SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+                    sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
+                }
             }
         }
         List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByTrangThai(1L);

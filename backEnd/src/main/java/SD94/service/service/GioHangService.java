@@ -41,12 +41,17 @@ public class GioHangService {
 
         int soLuongSanPhamHienCo = sanPhamChiTiet.getSoLuong();
         int soLuongUpdate = dto.getSoLuongCapNhat();
+        int soLuongDuocThemTiep = sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong();
+        int check = soLuongDuocThemTiep - gioHangChiTiet.getSoLuong();
 
-        if (soLuongSanPhamHienCo < soLuongUpdate) {
-            respone.put("err", "Số lượng nhập vào không được vượt quá " + soLuongSanPhamHienCo);
+        if (soLuongSanPhamHienCo < soLuongUpdate && soLuongUpdate > gioHangChiTiet.getSoLuong()) {
+            respone.put("err", "Bạn đã có " + sanPhamChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
             return ResponseEntity.badRequest().body(respone);
         } else if (sanPhamChiTiet.isTrangThai() == false) {
             respone.put("err", "Sản phẩm đã ngừng kinh doanh ");
+            return ResponseEntity.badRequest().body(respone);
+        } else if (check < 0) {
+            respone.put("err", "Bạn đã có " + gioHangChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn chỉ có thể thêm tiếp được tối đa " + soLuongDuocThemTiep + " sản phẩm này");
             return ResponseEntity.badRequest().body(respone);
         } else {
             gioHangChiTiet.setSoLuong(soLuongUpdate);
