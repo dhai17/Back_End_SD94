@@ -7,6 +7,7 @@ import SD94.entity.gioHang.GioHang;
 import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.hoaDon.LSHoaDon;
 import SD94.entity.hoaDon.TrangThai;
 import SD94.entity.khachHang.KhachHang;
 import SD94.entity.sanPham.SanPhamChiTiet;
@@ -14,6 +15,7 @@ import SD94.repository.gioHang.GioHangChiTietRepository;
 import SD94.repository.gioHang.GioHangRepository;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
+import SD94.repository.hoaDon.LSHoaDonRepository;
 import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -64,6 +67,9 @@ public class VnpayController {
 
     @Autowired
     MailService mailService;
+
+    @Autowired
+    LSHoaDonRepository lsHoaDonRepository;
 
     HoaDonDTO dto = null;
 
@@ -139,6 +145,15 @@ public class VnpayController {
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());
+
+        //Lưu lịch sử hóa đơn
+        LSHoaDon ls = new LSHoaDon();
+        ls.setNguoiThaoTac(khachHang.getHoTen());
+        ls.setNgayTao(new Date());
+        ls.setHoaDon(hoaDon);
+        ls.setThaoTac("Đã thanh toán qua VNPay");
+        lsHoaDonRepository.save(ls);
+
         try {
             mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
         } catch (MessagingException e) {
@@ -199,6 +214,15 @@ public class VnpayController {
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), dto.getNguoiTao());
+
+        //Lưu lịch sử hóa đơn
+        LSHoaDon ls = new LSHoaDon();
+        ls.setNguoiThaoTac(hoaDon.getNguoiNhan());
+        ls.setHoaDon(hoaDon);
+        ls.setNgayTao(new Date());
+        ls.setThaoTac("Đã thanh toán qua VNPay");
+        lsHoaDonRepository.save(ls);
+
         try {
             mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
         } catch (MessagingException e) {

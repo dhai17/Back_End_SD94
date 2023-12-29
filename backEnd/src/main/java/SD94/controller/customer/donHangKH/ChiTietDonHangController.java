@@ -21,8 +21,10 @@ public class ChiTietDonHangController {
 
     @Autowired
     TrangThaiRepository trangThaiRepository;
+
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
+
     @GetMapping("/donHang/id={id}")
     public ResponseEntity<?> CTDaGiaoHang(@PathVariable("id") long hoa_don_id) {
         return hoaDonDatHangService.CTDonHangKH(hoa_don_id);

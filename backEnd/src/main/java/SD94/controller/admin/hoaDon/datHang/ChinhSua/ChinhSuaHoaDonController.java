@@ -1,11 +1,12 @@
 package SD94.controller.admin.hoaDon.datHang.ChinhSua;
 
 import SD94.dto.HoaDonChiTietDTO;
-import SD94.dto.HoaDonDTO;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.hoaDon.LSHoaDon;
+import SD94.entity.nhanVien.NhanVien;
 import SD94.entity.sanPham.KichCo;
 import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPham;
@@ -13,24 +14,25 @@ import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.gioHang.GioHangChiTietRepository;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
+import SD94.repository.hoaDon.LSHoaDonRepository;
+import SD94.repository.hoaDon.LichSuHoaDonRepository;
+import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.repository.sanPham.KichCoRepository;
 import SD94.repository.sanPham.MauSacRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.repository.sanPham.SanPhamRepository;
-import SD94.validator.TaiQuayValidate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.net.URI;
+import java.util.*;
 
 @RestController
 @RequestMapping("/hoaDon/ChinhSua")
@@ -55,6 +57,15 @@ public class ChinhSuaHoaDonController {
 
     @Autowired
     GioHangChiTietRepository gioHangChiTietRepository;
+
+    @Autowired
+    LichSuHoaDonRepository lichSuHoaDonRepository;
+
+    @Autowired
+    NhanVienRepository nhanVienRepository;
+
+    @Autowired
+    LSHoaDonRepository lsHoaDonRepository;
 
     @PostMapping("/themSanPham")
     public ResponseEntity<?> themSanPham(@RequestBody SanPhamDTO dto) {
@@ -103,6 +114,15 @@ public class ChinhSuaHoaDonController {
 
                     sanPhamChiTiet.setSoLuong(soLuongBanDau - dto.getSoLuong());
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+                    NhanVien nhanVien = nhanVienRepository.findByEmail(dto.getEmail_user());
+
+                    // Lưu lịch sử hóa đơn
+                    LSHoaDon lichSuHoaDon = new LSHoaDon();
+                    lichSuHoaDon.setNguoiThaoTac(nhanVien.getHoTen());
+                    lichSuHoaDon.setHoaDon(hoaDon);
+                    lichSuHoaDon.setThaoTac("Thêm mới " + dto.getSoLuong() +  " sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " vào hóa đơn");
+                    lsHoaDonRepository.save(lichSuHoaDon);
                 }
             } else {
                 int thanhTien = (int) (dto.getSoLuong() * sanPham.getGia());
@@ -128,6 +148,16 @@ public class ChinhSuaHoaDonController {
 
                 sanPhamChiTiet.setSoLuong(soLuongBanDau - dto.getSoLuong());
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+                NhanVien nhanVien = nhanVienRepository.findByEmail(dto.getEmail_user());
+
+                // Lưu lịch sử hóa đơn
+                LSHoaDon lichSuHoaDon = new LSHoaDon();
+                lichSuHoaDon.setNguoiThaoTac(nhanVien.getHoTen());
+                lichSuHoaDon.setNgayTao(new Date());
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setThaoTac("Thêm mới " + dto.getSoLuong() +  " sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " vào hóa đơn");
+                lsHoaDonRepository.save(lichSuHoaDon);
             }
 
             return ResponseEntity.ok(HttpStatus.OK);
@@ -156,6 +186,7 @@ public class ChinhSuaHoaDonController {
             respone.put("err", "Bạn đã có " + hoaDonChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn chỉ có thể thêm tiếp được tối đa " + soLuongDuocThemTiep + " sản phẩm này");
             return ResponseEntity.badRequest().body(respone);
         } else {
+            int soLuongBanDau = hoaDonChiTiet.getSoLuong();
             hoaDonChiTiet.setSoLuong(soLuongUpdate);
             hoaDonChiTiet.setThanhTien(thanhTienUpdate);
             hoaDonChiTietRepository.save(hoaDonChiTiet);
@@ -174,6 +205,16 @@ public class ChinhSuaHoaDonController {
 
             sanPhamChiTiet.setSoLuong(soLuongSanPhamHienCo - soLuongUpdate);
             sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+            NhanVien nhanVien = nhanVienRepository.findByEmail(dto.getEmail_user());
+
+            // Lưu lịch sử hóa đơn
+            LSHoaDon lichSuHoaDon = new LSHoaDon();
+            lichSuHoaDon.setNguoiThaoTac(nhanVien.getHoTen());
+            lichSuHoaDon.setNgayTao(new Date());
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setThaoTac("Cập nhật số lượng của sản phẩm " + hoaDonChiTiet.getSanPhamChiTiet().getSanPham().getTenSanPham() + " từ " + soLuongBanDau + " thành " + soLuongUpdate);
+            lsHoaDonRepository.save(lichSuHoaDon);
 
             if (sanPhamChiTiet.getSoLuong() <= 0) {
                 sanPhamChiTiet.setTrangThai(false);
@@ -194,6 +235,7 @@ public class ChinhSuaHoaDonController {
         }
     }
 
+    @Transactional
     @PostMapping("/xoa-hdct")
     public ResponseEntity<?> xoahdct(@RequestBody HoaDonChiTietDTO dto) {
         Map<String, String> respone = new HashMap<>();
@@ -206,16 +248,32 @@ public class ChinhSuaHoaDonController {
         sanPhamChiTietRepository.save(sanPhamChiTiet);
         hoaDonChiTietRepository.deleteById(dto.getId());
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDonChiTiet.getHoaDon().getId());
-        int totalAmount = 0;
-        int total = hoaDon.getTongTienDonHang();
-        for (HoaDonChiTiet hdct : hoaDonChiTiets) {
-            totalAmount += hdct.getThanhTien();
-        }
-        hoaDon.setTongTienHoaDon(totalAmount);
+        if (hoaDonChiTiets.isEmpty()) {
+            respone.put("err", "Không thể xóa vì chỉ còn duy nhất sản phẩm này trong đơn");
+            return ResponseEntity.badRequest().body(respone);
+        } else {
+            int totalAmount = 0;
+            int total = hoaDon.getTongTienDonHang();
+            for (HoaDonChiTiet hdct : hoaDonChiTiets) {
+                totalAmount += hdct.getThanhTien();
+            }
+            hoaDon.setTongTienHoaDon(totalAmount);
 
-        hoaDon.setTongTienDonHang(total - thanhTienHDCT);
-        hoaDonRepository.save(hoaDon);
-        respone.put("success", "Xóa sản phẩm thành công");
-        return ResponseEntity.ok().body(respone);
+            hoaDon.setTongTienDonHang(total - thanhTienHDCT);
+            hoaDonRepository.save(hoaDon);
+
+            NhanVien nhanVien = nhanVienRepository.findByEmail(dto.getEmail_user());
+
+            // Lưu lịch sử hóa đơn
+            LSHoaDon lichSuHoaDon = new LSHoaDon();
+            lichSuHoaDon.setNguoiThaoTac(nhanVien.getHoTen());
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setNgayTao(new Date());
+            lichSuHoaDon.setThaoTac("Xóa sản phẩm " + hoaDonChiTiet.getSanPhamChiTiet().getSanPham().getTenSanPham());
+            lsHoaDonRepository.save(lichSuHoaDon);
+
+            respone.put("success", "Xóa sản phẩm thành công");
+            return ResponseEntity.ok().body(respone);
+        }
     }
 }

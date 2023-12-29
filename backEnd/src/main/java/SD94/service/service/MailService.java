@@ -1,11 +1,7 @@
 package SD94.service.service;
 
-import SD94.dto.SanPhamDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
-import SD94.entity.nhanVien.NhanVien;
-import SD94.entity.sanPham.SanPham;
-import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;

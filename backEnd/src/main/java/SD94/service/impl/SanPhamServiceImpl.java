@@ -6,7 +6,6 @@ import SD94.entity.sanPham.*;
 import SD94.repository.sanPham.*;
 import SD94.service.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

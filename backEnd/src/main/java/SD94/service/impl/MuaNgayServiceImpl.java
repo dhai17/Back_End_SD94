@@ -4,6 +4,7 @@ import SD94.dto.HoaDonDTO;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.hoaDon.LSHoaDon;
 import SD94.entity.hoaDon.TrangThai;
 import SD94.entity.khuyenMai.KhuyenMai;
 import SD94.entity.sanPham.KichCo;
@@ -11,6 +12,7 @@ import SD94.entity.sanPham.MauSac;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
+import SD94.repository.hoaDon.LSHoaDonRepository;
 import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
@@ -60,6 +62,9 @@ public class MuaNgayServiceImpl implements MuaNgayService {
 
     @Autowired
     MailService mailService;
+
+    @Autowired
+    LSHoaDonRepository lsHoaDonRepository;
 
     private Long idBill;
 
@@ -171,6 +176,14 @@ public class MuaNgayServiceImpl implements MuaNgayService {
         hoaDon.setTrangThai(trangThai);
         hoaDon.setNguoiNhan(dto.getNguoiTao());
         hoaDonRepository.save(hoaDon);
+
+        //Lưu lịch sử hóa đơn
+        LSHoaDon ls = new LSHoaDon();
+        ls.setNguoiThaoTac(dto.getNguoiTao());
+        ls.setHoaDon(hoaDon);
+        ls.setNgayTao(new Date());
+        ls.setThaoTac("Đặt hàng thanh toán khi nhận hàng");
+        lsHoaDonRepository.save(ls);
 
         try {
             mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);

@@ -1,11 +1,9 @@
 package SD94.controller.customer.gioHang;
 
 import SD94.dto.GioHangChiTietDTO;
-import SD94.dto.SanPhamDTO;
 import SD94.entity.gioHang.GioHang;
 import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.khachHang.KhachHang;
-import SD94.entity.sanPham.HinhAnh;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.gioHang.GioHangChiTietRepository;
 import SD94.repository.gioHang.GioHangRepository;

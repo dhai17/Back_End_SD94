@@ -7,6 +7,7 @@ import SD94.entity.gioHang.GioHang;
 import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.hoaDon.LSHoaDon;
 import SD94.entity.hoaDon.TrangThai;
 import SD94.entity.khachHang.KhachHang;
 import SD94.entity.khuyenMai.KhuyenMai;
@@ -15,6 +16,7 @@ import SD94.repository.gioHang.GioHangChiTietRepository;
 import SD94.repository.gioHang.GioHangRepository;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
+import SD94.repository.hoaDon.LSHoaDonRepository;
 import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;
@@ -70,6 +72,9 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
 
     @Autowired
     GioHangChiTietRepository gioHangChiTietRepository;
+
+    @Autowired
+    LSHoaDonRepository lsHoaDonRepository;
 
     private Long idBill;
 
@@ -248,6 +253,15 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         hoaDon.setNguoiNhan(khachHang.getHoTen());
         hoaDon.setLoaiHoaDon(0);
         billRepository.save(hoaDon);
+
+        //Lưu lịch sử hóa đơn
+        LSHoaDon ls = new LSHoaDon();
+        ls.setNguoiThaoTac(khachHang.getHoTen());
+        ls.setHoaDon(hoaDon);
+        ls.setNgayTao(new Date());
+        ls.setThaoTac("Đặt hàng thanh toán khi nhận hàng");
+        lsHoaDonRepository.save(ls);
+
         try {
             mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
         } catch (MessagingException e) {

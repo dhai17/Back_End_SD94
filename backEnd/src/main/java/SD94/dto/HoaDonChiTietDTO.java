@@ -31,4 +31,6 @@ public class HoaDonChiTietDTO {
     private String anhSanPham;
 
     private int soLuongcapNhat;
+
+    private String email_user;
 }
