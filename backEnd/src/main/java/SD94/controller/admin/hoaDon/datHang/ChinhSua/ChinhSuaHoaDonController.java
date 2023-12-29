@@ -121,7 +121,7 @@ public class ChinhSuaHoaDonController {
                     LSHoaDon lichSuHoaDon = new LSHoaDon();
                     lichSuHoaDon.setNguoiThaoTac(nhanVien.getHoTen());
                     lichSuHoaDon.setHoaDon(hoaDon);
-                    lichSuHoaDon.setThaoTac("Thêm mới " + dto.getSoLuong() +  " sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " vào hóa đơn");
+                    lichSuHoaDon.setThaoTac("Thêm mới " + dto.getSoLuong() + " sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " vào hóa đơn");
                     lsHoaDonRepository.save(lichSuHoaDon);
                 }
             } else {
@@ -156,7 +156,7 @@ public class ChinhSuaHoaDonController {
                 lichSuHoaDon.setNguoiThaoTac(nhanVien.getHoTen());
                 lichSuHoaDon.setNgayTao(new Date());
                 lichSuHoaDon.setHoaDon(hoaDon);
-                lichSuHoaDon.setThaoTac("Thêm mới " + dto.getSoLuong() +  " sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " vào hóa đơn");
+                lichSuHoaDon.setThaoTac("Thêm mới " + dto.getSoLuong() + " sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " vào hóa đơn");
                 lsHoaDonRepository.save(lichSuHoaDon);
             }
 
@@ -170,22 +170,23 @@ public class ChinhSuaHoaDonController {
         HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepository.findById(dto.getId()).get();
 
         SanPhamChiTiet sanPhamChiTiet = dto.getSanPhamChiTiet();
-        int soLuongSanPhamHienCo = sanPhamChiTiet.getSoLuong();
+        int tongSoLuong = sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong();
         int soLuongUpdate = dto.getSoLuongcapNhat();
-        int soLuongDuocThemTiep = sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong();
-        int check = soLuongDuocThemTiep - hoaDonChiTiet.getSoLuong();
+        int soLuongDuocThemTiep = (sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong()) - hoaDonChiTiet.getSoLuong();
         int thanhTienUpdate = (int) (soLuongUpdate * sanPhamChiTiet.getSanPham().getGia());
         int thanhTienMoiThem = thanhTienUpdate - hoaDonChiTiet.getThanhTien();
-        if (soLuongSanPhamHienCo < soLuongUpdate && soLuongUpdate > hoaDonChiTiet.getSoLuong()) {
-            respone.put("err", "Bạn đã có " + sanPhamChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
+
+        if (tongSoLuong < soLuongUpdate) {
+            respone.put("err", "Bạn đã có " + hoaDonChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
             return ResponseEntity.badRequest().body(respone);
         } else if (sanPhamChiTiet.isTrangThai() == false) {
             respone.put("err", "Sản phẩm đã ngừng kinh doanh ");
             return ResponseEntity.badRequest().body(respone);
-        } else if (check < 0 && soLuongUpdate > hoaDonChiTiet.getSoLuong()) {
+        } else if (soLuongUpdate > tongSoLuong && soLuongUpdate > soLuongDuocThemTiep) {
             respone.put("err", "Bạn đã có " + hoaDonChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn chỉ có thể thêm tiếp được tối đa " + soLuongDuocThemTiep + " sản phẩm này");
             return ResponseEntity.badRequest().body(respone);
         } else {
+
             int soLuongBanDau = hoaDonChiTiet.getSoLuong();
             hoaDonChiTiet.setSoLuong(soLuongUpdate);
             hoaDonChiTiet.setThanhTien(thanhTienUpdate);
@@ -203,7 +204,7 @@ public class ChinhSuaHoaDonController {
             hoaDon.setTongTienDonHang(total + thanhTienMoiThem);
             hoaDonRepository.save(hoaDon);
 
-            sanPhamChiTiet.setSoLuong(soLuongSanPhamHienCo - soLuongUpdate);
+            sanPhamChiTiet.setSoLuong(tongSoLuong - soLuongUpdate);
             sanPhamChiTietRepository.save(sanPhamChiTiet);
 
             NhanVien nhanVien = nhanVienRepository.findByEmail(dto.getEmail_user());
