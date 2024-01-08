@@ -215,28 +215,33 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(hoaDon.getId());
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             cartDetailsRepository.deleteGioHangChiTiet(hoaDonChiTiet.getSanPhamChiTiet().getId());
-        }
 
-        for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
-            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
-            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
-            if (sanPhamChiTiet.getSoLuong() <= 0) {
-                sanPhamChiTiet.setTrangThai(false);
+            for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
+                SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
+                if (hoaDonChiTiet.getSanPhamChiTiet().getId() == gioHangChiTiet.getSanPhamChiTiet().getId()) {
+                    sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
 
-                List<HoaDonChiTiet> hdct = billDetailsRepository.findBySPCTID(sanPhamChiTiet.getId());
-                for (HoaDonChiTiet ListHDCT : hdct) {
-                    billDetailsRepository.deleteById(ListHDCT.getId());
+                    //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
+                    if (sanPhamChiTiet.getSoLuong() <= 0) {
+                        sanPhamChiTiet.setTrangThai(false);
+
+                        List<HoaDonChiTiet> hdct = billDetailsRepository.findBySPCTID(sanPhamChiTiet.getId());
+                        for (HoaDonChiTiet ListHDCT : hdct) {
+                            billDetailsRepository.deleteById(ListHDCT.getId());
+                        }
+
+                        List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                        for (GioHangChiTiet gioHangChiTiet1 : ghct) {
+                            gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
+                        }
+
+                    } else {
+                        sanPhamChiTiet.setTrangThai(true);
+                    }
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
                 }
 
-                List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
-                for (GioHangChiTiet gioHangChiTiet1 : ghct) {
-                    gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
-                }
-
-            } else {
-                sanPhamChiTiet.setTrangThai(true);
             }
-            sanPhamChiTietRepository.save(sanPhamChiTiet);
         }
 
         TrangThai trangThai = trangThaiRepository.findByID(1L);

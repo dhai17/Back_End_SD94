@@ -247,12 +247,13 @@ public class ChinhSuaHoaDonController {
         SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
         sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
         sanPhamChiTietRepository.save(sanPhamChiTiet);
-        hoaDonChiTietRepository.deleteById(dto.getId());
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDonChiTiet.getHoaDon().getId());
-        if (hoaDonChiTiets.isEmpty()) {
+        if (hoaDonChiTiets.size() <= 1) {
             respone.put("err", "Không thể xóa vì chỉ còn duy nhất sản phẩm này trong đơn");
             return ResponseEntity.badRequest().body(respone);
         } else {
+            hoaDonChiTietRepository.deleteById(dto.getId());
+
             int totalAmount = 0;
             int total = hoaDon.getTongTienDonHang();
             for (HoaDonChiTiet hdct : hoaDonChiTiets) {
