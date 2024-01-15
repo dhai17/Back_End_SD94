@@ -13,9 +13,13 @@ public interface HoaDonDatHangService {
     List<HoaDon> findHoaDonByTrangThai(long trang_thai_id);
 
     ResponseEntity<Map<String, Boolean>> capNhatTrangThai(long trang_thai_id, long id_bill);
+
     ResponseEntity<Map<String, Boolean>> capNhatTrangThaiHuyDon(long trang_thai_id, long id_bill, String ghiChu);
+
     ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id, long trang_thai_id_sau, String thaoTac, String nguoiThaoTac);
+
     List<HoaDon> capNhatTrangThai_DaChon(HoaDonDTO hoaDonDTO, long trang_thai_id, String thaoTac, String nguoiThaoTac);
+
     List<HoaDon> capNhatTrangThaiHuy_DaChon(HoaDonDTO hoaDonDTO, String nguoiThaoTac, String ghiChu);
 
     List<HoaDon> searchAllBill(long trang_thai_id, String search);

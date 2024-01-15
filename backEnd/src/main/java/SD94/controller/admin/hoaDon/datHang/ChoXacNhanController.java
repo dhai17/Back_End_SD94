@@ -38,6 +38,7 @@ public class ChoXacNhanController {
 
     @GetMapping("/danhSach")
     public List<HoaDon> listBill1() {
+
         return hoaDonDatHangService.findHoaDonByTrangThai(1L);
     }
 

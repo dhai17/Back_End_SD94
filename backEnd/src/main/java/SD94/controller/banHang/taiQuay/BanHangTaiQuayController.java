@@ -115,7 +115,7 @@ public class BanHangTaiQuayController {
     }
 
     @PostMapping("/add/khuyenMai")
-    public HoaDon themMaGiamGiaTaiQuay(@RequestBody HoaDonDTO hoaDonDTO) {
+    public ResponseEntity<?> themMaGiamGiaTaiQuay(@RequestBody HoaDonDTO hoaDonDTO) {
         return banHangTaiQuayService.themMaGiamGiaTaiQuay(hoaDonDTO);
     }
 

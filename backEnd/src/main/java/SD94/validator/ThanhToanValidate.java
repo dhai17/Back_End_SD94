@@ -25,7 +25,7 @@ public class ThanhToanValidate {
         Map<String, String> errors = new HashMap<>();
         checkNguoiTao(hoaDonDTO.getNguoiTao(), errors);
         checksoDienThoai(hoaDonDTO.getSoDienThoai(), errors);
-        checkEmail(hoaDonDTO.getEmail(), errors);
+//        checkEmail(hoaDonDTO.getEmail(), errors);
         checkdiaChi(hoaDonDTO.getDiaChi(), errors);
         if (errors.isEmpty()) {
             return ResponseEntity.ok().build();
@@ -40,11 +40,11 @@ public class ThanhToanValidate {
         }
     }
 
-    public static void checkEmail(String email, Map<String, String> errors) {
-        if (email == null || email == "") {
-            errors.put(DatHangCheckoutValidate.ErrorCode.Null_email.name(), "Bạn chưa nhập Email");
-        }
-    }
+//    public static void checkEmail(String email, Map<String, String> errors) {
+//        if (email == null || email == "") {
+//            errors.put(DatHangCheckoutValidate.ErrorCode.Null_email.name(), "Bạn chưa nhập Email");
+//        }
+//    }
 
     public static void checktienShip(Integer tienShip, Map<String, String> errors) {
         if (tienShip == null || tienShip == 0) {

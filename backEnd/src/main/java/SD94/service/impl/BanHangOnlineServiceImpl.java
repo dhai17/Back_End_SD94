@@ -7,6 +7,7 @@ import SD94.entity.gioHang.GioHang;
 import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.hoaDon.LSHoaDon;
 import SD94.entity.hoaDon.TrangThai;
 import SD94.entity.khachHang.KhachHang;
 import SD94.entity.khuyenMai.KhuyenMai;
@@ -15,6 +16,7 @@ import SD94.repository.gioHang.GioHangChiTietRepository;
 import SD94.repository.gioHang.GioHangRepository;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
+import SD94.repository.hoaDon.LSHoaDonRepository;
 import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;
@@ -70,6 +72,9 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
 
     @Autowired
     GioHangChiTietRepository gioHangChiTietRepository;
+
+    @Autowired
+    LSHoaDonRepository lsHoaDonRepository;
 
     private Long idBill;
 
@@ -208,30 +213,36 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         GioHang gioHang = gioHangRepository.findbyCustomerID(khachHang.getId());
         List<GioHangChiTiet> gioHangChiTiets = cartDetailsRepository.findByCartID(gioHang.getId());
         List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(hoaDon.getId());
+
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             cartDetailsRepository.deleteGioHangChiTiet(hoaDonChiTiet.getSanPhamChiTiet().getId());
-        }
 
-        for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
-            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
-            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
-            if (sanPhamChiTiet.getSoLuong() <= 0) {
-                sanPhamChiTiet.setTrangThai(false);
+            for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
+                SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
+                if (hoaDonChiTiet.getSanPhamChiTiet().getId() == gioHangChiTiet.getSanPhamChiTiet().getId()) {
+                    sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
 
-                List<HoaDonChiTiet> hdct = billDetailsRepository.findBySPCTID(sanPhamChiTiet.getId());
-                for (HoaDonChiTiet ListHDCT : hdct) {
-                    billDetailsRepository.deleteById(ListHDCT.getId());
+                    //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
+                    if (sanPhamChiTiet.getSoLuong() <= 0) {
+//                        sanPhamChiTiet.setTrangThai(false);
+
+                        List<HoaDonChiTiet> hdct = billDetailsRepository.findBySPCTID(sanPhamChiTiet.getId());
+                        for (HoaDonChiTiet ListHDCT : hdct) {
+                            billDetailsRepository.deleteById(ListHDCT.getId());
+                        }
+
+                        List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                        for (GioHangChiTiet gioHangChiTiet1 : ghct) {
+                            gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
+                        }
+
+                    } else {
+                        sanPhamChiTiet.setTrangThai(true);
+                    }
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
                 }
 
-                List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
-                for (GioHangChiTiet gioHangChiTiet1 : ghct) {
-                    gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
-                }
-
-            } else {
-                sanPhamChiTiet.setTrangThai(true);
             }
-            sanPhamChiTietRepository.save(sanPhamChiTiet);
         }
 
         TrangThai trangThai = trangThaiRepository.findByID(1L);
@@ -248,10 +259,21 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         hoaDon.setNguoiNhan(khachHang.getHoTen());
         hoaDon.setLoaiHoaDon(0);
         billRepository.save(hoaDon);
-        try {
-            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
-        } catch (MessagingException e) {
-            e.printStackTrace();
+
+        //Lưu lịch sử hóa đơn
+        LSHoaDon ls = new LSHoaDon();
+        ls.setNguoiThaoTac(khachHang.getHoTen());
+        ls.setHoaDon(hoaDon);
+        ls.setNgayTao(new Date());
+        ls.setThaoTac("Đặt hàng thanh toán khi nhận hàng");
+        lsHoaDonRepository.save(ls);
+
+        if (hoaDon.getEmailNguoiNhan() != null && !hoaDon.getEmailNguoiNhan().isEmpty()) {
+            try {
+                mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         }
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());

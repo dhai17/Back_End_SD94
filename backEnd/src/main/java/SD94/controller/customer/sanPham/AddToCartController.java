@@ -79,7 +79,7 @@ public class AddToCartController {
                         Map<String, String> respone = new HashMap<>();
                         respone.put("err", "Bạn đã có " + sanPhamChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
                         return ResponseEntity.badRequest().body(respone);
-                    } else if (check <= 0) {
+                    } else if (check < 0) {
                         Map<String, String> respone = new HashMap<>();
                         respone.put("err", "Bạn đã có " + gioHangChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn chỉ có thể thêm tiếp được tối đa " + soLuongDuocThemTiep + " sản phẩm này");
                         return ResponseEntity.badRequest().body(respone);

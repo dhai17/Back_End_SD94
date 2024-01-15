@@ -1,11 +1,9 @@
 package SD94.dto;
 
-import SD94.entity.sanPham.NhaSanXuat;
-import SD94.entity.sanPham.LoaiSanPham;
 import SD94.entity.sanPham.ChatLieu;
-import SD94.entity.sanPham.SanPhamChiTiet;
+import SD94.entity.sanPham.LoaiSanPham;
+import SD94.entity.sanPham.NhaSanXuat;
 import lombok.Data;
-import lombok.extern.java.Log;
 
 import java.util.Date;
 import java.util.List;
@@ -72,4 +70,5 @@ public class SanPhamDTO {
 
     private Long kichCo_id;
 
+    private String email_user;
 }

@@ -126,7 +126,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                 if (hoaDonChiTiet.getSoLuong() == sanPhamChiTiet.getSoLuong()) {
                     respone.put("err", "Bạn đã có " + sanPhamChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
                     return ResponseEntity.badRequest().body(respone);
-                } else if (check <= 0) {
+                } else if (check < 0) {
                     respone.put("err", "Bạn đã có " + hoaDonChiTiet.getSoLuong() + " sản phẩm này trong hóa đơn, bạn chỉ có thể thêm tiếp được tối đa " + soLuongDuocThemTiep + " sản phẩm này");
                     return ResponseEntity.badRequest().body(respone);
                 } else {
@@ -181,30 +181,38 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
     }
 
     @Override
-    public HoaDon themMaGiamGiaTaiQuay(HoaDonDTO hoaDonDTO) {
+    public ResponseEntity<?> themMaGiamGiaTaiQuay(HoaDonDTO hoaDonDTO) {
+        Map<String, String> response = new HashMap<>();
         KhuyenMai khuyenMai = khuyenMaiRepository.findByNameKM(hoaDonDTO.getTenMaGiamGia());
-        HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
-        int phanTramGiam = khuyenMai.getPhanTramGiam();
-        int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
-        int tongTienBill = hoaDon.getTongTienHoaDon();
-
-        int tongTienSauGiamCheck = (tongTienBill * phanTramGiam) / 100;
-        if (tongTienSauGiamCheck > tienGiamToiDa) {
-            int tongTienSauGiam = hoaDon.getTongTienHoaDon() - khuyenMai.getTienGiamToiDa();
-            hoaDon.setTienGiam(hoaDon.getTongTienHoaDon() - tongTienSauGiam);
-            hoaDon.setTongTienDonHang(tongTienSauGiam);
-            hoaDon.setKhuyenMai(khuyenMai);
-            hoaDonRepository.save(hoaDon);
+        if (khuyenMai == null) {
+            response.put("mess", "Khuyến mại không tồn tại");
+            return ResponseEntity.badRequest().body(response);
+        } else if (khuyenMai.getTrangThai() == 1 || khuyenMai.getTrangThai() == 2) {
+            response.put("mess", "Khuyến mãi đã hết hạn hoặc chưa bắt đầu");
+            return ResponseEntity.badRequest().body(response);
         } else {
-            int tongTien = hoaDon.getTongTienHoaDon() - tongTienSauGiamCheck;
-            hoaDon.setTongTienDonHang(tongTien);
-            hoaDon.setTienGiam(tongTienSauGiamCheck);
-            hoaDon.setKhuyenMai(khuyenMai);
-            hoaDonRepository.save(hoaDon);
-        }
+            HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
+            int phanTramGiam = khuyenMai.getPhanTramGiam();
+            int tienGiamToiDa = khuyenMai.getTienGiamToiDa();
+            int tongTienBill = hoaDon.getTongTienHoaDon();
 
-        HoaDon hoaDon2 = hoaDonRepository.findByID(hoaDonDTO.getId());
-        return hoaDon2;
+            int tongTienSauGiamCheck = (tongTienBill * phanTramGiam) / 100;
+            if (tongTienSauGiamCheck > tienGiamToiDa) {
+                int tongTienSauGiam = hoaDon.getTongTienHoaDon() - khuyenMai.getTienGiamToiDa();
+                hoaDon.setTienGiam(hoaDon.getTongTienHoaDon() - tongTienSauGiam);
+                hoaDon.setTongTienDonHang(tongTienSauGiam);
+                hoaDon.setKhuyenMai(khuyenMai);
+                hoaDonRepository.save(hoaDon);
+            } else {
+                int tongTien = hoaDon.getTongTienHoaDon() - tongTienSauGiamCheck;
+                hoaDon.setTongTienDonHang(tongTien);
+                hoaDon.setTienGiam(tongTienSauGiamCheck);
+                hoaDon.setKhuyenMai(khuyenMai);
+                hoaDonRepository.save(hoaDon);
+            }
+            HoaDon hoaDon2 = hoaDonRepository.findByID(hoaDonDTO.getId());
+            return ResponseEntity.ok().body(hoaDon2);
+        }
     }
 
     @Override
@@ -247,13 +255,6 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
     public ResponseEntity huyDon(HoaDonDTO hoaDonDTO) {
         HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
         TrangThai trangThai = trangThaiRepository.findByID(8L);
-        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
-
-        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
-            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
-            sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
-            sanPhamChiTietRepository.save(sanPhamChiTiet);
-        }
         hoaDon.setTrangThai(trangThai);
         hoaDonRepository.save(hoaDon);
         Map<String, String> response = new HashMap<>();
@@ -319,16 +320,11 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
             hoaDonChiTiet.setDeleted(true);
             hoaDonChiTietRepository.save(hoaDonChiTiet);
 
-            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
-            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
-            sanPhamChiTietRepository.save(sanPhamChiTiet);
-
             HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
             int tongTienHoaDon = 0;
             List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
             for (HoaDonChiTiet hoaDonChiTiet1 : hoaDonChiTiets) {
                 tongTienHoaDon += hoaDonChiTiet1.getThanhTien();
-
             }
 
             hoaDon.setTongTienHoaDon(tongTienHoaDon);

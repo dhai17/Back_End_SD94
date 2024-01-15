@@ -20,9 +20,19 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, Lo
     @Query(value = "select * from hoa_don_chi_tiet where hoa_don_id = ? and san_pham_chi_tiet_id=? and is_deleted = false", nativeQuery = true)
     Optional<HoaDonChiTiet> checkHDCT(long hoa_don_id, long san_pham_chi_tiet_id);
 
-    @Query(value = "select * from hoa_don_chi_tiet where san_pham_chi_tiet_id = ? and is_deleted = false", nativeQuery = true)
+    @Query(value = "SELECT hoa_don_chi_tiet.*\n" +
+            "FROM hoa_don_chi_tiet\n" +
+            "         JOIN hoa_don ON hoa_don_chi_tiet.hoa_don_id = hoa_don.id\n" +
+            "WHERE hoa_don_chi_tiet.san_pham_chi_tiet_id = ?\n" +
+            "  AND hoa_don_chi_tiet.is_deleted = false\n" +
+            "  AND hoa_don.trang_thai_id = 6;", nativeQuery = true)
     List<HoaDonChiTiet> findBySPCTID(long san_pham_chi_tiet_id);
 
-    @Query(value = "select * from hoa_don_chi_tiet where san_pham_chi_tiet_id = ? and is_deleted = true", nativeQuery = true)
+    @Query(value = "SELECT hoa_don_chi_tiet.*\n" +
+            "FROM hoa_don_chi_tiet\n" +
+            "         JOIN hoa_don ON hoa_don_chi_tiet.hoa_don_id = hoa_don.id\n" +
+            "WHERE hoa_don_chi_tiet.san_pham_chi_tiet_id = ?\n" +
+            "  AND hoa_don_chi_tiet.is_deleted = true\n" +
+            "  AND hoa_don.trang_thai_id = 6;", nativeQuery = true)
     List<HoaDonChiTiet> findBySPCTIDDeleteTrue(long san_pham_chi_tiet_id);
 }
