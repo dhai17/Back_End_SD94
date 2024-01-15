@@ -100,6 +100,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
                 SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
                 sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
+                sanPhamChiTiet.setTrangThai(true);
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
             }
         }
