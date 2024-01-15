@@ -156,11 +156,11 @@ public class MuaNgayServiceImpl implements MuaNgayService {
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
-            if (sanPhamChiTiet.getSoLuong() <= 0) {
-                sanPhamChiTiet.setTrangThai(false);
-            } else {
-                sanPhamChiTiet.setTrangThai(true);
-            }
+//            if (sanPhamChiTiet.getSoLuong() <= 0) {
+//                sanPhamChiTiet.setTrangThai(false);
+//            } else {
+//                sanPhamChiTiet.setTrangThai(true);
+//            }
             sanPhamChiTietRepository.save(sanPhamChiTiet);
         }
 
@@ -185,10 +185,12 @@ public class MuaNgayServiceImpl implements MuaNgayService {
         ls.setThaoTac("Đặt hàng thanh toán khi nhận hàng");
         lsHoaDonRepository.save(ls);
 
-        try {
-            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
-        } catch (MessagingException e) {
-            e.printStackTrace();
+        if (hoaDon.getEmailNguoiNhan() != null && !hoaDon.getEmailNguoiNhan().isEmpty()) {
+            try {
+                mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         }
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), dto.getNguoiTao());

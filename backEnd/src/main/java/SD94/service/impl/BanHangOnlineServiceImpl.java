@@ -213,6 +213,7 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         GioHang gioHang = gioHangRepository.findbyCustomerID(khachHang.getId());
         List<GioHangChiTiet> gioHangChiTiets = cartDetailsRepository.findByCartID(gioHang.getId());
         List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(hoaDon.getId());
+
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             cartDetailsRepository.deleteGioHangChiTiet(hoaDonChiTiet.getSanPhamChiTiet().getId());
 
@@ -223,7 +224,7 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
 
                     //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
                     if (sanPhamChiTiet.getSoLuong() <= 0) {
-                        sanPhamChiTiet.setTrangThai(false);
+//                        sanPhamChiTiet.setTrangThai(false);
 
                         List<HoaDonChiTiet> hdct = billDetailsRepository.findBySPCTID(sanPhamChiTiet.getId());
                         for (HoaDonChiTiet ListHDCT : hdct) {
@@ -267,10 +268,12 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         ls.setThaoTac("Đặt hàng thanh toán khi nhận hàng");
         lsHoaDonRepository.save(ls);
 
-        try {
-            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
-        } catch (MessagingException e) {
-            e.printStackTrace();
+        if (hoaDon.getEmailNguoiNhan() != null && !hoaDon.getEmailNguoiNhan().isEmpty()) {
+            try {
+                mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         }
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());

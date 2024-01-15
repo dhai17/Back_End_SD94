@@ -3,6 +3,7 @@ package SD94.service.impl;
 
 import SD94.dto.HoaDonChiTietDTO;
 import SD94.dto.HoaDonDTO;
+import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.hoaDon.*;
 import SD94.entity.sanPham.SanPhamChiTiet;
 import SD94.repository.hoaDon.*;
@@ -64,6 +65,23 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             TrangThai trangThai = optionalTrangThai.get();
             hoaDon.setTrangThai(trangThai);
             hoaDonRepository.save(hoaDon);
+
+            if (trang_thai_id == 2) {
+                List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+                for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+
+                    SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
+                    if (hoaDonChiTiet.getSanPhamChiTiet().getId() == hoaDonChiTiet.getSanPhamChiTiet().getId()) {
+                        //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
+                        if (sanPhamChiTiet.getSoLuong() <= 0) {
+                            sanPhamChiTiet.setTrangThai(false);
+                        } else {
+                            sanPhamChiTiet.setTrangThai(true);
+                        }
+                        sanPhamChiTietRepository.save(sanPhamChiTiet);
+                    }
+                }
+            }
         }
         return ResponseEntity.ok().build();
     }

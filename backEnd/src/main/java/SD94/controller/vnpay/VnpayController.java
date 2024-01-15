@@ -112,7 +112,7 @@ public class VnpayController {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
             if (sanPhamChiTiet.getSoLuong() <= 0) {
-                sanPhamChiTiet.setTrangThai(false);
+//                sanPhamChiTiet.setTrangThai(false);
 
                 List<HoaDonChiTiet> hdct = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
                 for (HoaDonChiTiet ListHDCT : hdct) {
@@ -154,11 +154,14 @@ public class VnpayController {
         ls.setThaoTac("Đã thanh toán qua VNPay");
         lsHoaDonRepository.save(ls);
 
-        try {
-            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
-        } catch (MessagingException e) {
-            e.printStackTrace();
+        if (hoaDon.getEmailNguoiNhan() != null && !hoaDon.getEmailNguoiNhan().isEmpty()) {
+            try {
+                mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         }
+
         if (paymentStatus == 1) {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Success.html"));
@@ -180,7 +183,7 @@ public class VnpayController {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
             if (sanPhamChiTiet.getSoLuong() <= 0) {
-                sanPhamChiTiet.setTrangThai(false);
+//                sanPhamChiTiet.setTrangThai(false);
 
                 List<HoaDonChiTiet> hdct = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
                 for (HoaDonChiTiet ListHDCT : hdct) {
@@ -223,11 +226,14 @@ public class VnpayController {
         ls.setThaoTac("Đã thanh toán qua VNPay");
         lsHoaDonRepository.save(ls);
 
-        try {
-            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
-        } catch (MessagingException e) {
-            e.printStackTrace();
+        if (hoaDon.getEmailNguoiNhan() != null && !hoaDon.getEmailNguoiNhan().isEmpty()) {
+            try {
+                mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         }
+        
         if (paymentStatus == 1) {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Success.html"));
