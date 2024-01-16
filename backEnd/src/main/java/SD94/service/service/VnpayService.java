@@ -15,6 +15,7 @@ import java.util.*;
 @Service
 public class VnpayService {
     public ResponseEntity<VnpayDTO> createPayment(HoaDonDTO hoaDonDTO){
+        int amount = hoaDonDTO.getTongTienDonHang();
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String vnp_TxnRef = VnpayConflig.getRandomNumber(8);
@@ -25,7 +26,7 @@ public class VnpayService {
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(hoaDonDTO.getTongTienDonHang() * 100));
+        vnp_Params.put("vnp_Amount", String.valueOf(amount * 100L));
         vnp_Params.put("vnp_CurrCode", "VND");
 
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
@@ -78,6 +79,7 @@ public class VnpayService {
         String paymentUrl = VnpayConflig.vnp_PayUrl + "?" + queryUrl;
         VnpayDTO dto = new VnpayDTO();
         dto.setCreateURL(paymentUrl);
+        System.out.println(paymentUrl);
         return ResponseEntity.ok(dto);
     }
 
@@ -93,7 +95,7 @@ public class VnpayService {
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(hoaDonDTO.getTongTienDonHang() * 100));
+        vnp_Params.put("vnp_Amount", String.valueOf(hoaDonDTO.getTongTienDonHang() * 100L));
         vnp_Params.put("vnp_CurrCode", "VND");
 
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
