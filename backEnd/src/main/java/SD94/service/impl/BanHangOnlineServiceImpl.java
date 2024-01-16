@@ -215,8 +215,8 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(hoaDon.getId());
 
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
-//            cartDetailsRepository.deleteGioHangChiTiet(hoaDonChiTiet.getSanPhamChiTiet().getId());
-            cartDetailsRepository.deleteById(hoaDonChiTiet.getSanPhamChiTiet().getId());
+            cartDetailsRepository.deleteGioHangChiTiet(hoaDonChiTiet.getSanPhamChiTiet().getId());
+//            cartDetailsRepository.deleteById(hoaDonChiTiet.getSanPhamChiTiet().getId());
 
             for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
                 SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
