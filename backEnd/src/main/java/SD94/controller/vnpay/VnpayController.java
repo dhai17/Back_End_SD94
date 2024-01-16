@@ -7,6 +7,7 @@ import SD94.entity.gioHang.GioHang;
 import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.hoaDon.HoaDon;
 import SD94.entity.hoaDon.HoaDonChiTiet;
+import SD94.entity.hoaDon.LSHoaDon;
 import SD94.entity.hoaDon.TrangThai;
 import SD94.entity.khachHang.KhachHang;
 import SD94.entity.sanPham.SanPhamChiTiet;
@@ -14,6 +15,7 @@ import SD94.repository.gioHang.GioHangChiTietRepository;
 import SD94.repository.gioHang.GioHangRepository;
 import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
+import SD94.repository.hoaDon.LSHoaDonRepository;
 import SD94.repository.hoaDon.TrangThaiRepository;
 import SD94.repository.khachHang.KhachHangRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -64,6 +67,9 @@ public class VnpayController {
 
     @Autowired
     MailService mailService;
+
+    @Autowired
+    LSHoaDonRepository lsHoaDonRepository;
 
     HoaDonDTO dto = null;
 
@@ -106,7 +112,7 @@ public class VnpayController {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
             if (sanPhamChiTiet.getSoLuong() <= 0) {
-                sanPhamChiTiet.setTrangThai(false);
+//                sanPhamChiTiet.setTrangThai(false);
 
                 List<HoaDonChiTiet> hdct = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
                 for (HoaDonChiTiet ListHDCT : hdct) {
@@ -139,11 +145,23 @@ public class VnpayController {
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());
-        try {
-            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
-        } catch (MessagingException e) {
-            e.printStackTrace();
+
+        //Lưu lịch sử hóa đơn
+        LSHoaDon ls = new LSHoaDon();
+        ls.setNguoiThaoTac(khachHang.getHoTen());
+        ls.setNgayTao(new Date());
+        ls.setHoaDon(hoaDon);
+        ls.setThaoTac("Đã thanh toán qua VNPay");
+        lsHoaDonRepository.save(ls);
+
+        if (hoaDon.getEmailNguoiNhan() != null && !hoaDon.getEmailNguoiNhan().isEmpty()) {
+            try {
+                mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         }
+
         if (paymentStatus == 1) {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Success.html"));
@@ -165,7 +183,7 @@ public class VnpayController {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
             if (sanPhamChiTiet.getSoLuong() <= 0) {
-                sanPhamChiTiet.setTrangThai(false);
+//                sanPhamChiTiet.setTrangThai(false);
 
                 List<HoaDonChiTiet> hdct = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
                 for (HoaDonChiTiet ListHDCT : hdct) {
@@ -199,11 +217,23 @@ public class VnpayController {
         hoaDonRepository.save(hoaDon);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), dto.getNguoiTao());
-        try {
-            mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
-        } catch (MessagingException e) {
-            e.printStackTrace();
+
+        //Lưu lịch sử hóa đơn
+        LSHoaDon ls = new LSHoaDon();
+        ls.setNguoiThaoTac(hoaDon.getNguoiNhan());
+        ls.setHoaDon(hoaDon);
+        ls.setNgayTao(new Date());
+        ls.setThaoTac("Đã thanh toán qua VNPay");
+        lsHoaDonRepository.save(ls);
+
+        if (hoaDon.getEmailNguoiNhan() != null && !hoaDon.getEmailNguoiNhan().isEmpty()) {
+            try {
+                mailService.sendOrderConfirmationEmail(hoaDon.getEmailNguoiNhan(), hoaDon);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         }
+        
         if (paymentStatus == 1) {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Success.html"));

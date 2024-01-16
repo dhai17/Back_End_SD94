@@ -5,7 +5,6 @@ import SD94.dto.HoaDonDTO;
 import SD94.dto.KhachHangDTO;
 import SD94.dto.SanPhamDTO;
 import SD94.entity.hoaDon.HoaDon;
-import SD94.entity.hoaDon.HoaDonChiTiet;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 

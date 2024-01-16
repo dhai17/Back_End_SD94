@@ -3,20 +3,13 @@ package SD94.service.impl;
 
 import SD94.dto.HoaDonChiTietDTO;
 import SD94.dto.HoaDonDTO;
-import SD94.entity.hoaDon.HoaDon;
-import SD94.entity.hoaDon.HoaDonChiTiet;
-import SD94.entity.hoaDon.LichSuHoaDon;
-import SD94.entity.hoaDon.TrangThai;
-import SD94.entity.nhanVien.NhanVien;
+import SD94.entity.gioHang.GioHangChiTiet;
+import SD94.entity.hoaDon.*;
 import SD94.entity.sanPham.SanPhamChiTiet;
-import SD94.repository.hoaDon.HoaDonChiTietRepository;
-import SD94.repository.hoaDon.HoaDonRepository;
-import SD94.repository.hoaDon.LichSuHoaDonRepository;
-import SD94.repository.hoaDon.TrangThaiRepository;
+import SD94.repository.hoaDon.*;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
 import SD94.repository.sanPham.SanPhamChiTietRepository;
-import SD94.repository.sanPham.SanPhamRepository;
 import SD94.service.service.HoaDonDatHangService;
 import SD94.service.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +48,9 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     @Autowired
     SanPhamChiTietRepository sanPhamChiTietRepository;
 
+    @Autowired
+    LSHoaDonRepository lsHoaDonRepository;
+
     @Override
     public List<HoaDon> findHoaDonByTrangThai(long trang_thai_id) {
         List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByTrangThai(trang_thai_id);
@@ -69,6 +65,23 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             TrangThai trangThai = optionalTrangThai.get();
             hoaDon.setTrangThai(trangThai);
             hoaDonRepository.save(hoaDon);
+
+            if (trang_thai_id == 2) {
+                List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+                for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+
+                    SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
+                    if (hoaDonChiTiet.getSanPhamChiTiet().getId() == hoaDonChiTiet.getSanPhamChiTiet().getId()) {
+                        //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
+                        if (sanPhamChiTiet.getSoLuong() <= 0) {
+                            sanPhamChiTiet.setTrangThai(false);
+                        } else {
+                            sanPhamChiTiet.setTrangThai(true);
+                        }
+                        sanPhamChiTietRepository.save(sanPhamChiTiet);
+                    }
+                }
+            }
         }
         return ResponseEntity.ok().build();
     }
@@ -87,6 +100,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
             for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
                 SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
                 sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
+                sanPhamChiTiet.setTrangThai(true);
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
             }
         }
@@ -141,6 +155,13 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                 hoaDon.setGhiChu(ghiChu);
                 createTimeLine("Huỷ đơn", 5L, id_hoaDon, nguoiThaoTac);
                 hoaDonRepository.save(hoaDon);
+
+                List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+                for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+                    SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+                    sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
+                }
             }
         }
         List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByTrangThai(1L);
@@ -201,10 +222,15 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
 
             dto.add(hoaDonChiTietDTO);
         }
+
+
         Map<String, Object> response = new HashMap<>();
         response.put("list_HDCT", dto);
         response.put("hoaDon", hoaDon);
         response.put("timeLine", timeLine_ChoXacNhan);
+
+        List<LSHoaDon> lsHoaDons = lsHoaDonRepository.getLSHD(hoaDon.getId());
+        response.put("lsHoaDons", lsHoaDons);
         return ResponseEntity.ok().body(response);
     }
 
@@ -239,6 +265,9 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         response.put("hoaDon", hoaDon);
         response.put("timeLine_ChoXacNhan", timeLine_ChoXacNhan);
         response.put("timeLine_ChoGiaoHang", timeLine_ChoGiaoHang);
+
+        List<LSHoaDon> lsHoaDons = lsHoaDonRepository.getLSHD(hoaDon.getId());
+        response.put("lsHoaDons", lsHoaDons);
         return ResponseEntity.ok().body(response);
     }
 
@@ -275,6 +304,9 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         response.put("timeLine_ChoXacNhan", timeLine_ChoXacNhan);
         response.put("timeLine_ChoGiaoHang", timeLine_ChoGiaoHang);
         response.put("timeLine_DangGiaoHang", timeLine_DangGiaoHang);
+
+        List<LSHoaDon> lsHoaDons = lsHoaDonRepository.getLSHD(hoaDon.getId());
+        response.put("lsHoaDons", lsHoaDons);
         return ResponseEntity.ok().body(response);
     }
 
@@ -313,6 +345,9 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         response.put("timeLine_ChoGiaoHang", timeLine_ChoGiaoHang);
         response.put("timeLine_DangGiaoHang", timeLine_DangGiaoHang);
         response.put("timeLine_DaGiaoHang", timeLine_DaGiaoHang);
+
+        List<LSHoaDon> lsHoaDons = lsHoaDonRepository.getLSHD(hoaDon.getId());
+        response.put("lsHoaDons", lsHoaDons);
         return ResponseEntity.ok().body(response);
     }
 
@@ -347,6 +382,9 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         response.put("hoaDon", hoaDon);
         response.put("timeLine_ChoXacNhan", timeLine_ChoXacNhan);
         response.put("timeLine_DaHuy", timeLine_DaHuy);
+
+        List<LSHoaDon> lsHoaDons = lsHoaDonRepository.getLSHD(hoaDon.getId());
+        response.put("lsHoaDons", lsHoaDons);
         return ResponseEntity.ok().body(response);
     }
 
@@ -385,6 +423,9 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         response.put("timeLine_ChoGiaoHang", timeLine_ChoGiaoHang);
         response.put("timeLine_DangGiaoHang", timeLine_DangGiaoHang);
         response.put("timeLine_XacNhanDaGiao", timeLine_XacNhanDaGiao);
+
+        List<LSHoaDon> lsHoaDons = lsHoaDonRepository.getLSHD(hoaDon.getId());
+        response.put("lsHoaDons", lsHoaDons);
         return ResponseEntity.ok().body(response);
     }
 
@@ -455,6 +496,8 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         response.put("timeLine_DangGiaoHang", timeLine_DangGiaoHang);
         response.put("timeLine_DaGiaoHang", timeLine_DaGiaoHang);
         response.put("timeLine_DaHuy", timeLine_DaHuy);
+        List<LSHoaDon> lsHoaDons = lsHoaDonRepository.getLSHD(hoaDon.getId());
+        response.put("lsHoaDons", lsHoaDons);
         return ResponseEntity.ok().body(response);
     }
 

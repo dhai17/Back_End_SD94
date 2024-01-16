@@ -210,10 +210,9 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                 hoaDon.setKhuyenMai(khuyenMai);
                 hoaDonRepository.save(hoaDon);
             }
+            HoaDon hoaDon2 = hoaDonRepository.findByID(hoaDonDTO.getId());
+            return ResponseEntity.ok().body(hoaDon2);
         }
-
-        HoaDon hoaDon2 = hoaDonRepository.findByID(hoaDonDTO.getId());
-        return ResponseEntity.ok().body(hoaDon2);
     }
 
     @Override

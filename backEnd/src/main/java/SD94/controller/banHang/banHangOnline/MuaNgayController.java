@@ -11,12 +11,8 @@ import SD94.repository.hoaDon.HoaDonChiTietRepository;
 import SD94.repository.hoaDon.HoaDonRepository;
 import SD94.repository.khuyenMai.KhuyenMaiRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
-import SD94.repository.sanPham.KichCoRepository;
-import SD94.repository.sanPham.MauSacRepository;
-import SD94.repository.sanPham.SanPhamChiTietRepository;
 import SD94.service.service.MuaNgayService;
 
-import SD94.validator.DatHangCheckoutValidate;
 import SD94.validator.DatHangValidate;
 import SD94.validator.SanPhamValidate;
 import org.springframework.beans.factory.annotation.Autowired;

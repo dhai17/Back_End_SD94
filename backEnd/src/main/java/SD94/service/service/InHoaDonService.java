@@ -569,7 +569,6 @@ public class InHoaDonService {
             }else{
                 ghiChu = hoaDon.getGhiChu();
             }
-
             // Kiểm tra nếu khuyến mãi là null hoặc không có id
             if (km == null || km.getId() == null) {
                 formattedTienGiam = "0 đ";
