@@ -12,7 +12,7 @@ import java.util.Map;
 public interface HoaDonDatHangService {
     List<HoaDon> findHoaDonByTrangThai(long trang_thai_id);
 
-    ResponseEntity<Map<String, Boolean>> capNhatTrangThai(long trang_thai_id, long id_bill);
+    ResponseEntity<?> capNhatTrangThai(long trang_thai_id, long id_bill);
 
     ResponseEntity<Map<String, Boolean>> capNhatTrangThaiHuyDon(long trang_thai_id, long id_bill, String ghiChu);
 

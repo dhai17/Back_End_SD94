@@ -26,5 +26,4 @@ public interface SanPhamChiTietService {
     List<SanPhamChiTiet> searchDateProductDetails(String searchDate);
 
     ResponseEntity chinhSuaSoLuongSPCT(SanPhamChiTiet sanPhamChiTiet);
-
 }

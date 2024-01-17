@@ -227,30 +227,14 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
                 return ResponseEntity.badRequest().body(respone);
             } else {
                 for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
-                    cartDetailsRepository.deleteGioHangChiTiet(hoaDonChiTiet.getSanPhamChiTiet().getId());
                     SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
-                    if (hoaDonChiTiet.getSanPhamChiTiet().getId() == gioHangChiTiet.getSanPhamChiTiet().getId()) {
-                        sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
-
-                        //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
-                        if (sanPhamChiTiet.getSoLuong() == 0) {
-                            billDetailsRepository.deleteByID(6);
-
-                            List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
-                            for (GioHangChiTiet gioHangChiTiet1 : ghct) {
-                                cartDetailsRepository.deleteById(gioHangChiTiet1.getId());
-                            }
-                        } else {
-                            sanPhamChiTiet.setTrangThai(true);
-                        }
-                        sanPhamChiTietRepository.save(sanPhamChiTiet);
-                    }
+                    sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
                 }
             }
         }
 
         TrangThai trangThai = trangThaiRepository.findByID(1L);
-
         hoaDon.setGhiChu(dto.getGhiChu());
         hoaDon.setTongTienHoaDon(dto.getTongTienHoaDon());
         hoaDon.setTongTienDonHang(dto.getTongTienDonHang());

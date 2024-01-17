@@ -20,6 +20,9 @@ public class SanPhamChiTiet extends Base implements Serializable {
     @Column(name = "soLuong", columnDefinition = "int null")
     private Integer soLuong;
 
+    @Column(name = "soLuongTam", columnDefinition = "int null")
+    private Integer soLuongTam;
+
     @Column(name = "trangThai", columnDefinition = "bit")
     private boolean trangThai;
 

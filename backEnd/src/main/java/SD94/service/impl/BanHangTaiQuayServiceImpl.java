@@ -283,6 +283,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                     return ResponseEntity.badRequest().body(response);
                 } else {
                     sanPhamChiTiet.setSoLuong(soLuongBanDau - soLuongHoaDon);
+                    sanPhamChiTiet.setSoLuongTam(soLuongBanDau - soLuongHoaDon);
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
                 }
 

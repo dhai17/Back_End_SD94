@@ -112,7 +112,8 @@ public class ChinhSuaHoaDonController {
                     hoaDon.setTongTienDonHang(total + thanhTienThem);
                     hoaDonRepository.save(hoaDon);
 
-                    sanPhamChiTiet.setSoLuong(soLuongBanDau - dto.getSoLuong());
+//                    sanPhamChiTiet.setSoLuong(soLuongBanDau - dto.getSoLuong());
+                    sanPhamChiTiet.setSoLuongTam(soLuongBanDau - dto.getSoLuong());
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
 
                     NhanVien nhanVien = nhanVienRepository.findByEmail(dto.getEmail_user());
@@ -205,7 +206,8 @@ public class ChinhSuaHoaDonController {
             hoaDon.setTongTienDonHang(total + thanhTienMoiThem);
             hoaDonRepository.save(hoaDon);
 
-            sanPhamChiTiet.setSoLuong(tongSoLuong - soLuongUpdate);
+//            sanPhamChiTiet.setSoLuong(tongSoLuong - soLuongUpdate);
+            sanPhamChiTiet.setSoLuongTam(tongSoLuong - soLuongUpdate);
             sanPhamChiTietRepository.save(sanPhamChiTiet);
 
             NhanVien nhanVien = nhanVienRepository.findByEmail(dto.getEmail_user());
@@ -247,6 +249,7 @@ public class ChinhSuaHoaDonController {
 
         SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
         sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
+        sanPhamChiTiet.setSoLuongTam(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
         sanPhamChiTietRepository.save(sanPhamChiTiet);
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDonChiTiet.getHoaDon().getId());
         if (hoaDonChiTiets.size() <= 1) {

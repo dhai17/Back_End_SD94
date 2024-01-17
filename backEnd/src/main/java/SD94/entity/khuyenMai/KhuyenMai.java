@@ -19,7 +19,7 @@ import java.util.Date;
 @Table(name = "KhuyenMai")
 public class KhuyenMai extends Base implements Serializable {
 
-    @Column(name = "tenKhuyenMai", columnDefinition = "nvarchar(256) not null unique")
+    @Column(name = "tenKhuyenMai", columnDefinition = "nvarchar(256) not null")
     private String tenKhuyenMai;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

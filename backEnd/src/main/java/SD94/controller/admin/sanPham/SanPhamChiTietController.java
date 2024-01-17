@@ -73,13 +73,6 @@ public class SanPhamChiTietController {
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
             }
 
-//            if (sanPhamChiTiet.getSoLuong() == 0) {
-//                sanPhamChiTiet.setTrangThai(false);
-//                sanPhamChiTietRepository.save(sanPhamChiTiet);
-//            } else {
-//                sanPhamChiTiet.setTrangThai(true);
-//                sanPhamChiTietRepository.save(sanPhamChiTiet);
-//            }
         }
         return ResponseEntity.ok().body(product);
     }
@@ -120,6 +113,7 @@ public class SanPhamChiTietController {
         SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
         sanPhamChiTiet.setKichCo(size);
         sanPhamChiTiet.setSoLuong(detailsDTO.getQuantity());
+        sanPhamChiTiet.setSoLuongTam(detailsDTO.getQuantity());
         sanPhamChiTietRepository.save(sanPhamChiTiet);
         return sanPhamChiTiet;
     }

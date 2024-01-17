@@ -28,20 +28,20 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
     public List<KhuyenMai> findAllkhuyenMai() {
         List<KhuyenMai> khuyenMais = khuyenMaiRepository.findAllDiscount();
         long homNay = new Date().getTime();
-        for(KhuyenMai khuyenMai : khuyenMais){
+        for (KhuyenMai khuyenMai : khuyenMais) {
             long startDate = khuyenMai.getNgayBatDau().getTime();
             long endDate = khuyenMai.getNgayKetThuc().getTime();
             long idkhuyeMai = khuyenMai.getId();
 
-            if (endDate < homNay && khuyenMai.getTrangThai() != 2){
+            if (endDate < homNay && khuyenMai.getTrangThai() != 2) {
                 khuyenMaiRepository.updateStatusDiscount(2, idkhuyeMai);
             }
 
-            if(startDate > homNay && khuyenMai.getTrangThai() != 1){
+            if (startDate > homNay && khuyenMai.getTrangThai() != 1) {
                 khuyenMaiRepository.updateStatusDiscount(1, idkhuyeMai);
             }
 
-            if(startDate < homNay && endDate > homNay){
+            if (startDate < homNay && endDate > homNay) {
                 khuyenMaiRepository.updateStatusDiscount(0, idkhuyeMai);
             }
         }
@@ -56,6 +56,15 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
     public ResponseEntity<KhuyenMai> saveEdit(KhuyenMai khuyenMaiUpdate) {
         String errorMessage;
         Message errorResponse;
+
+        KhuyenMai khuyenMaiCheck = khuyenMaiRepository.findByNameKM(khuyenMaiUpdate.getTenKhuyenMai());
+        if(khuyenMaiCheck != null){
+            if (khuyenMaiCheck.getTenKhuyenMai().equals(khuyenMaiUpdate.getTenKhuyenMai()) && khuyenMaiCheck.getId() != khuyenMaiUpdate.getId()) {
+                errorMessage = "Trùng tên khuyến mại";
+                errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
+                return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+            }
+        }
 
         if (khuyenMaiUpdate.getTenKhuyenMai() == "" || khuyenMaiUpdate.getNgayBatDau() == null || khuyenMaiUpdate.getNgayKetThuc() == null || khuyenMaiUpdate.getPhanTramGiam() == 0 || khuyenMaiUpdate.getTienGiamToiDa() == 0) {
             errorMessage = "Nhập đầy đủ thông tin";
@@ -74,6 +83,8 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
             errorResponse = new Message(errorMessage, TrayIcon.MessageType.ERROR);
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
         }
+
+
 
         // Định dạng của ngày tháng khi trả về
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);

@@ -126,6 +126,7 @@ public class SanPhamController {
             spct.setKichCo(kichCo);
             spct.setTrangThai(true);
             spct.setSoLuong(sanPhamDTO.getSoLuong());
+            spct.setSoLuongTam(sanPhamDTO.getSoLuong());
             sanPhamChiTietRepository.save(spct);
 
             respone.put("success", "Tạo mới thành công");
@@ -138,6 +139,7 @@ public class SanPhamController {
     public ResponseEntity<?> ChinhSuaSoLuongSanPhamChiTiet(@RequestBody SPCTDTO spctdto) {
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(spctdto.getSpctId());
         sanPhamChiTiet.setSoLuong(spctdto.getSoLuong());
+        sanPhamChiTiet.setSoLuongTam(spctdto.getSoLuong());
         sanPhamChiTietRepository.save(sanPhamChiTiet);
         List<SanPhamChiTiet> sanPhamChiTiets = sanPhamChiTietRepository.findByProductID(spctdto.getSanPhamId());
         return ResponseEntity.ok().body(sanPhamChiTiets);

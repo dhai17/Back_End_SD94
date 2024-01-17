@@ -128,6 +128,7 @@ public class VnpayController {
         for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
+            sanPhamChiTiet.setSoLuongTam(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
             if (sanPhamChiTiet.getSoLuong() == 0) {
 
                 hoaDonChiTietRepository.deleteByID(6);
@@ -195,6 +196,7 @@ public class VnpayController {
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
+            sanPhamChiTiet.setSoLuongTam(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
             if (sanPhamChiTiet.getSoLuong() == 0) {
 
                 hoaDonChiTietRepository.deleteByID(6);

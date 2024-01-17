@@ -168,6 +168,7 @@ public class SanPhamServiceImpl implements SanPhamService {
                 sanPhamChiTiet.setKichCo(kichCo);
                 sanPhamChiTiet.setTrangThai(true);
                 sanPhamChiTiet.setSoLuong(sanPhamDTO.getSoLuong());
+                sanPhamChiTiet.setSoLuongTam(sanPhamDTO.getSoLuong());
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
                 sanPhamChiTietList.add(sanPhamChiTiet);
             }

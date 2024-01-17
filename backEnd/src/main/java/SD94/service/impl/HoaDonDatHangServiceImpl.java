@@ -6,6 +6,7 @@ import SD94.dto.HoaDonDTO;
 import SD94.entity.gioHang.GioHangChiTiet;
 import SD94.entity.hoaDon.*;
 import SD94.entity.sanPham.SanPhamChiTiet;
+import SD94.repository.gioHang.GioHangChiTietRepository;
 import SD94.repository.hoaDon.*;
 import SD94.repository.nhanVien.NhanVienRepository;
 import SD94.repository.sanPham.HinhAnhRepository;
@@ -51,6 +52,9 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     @Autowired
     LSHoaDonRepository lsHoaDonRepository;
 
+    @Autowired
+    GioHangChiTietRepository gioHangChiTietRepository;
+
     @Override
     public List<HoaDon> findHoaDonByTrangThai(long trang_thai_id) {
         List<HoaDon> hoaDonList = hoaDonRepository.findHoaDonByTrangThai(trang_thai_id);
@@ -58,32 +62,57 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Boolean>> capNhatTrangThai(long trang_thai_id, long id_bill) {
+    public ResponseEntity<?> capNhatTrangThai(long trang_thai_id, long id_bill) {
+        Map<String, String> respone = new HashMap<>();
         HoaDon hoaDon = hoaDonRepository.findByID(id_bill);
         Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id);
         if (optionalTrangThai.isPresent()) {
-            TrangThai trangThai = optionalTrangThai.get();
-            hoaDon.setTrangThai(trangThai);
-            hoaDonRepository.save(hoaDon);
-
             if (trang_thai_id == 2) {
                 List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
                 for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
-
                     SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
                     if (hoaDonChiTiet.getSanPhamChiTiet().getId() == hoaDonChiTiet.getSanPhamChiTiet().getId()) {
+                        int soLuong = sanPhamChiTiet.getSoLuong();
+                        int soLuongSPHoaDon = hoaDonChiTiet.getSoLuong();
+                        int soLuongUpdate = soLuong - soLuongSPHoaDon;
+                        sanPhamChiTiet.setSoLuong(soLuongUpdate);
+                        sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
+
                         //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
-                        if (sanPhamChiTiet.getSoLuong() <= 0) {
+                        if (soLuongUpdate == 0) {
+                            hoaDonChiTietRepository.deleteByID(6);
+
+                            List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                            for (GioHangChiTiet gioHangChiTiet1 : ghct) {
+                                gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
+                            }
                             sanPhamChiTiet.setTrangThai(false);
+                        } else if (soLuongUpdate < 0) {
+                            respone.put("err", "Số lượng cửa sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không đủ để giao hàng, vui lòng thử lại sau");
+                            return ResponseEntity.badRequest().body(respone);
                         } else {
+
+                            TrangThai trangThai = optionalTrangThai.get();
+                            hoaDon.setTrangThai(trangThai);
+                            hoaDonRepository.save(hoaDon);
                             sanPhamChiTiet.setTrangThai(true);
+
+                            List<HoaDon> result = findHoaDonByTrangThai(1);
+                            respone.put("success", result.toString());
+                            return ResponseEntity.ok().body(respone);
                         }
                         sanPhamChiTietRepository.save(sanPhamChiTiet);
                     }
                 }
             }
         }
-        return ResponseEntity.ok().build();
+
+        TrangThai trangThai = optionalTrangThai.get();
+        hoaDon.setTrangThai(trangThai);
+        hoaDonRepository.save(hoaDon);
+        List<HoaDon> result = findHoaDonByTrangThai(1);
+        respone.put("success", result.toString());
+        return ResponseEntity.ok().body(respone);
     }
 
     @Override
@@ -91,17 +120,26 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
         HoaDon hoaDon = hoaDonRepository.findByID(id_bill);
         Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id);
         if (optionalTrangThai.isPresent()) {
-            TrangThai trangThai = optionalTrangThai.get();
-            hoaDon.setTrangThai(trangThai);
-            hoaDon.setGhiChu(ghiChu);
-            hoaDonRepository.save(hoaDon);
-
             List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
-            for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
-                SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
-                sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
-                sanPhamChiTiet.setTrangThai(true);
-                sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+            if (hoaDon.getTrangThai().getId() == 3) {
+                for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+                    SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+                    sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuongTam());
+                    sanPhamChiTiet.setSoLuongTam(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
+                    sanPhamChiTiet.setTrangThai(true);
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+                    TrangThai trangThai = optionalTrangThai.get();
+                    hoaDon.setTrangThai(trangThai);
+                    hoaDon.setGhiChu(ghiChu);
+                    hoaDonRepository.save(hoaDon);
+                }
+            } else {
+                TrangThai trangThai = optionalTrangThai.get();
+                hoaDon.setTrangThai(trangThai);
+                hoaDon.setGhiChu(ghiChu);
+                hoaDonRepository.save(hoaDon);
             }
         }
         return ResponseEntity.ok().build();
@@ -160,6 +198,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                 for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
                     SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
                     sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
+                    sanPhamChiTiet.setSoLuongTam(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
                 }
             }

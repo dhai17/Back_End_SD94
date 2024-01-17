@@ -22,5 +22,4 @@ public interface BanHangOnlineService {
     ResponseEntity<?> addDiscount(HoaDonDTO hoaDonDTO);
 
     ResponseEntity datHang(HoaDonDTO dto);
-
 }

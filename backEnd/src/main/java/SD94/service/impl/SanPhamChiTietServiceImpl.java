@@ -73,6 +73,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                     sanPhamChiTiet.setTrangThai(true);
                 }
                 sanPhamChiTiet.setSoLuong(sanPhamChiTietUpdate.getSoLuong());
+                sanPhamChiTiet.setSoLuongTam(sanPhamChiTietUpdate.getSoLuong());
                 sanPhamChiTiet.setMauSac(sanPhamChiTietUpdate.getMauSac());
                 sanPhamChiTiet.setKichCo(sanPhamChiTietUpdate.getKichCo());
                 SanPham sanPham = sanPhamChiTietUpdate.getSanPham();
@@ -154,6 +155,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public ResponseEntity chinhSuaSoLuongSPCT(SanPhamChiTiet sanPhamChiTiet) {
         SanPhamChiTiet sanPhamChiTiets = repository.findByID(sanPhamChiTiet.getId());
         sanPhamChiTiets.setSoLuong(sanPhamChiTiet.getSoLuong());
+        sanPhamChiTiets.setSoLuongTam(sanPhamChiTiet.getSoLuong());
         repository.save(sanPhamChiTiets);
         return new ResponseEntity(HttpStatus.OK);
     }
