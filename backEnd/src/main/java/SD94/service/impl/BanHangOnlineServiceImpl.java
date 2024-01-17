@@ -208,11 +208,15 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
     @Transactional
     @Override
     public ResponseEntity datHang(HoaDonDTO dto) {
+        Map<String, String> respone = new HashMap<>();
         HoaDon hoaDon = billRepository.findByID(dto.getId());
         KhachHang khachHang = khachHangRepository.findByEmail(dto.getEmail_user());
         GioHang gioHang = gioHangRepository.findbyCustomerID(khachHang.getId());
         List<GioHangChiTiet> gioHangChiTiets = cartDetailsRepository.findByCartID(gioHang.getId());
         List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(hoaDon.getId());
+
+        int soLuongUpdate = 0;
+        SanPhamChiTiet spct = new SanPhamChiTiet();
 
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             cartDetailsRepository.deleteGioHangChiTiet(hoaDonChiTiet.getSanPhamChiTiet().getId());
@@ -221,10 +225,12 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
             for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
                 SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
                 if (hoaDonChiTiet.getSanPhamChiTiet().getId() == gioHangChiTiet.getSanPhamChiTiet().getId()) {
-                    sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
+                    int soLuong = sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong();
+                    soLuongUpdate = soLuong;
+                    spct = sanPhamChiTiet;
 
                     //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
-                    if (sanPhamChiTiet.getSoLuong() <= 0) {
+                    if (sanPhamChiTiet.getSoLuong() == 0) {
 //                        sanPhamChiTiet.setTrangThai(false);
 
                         List<HoaDonChiTiet> hdct = billDetailsRepository.findBySPCTID(sanPhamChiTiet.getId());
@@ -236,7 +242,10 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
                         for (GioHangChiTiet gioHangChiTiet1 : ghct) {
                             cartDetailsRepository.deleteById(gioHangChiTiet1.getId());
                         }
-                    } else {
+                    } else if (soLuong < 0) {
+                        respone.put("errors", "Đã có lỗi xảy ra vui lòng thử lại");
+                        return ResponseEntity.badRequest().body(respone);
+                    }else {
                         sanPhamChiTiet.setTrangThai(true);
                     }
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
@@ -275,6 +284,9 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
                 e.printStackTrace();
             }
         }
+
+        spct.setSoLuong(soLuongUpdate);
+        sanPhamChiTietRepository.save(spct);
 
         hoaDonDatHangService.createTimeLine("Tạo đơn hàng", 1L, hoaDon.getId(), khachHang.getHoTen());
         return ResponseEntity.ok(HttpStatus.OK);
