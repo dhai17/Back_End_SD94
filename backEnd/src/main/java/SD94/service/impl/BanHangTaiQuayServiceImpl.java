@@ -292,6 +292,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                     TrangThai trangThai = trangThaiRepository.findByID(7L);
                     hoaDon.setTrangThai(trangThai);
                     hoaDonRepository.save(hoaDon);
+
                     hoaDonChiTietRepository.deleteByID(6);
 
                     List<GioHangChiTiet> gioHangChiTiets = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
@@ -303,6 +304,8 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
 
             NhanVien nhanVien = nhanVienRepository.findByEmail(hoaDonDTO.getEmail_user());
             hoaDon.setNhanVien(nhanVien);
+            TrangThai trangThai = trangThaiRepository.findByID(7L);
+            hoaDon.setTrangThai(trangThai);
             hoaDonRepository.save(hoaDon);
             response.put("message", "Thanh toán thành công");
             return ResponseEntity.status(HttpStatus.OK).body(response);
