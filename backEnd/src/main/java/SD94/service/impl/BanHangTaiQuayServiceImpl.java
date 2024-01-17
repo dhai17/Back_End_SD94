@@ -172,7 +172,6 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
-//            sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
             sanPhamChiTietRepository.save(sanPhamChiTiet);
         }
 

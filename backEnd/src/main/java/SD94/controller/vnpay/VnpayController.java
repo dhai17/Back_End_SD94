@@ -34,7 +34,9 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class VnpayController {
@@ -75,6 +77,21 @@ public class VnpayController {
 
     @PostMapping("/payment/create")
     public ResponseEntity<?> createUrl(@RequestBody HoaDonDTO hoaDonDTO) {
+        Map<String, String> respone = new HashMap<>();
+
+        HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+            SanPhamChiTiet spct = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
+            int soLuong = spct.getSoLuong();
+            int soLuongSPHoaDon = hoaDonChiTiet.getSoLuong();
+            int soLuongUpdate = soLuong - soLuongSPHoaDon;
+
+            if (soLuongUpdate < 0) {
+                respone.put("err", "Đã có lỗi xảy ra vui lòng thử lại sau");
+                return ResponseEntity.badRequest().body(respone);
+            }
+        }
         ResponseEntity<?> response = ThanhToanValidate.thanhtoan(hoaDonDTO);
         if (!response.getStatusCode().is2xxSuccessful()) {
             return response;
@@ -233,7 +250,7 @@ public class VnpayController {
                 e.printStackTrace();
             }
         }
-        
+
         if (paymentStatus == 1) {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:5501/templates/banHang/online/vnpay/Success.html"));
