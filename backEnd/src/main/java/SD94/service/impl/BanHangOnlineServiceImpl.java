@@ -234,10 +234,7 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
 
                         //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
                         if (sanPhamChiTiet.getSoLuong() == 0) {
-                            List<HoaDonChiTiet> hdct = billDetailsRepository.findBySPCTID(sanPhamChiTiet.getId());
-                            for (HoaDonChiTiet ListHDCT : hdct) {
-                                billDetailsRepository.deleteById(ListHDCT.getId());
-                            }
+                            billDetailsRepository.deleteByID(6);
 
                             List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
                             for (GioHangChiTiet gioHangChiTiet1 : ghct) {

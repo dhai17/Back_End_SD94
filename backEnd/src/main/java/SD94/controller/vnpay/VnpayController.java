@@ -128,13 +128,9 @@ public class VnpayController {
         for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong());
-            if (sanPhamChiTiet.getSoLuong() <= 0) {
-//                sanPhamChiTiet.setTrangThai(false);
+            if (sanPhamChiTiet.getSoLuong() == 0) {
 
-                List<HoaDonChiTiet> hdct = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
-                for (HoaDonChiTiet ListHDCT : hdct) {
-                    hoaDonChiTietRepository.deleteById(ListHDCT.getId());
-                }
+                hoaDonChiTietRepository.deleteByID(6);
 
                 List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
                 for (GioHangChiTiet gioHangChiTiet1 : ghct) {
@@ -199,13 +195,9 @@ public class VnpayController {
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
-            if (sanPhamChiTiet.getSoLuong() <= 0) {
-//                sanPhamChiTiet.setTrangThai(false);
+            if (sanPhamChiTiet.getSoLuong() == 0) {
 
-                List<HoaDonChiTiet> hdct = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
-                for (HoaDonChiTiet ListHDCT : hdct) {
-                    hoaDonChiTietRepository.deleteById(ListHDCT.getId());
-                }
+                hoaDonChiTietRepository.deleteByID(6);
 
                 List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
                 for (GioHangChiTiet gioHangChiTiet1 : ghct) {

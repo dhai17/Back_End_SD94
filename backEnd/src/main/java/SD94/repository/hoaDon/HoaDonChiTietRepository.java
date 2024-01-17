@@ -3,6 +3,7 @@ package SD94.repository.hoaDon;
 
 import SD94.entity.hoaDon.HoaDonChiTiet;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -35,4 +36,8 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, Lo
             "  AND hoa_don_chi_tiet.is_deleted = true\n" +
             "  AND hoa_don.trang_thai_id = 6;", nativeQuery = true)
     List<HoaDonChiTiet> findBySPCTIDDeleteTrue(long san_pham_chi_tiet_id);
+
+    @Modifying
+    @Query(value = "DELETE FROM hoa_don_chi_tiet WHERE hoa_don_chi_tiet.hoa_don_id IN (SELECT id FROM hoa_don WHERE trang_thai_id = ?)", nativeQuery = true)
+    void deleteByID(long trang_thai_id);
 }

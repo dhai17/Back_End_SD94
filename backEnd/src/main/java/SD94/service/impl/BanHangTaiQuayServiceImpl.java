@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -261,6 +262,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Transactional
     @Override
     public ResponseEntity thanhToan(HoaDonDTO hoaDonDTO) {
         HoaDon hoaDon = hoaDonRepository.findByID(hoaDonDTO.getId());
@@ -284,14 +286,13 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
                 }
 
-                if (sanPhamChiTiet.getSoLuong() <= 0) {
+                if (sanPhamChiTiet.getSoLuong() == 0) {
                     sanPhamChiTiet.setTrangThai(false);
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
-
-                    List<HoaDonChiTiet> hdct = hoaDonChiTietRepository.findBySPCTID(sanPhamChiTiet.getId());
-                    for (HoaDonChiTiet ListHDCT : hdct) {
-                        hoaDonChiTietRepository.deleteById(ListHDCT.getId());
-                    }
+                    TrangThai trangThai = trangThaiRepository.findByID(7L);
+                    hoaDon.setTrangThai(trangThai);
+                    hoaDonRepository.save(hoaDon);
+                    hoaDonChiTietRepository.deleteByID(6);
 
                     List<GioHangChiTiet> gioHangChiTiets = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
                     for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
@@ -300,24 +301,21 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                 }
             }
 
-            TrangThai trangThai = trangThaiRepository.findByID(7L);
             NhanVien nhanVien = nhanVienRepository.findByEmail(hoaDonDTO.getEmail_user());
-            hoaDon.setTrangThai(trangThai);
             hoaDon.setNhanVien(nhanVien);
             hoaDonRepository.save(hoaDon);
             response.put("message", "Thanh toán thành công");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-
+    @Transactional
     @Override
     public ResponseEntity<?> xoaHDCT(HoaDonChiTietDTO dto) {
         Optional<HoaDonChiTiet> optionalHoaDonChiTiet = hoaDonChiTietRepository.findById(dto.getId());
 
         if (optionalHoaDonChiTiet.isPresent()) {
             HoaDonChiTiet hoaDonChiTiet = optionalHoaDonChiTiet.get();
-            hoaDonChiTiet.setDeleted(true);
-            hoaDonChiTietRepository.save(hoaDonChiTiet);
+            hoaDonChiTietRepository.deleteById(hoaDonChiTiet.getId());
 
             HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
             int tongTienHoaDon = 0;
