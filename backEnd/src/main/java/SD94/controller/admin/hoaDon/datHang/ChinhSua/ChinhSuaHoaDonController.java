@@ -120,6 +120,7 @@ public class ChinhSuaHoaDonController {
                     // Lưu lịch sử hóa đơn
                     LSHoaDon lichSuHoaDon = new LSHoaDon();
                     lichSuHoaDon.setNguoiThaoTac(nhanVien.getHoTen());
+                    lichSuHoaDon.setNgayTao(new Date());
                     lichSuHoaDon.setHoaDon(hoaDon);
                     lichSuHoaDon.setThaoTac("Thêm mới " + dto.getSoLuong() + " sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " vào hóa đơn");
                     lsHoaDonRepository.save(lichSuHoaDon);
@@ -257,7 +258,9 @@ public class ChinhSuaHoaDonController {
             int totalAmount = 0;
             int total = hoaDon.getTongTienDonHang();
             for (HoaDonChiTiet hdct : hoaDonChiTiets) {
-                totalAmount += hdct.getThanhTien();
+                if(hdct.getId()!=dto.getId()){
+                    totalAmount += hdct.getThanhTien();
+                }
             }
             hoaDon.setTongTienHoaDon(totalAmount);
 
