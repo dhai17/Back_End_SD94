@@ -88,7 +88,7 @@ public class VnpayController {
             int soLuongUpdate = soLuong - soLuongSPHoaDon;
 
             if (soLuongUpdate < 0) {
-                respone.put("err", "Đã có lỗi xảy ra vui lòng thử lại sau");
+                respone.put("err", "Hiện tại sản phẩm " + spct.getSanPham().getTenSanPham() + " kích cỡ " + spct.getKichCo().getKichCo() + " màu sắc " + spct.getMauSac().getTenMauSac() + " chúng tôi chỉ còn số lượng là " + spct.getSoLuong() + " bạn vui lòng đặt hàng và thanh toán lại!");
                 return ResponseEntity.badRequest().body(respone);
             }
         }
