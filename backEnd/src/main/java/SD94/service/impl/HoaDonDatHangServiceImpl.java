@@ -79,19 +79,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                         sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
 
                         //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
-                        if (soLuongUpdate == 0) {
-                            hoaDonChiTietRepository.deleteByID(6);
-
-                            List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
-                            for (GioHangChiTiet gioHangChiTiet1 : ghct) {
-                                gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
-                            }
-                            sanPhamChiTiet.setTrangThai(false);
-                        } else if (soLuongUpdate < 0) {
-                            respone.put("err", "Số lượng cửa sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không đủ để giao hàng, vui lòng thử lại sau");
-                            return ResponseEntity.badRequest().body(respone);
-                        } else {
-
+                        if (hoaDon.getLoaiHoaDon() == 0) {
                             TrangThai trangThai = optionalTrangThai.get();
                             hoaDon.setTrangThai(trangThai);
                             hoaDonRepository.save(hoaDon);
@@ -100,8 +88,32 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                             List<HoaDon> result = findHoaDonByTrangThai(1);
                             respone.put("success", result.toString());
                             return ResponseEntity.ok().body(respone);
+                        } else if (hoaDon.getLoaiHoaDon() == 0) {
+                            if (soLuongUpdate == 0) {
+                                hoaDonChiTietRepository.deleteByID(6);
+
+                                List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                                for (GioHangChiTiet gioHangChiTiet1 : ghct) {
+                                    gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
+                                }
+                                sanPhamChiTiet.setTrangThai(false);
+                            } else if (soLuongUpdate < 0) {
+                                respone.put("err", "Số lượng cửa sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không đủ để giao hàng, vui lòng thử lại sau");
+                                return ResponseEntity.badRequest().body(respone);
+                            } else {
+
+                                TrangThai trangThai = optionalTrangThai.get();
+                                hoaDon.setTrangThai(trangThai);
+                                hoaDonRepository.save(hoaDon);
+                                sanPhamChiTiet.setTrangThai(true);
+
+                                List<HoaDon> result = findHoaDonByTrangThai(1);
+                                respone.put("success", result.toString());
+                                return ResponseEntity.ok().body(respone);
+                            }
+                            sanPhamChiTietRepository.save(sanPhamChiTiet);
                         }
-                        sanPhamChiTietRepository.save(sanPhamChiTiet);
+
                     }
                 }
             }
