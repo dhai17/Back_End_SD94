@@ -114,7 +114,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         HoaDon hoaDon = hoaDonRepository.findByID(dto.getId_hoaDon());
         Optional<HoaDonChiTiet> optionalHDCT = hoaDonChiTietRepository.checkHDCT(hoaDon.getId(), sanPhamChiTiet.getId());
 
-        int soLuongBanDau = sanPhamChiTiet.getSoLuong();
+        int soLuongBanDau = sanPhamChiTiet.getSoLuongTam();
         int soLuongThem = dto.getSoLuong();
         if (soLuongThem > soLuongBanDau) {
             respone.put("err", "Số lượng nhập vào lớn hơn số lượng hiện có");
@@ -122,10 +122,10 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         } else {
             if (optionalHDCT.isPresent()) {
                 HoaDonChiTiet hoaDonChiTiet = optionalHDCT.get();
-                int soLuongDuocThemTiep = sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong();
+                int soLuongDuocThemTiep = sanPhamChiTiet.getSoLuongTam() - hoaDonChiTiet.getSoLuong();
                 int check = soLuongDuocThemTiep - dto.getSoLuong();
-                if (hoaDonChiTiet.getSoLuong() == sanPhamChiTiet.getSoLuong()) {
-                    respone.put("err", "Bạn đã có " + sanPhamChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
+                if (hoaDonChiTiet.getSoLuong() == sanPhamChiTiet.getSoLuongTam()) {
+                    respone.put("err", "Bạn đã có " + hoaDonChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
                     return ResponseEntity.badRequest().body(respone);
                 } else if (check < 0) {
                     respone.put("err", "Bạn đã có " + hoaDonChiTiet.getSoLuong() + " sản phẩm này trong hóa đơn, bạn chỉ có thể thêm tiếp được tối đa " + soLuongDuocThemTiep + " sản phẩm này");
