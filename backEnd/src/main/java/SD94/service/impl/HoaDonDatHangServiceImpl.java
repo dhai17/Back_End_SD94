@@ -78,7 +78,6 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                         int soLuongSPHoaDon = hoaDonChiTiet.getSoLuong();
                         int soLuongUpdate = soLuong - soLuongSPHoaDon;
                         if (soLuongUpdate >= 0) {
-                            //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
                             if (hoaDon.getLoaiHoaDon() == 1 && soLuongUpdate >= 0) {
                                 TrangThai trangThai = optionalTrangThai.get();
                                 hoaDon.setTrangThai(trangThai);
@@ -110,9 +109,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                                     return ResponseEntity.ok().body(respone);
                                 }
                                 sanPhamChiTietRepository.save(sanPhamChiTiet);
-
                             }
-
                         } else if (soLuongUpdate < 0) {
                             respone.put("err", "Số lượng cửa sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không đủ để giao hàng, vui lòng thử lại sau");
                             return ResponseEntity.badRequest().body(respone);
@@ -157,6 +154,11 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
 
             } else if (hoaDon.getTrangThai().getId() == 1) {
                 if (hoaDon.getLoaiHoaDon() == 0) {
+                    TrangThai trangThai = optionalTrangThai.get();
+                    hoaDon.setTrangThai(trangThai);
+                    hoaDon.setGhiChu(ghiChu);
+                    hoaDonRepository.save(hoaDon);
+                } else if (hoaDon.getLoaiHoaDon() == 1) {
                     for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
                         SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
                         sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
@@ -168,11 +170,6 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                         hoaDon.setGhiChu(ghiChu);
                         hoaDonRepository.save(hoaDon);
                     }
-                } else if (hoaDon.getLoaiHoaDon() == 1) {
-                    TrangThai trangThai = optionalTrangThai.get();
-                    hoaDon.setTrangThai(trangThai);
-                    hoaDon.setGhiChu(ghiChu);
-                    hoaDonRepository.save(hoaDon);
                 }
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
