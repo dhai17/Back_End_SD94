@@ -77,8 +77,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                         int soLuong = sanPhamChiTiet.getSoLuong();
                         int soLuongSPHoaDon = hoaDonChiTiet.getSoLuong();
                         int soLuongUpdate = soLuong - soLuongSPHoaDon;
-                        sanPhamChiTiet.setSoLuong(soLuongUpdate);
-                        sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
+
 
                         //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
                         if (hoaDon.getLoaiHoaDon() == 1) {
@@ -91,6 +90,8 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                             respone.put("success", result.toString());
                             return ResponseEntity.ok().body(respone);
                         } else if (hoaDon.getLoaiHoaDon() == 0) {
+                            sanPhamChiTiet.setSoLuong(soLuongUpdate);
+                            sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
                             if (soLuongUpdate >= 0) {
                                 hoaDonChiTietRepository.deleteByID(6);
 

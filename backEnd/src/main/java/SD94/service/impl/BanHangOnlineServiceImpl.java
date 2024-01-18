@@ -100,10 +100,11 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
                     respone.put("err", "Sản phẩm đã ngừng kinh doanh");
                     return ResponseEntity.badRequest().body(respone);
                 } else {
-                    if (gioHangChiTiet.getSoLuong() > sanPhamChiTiet.getSoLuong()) {
+                    if (gioHangChiTiet.getSoLuong() > sanPhamChiTiet.getSoLuongTam()) {
                         respone.put("err", "Số lượng của sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không được vượt quá " + sanPhamChiTiet.getSoLuong());
                         return ResponseEntity.badRequest().body(respone);
                     }
+                    System.out.println(gioHangChiTiet);
                     HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
                     hoaDonChiTiet.setSanPhamChiTiet(gioHangChiTiet.getSanPhamChiTiet());
                     hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
@@ -112,6 +113,9 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
                     hoaDonChiTiet.setHoaDon(hoaDon);
                     billDetailsRepository.save(hoaDonChiTiet);
                 }
+            }else {
+                respone.put("err", "Đã có lỗi xảy ra vui lòng thử lại sau");
+                return ResponseEntity.badRequest().body(respone);
             }
         }
         idBill = hoaDon.getId();
