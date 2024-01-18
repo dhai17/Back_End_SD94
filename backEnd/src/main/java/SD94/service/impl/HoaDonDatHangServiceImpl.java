@@ -77,30 +77,9 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                         int soLuong = sanPhamChiTiet.getSoLuong();
                         int soLuongSPHoaDon = hoaDonChiTiet.getSoLuong();
                         int soLuongUpdate = soLuong - soLuongSPHoaDon;
-
-
-                        //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
-                        if (hoaDon.getLoaiHoaDon() == 1) {
-                            TrangThai trangThai = optionalTrangThai.get();
-                            hoaDon.setTrangThai(trangThai);
-                            hoaDonRepository.save(hoaDon);
-                            sanPhamChiTiet.setTrangThai(true);
-
-                            List<HoaDon> result = findHoaDonByTrangThai(1);
-                            respone.put("success", result.toString());
-                            return ResponseEntity.ok().body(respone);
-                        } else if (hoaDon.getLoaiHoaDon() == 0) {
-                            sanPhamChiTiet.setSoLuong(soLuongUpdate);
-                            sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
-                            if (soLuongUpdate >= 0) {
-                                hoaDonChiTietRepository.deleteByID(6);
-
-                                List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
-                                for (GioHangChiTiet gioHangChiTiet1 : ghct) {
-                                    gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
-                                }
-                                sanPhamChiTiet.setTrangThai(false);
-
+                        if (soLuongUpdate >= 0) {
+                            //Nếu số lượng của sản phẩm sau khi đặt hàng trở về 0 thì xóa sản phẩm đó ở mọi hóa đơn cũng như giỏ hàng
+                            if (hoaDon.getLoaiHoaDon() == 1 && soLuongUpdate >= 0) {
                                 TrangThai trangThai = optionalTrangThai.get();
                                 hoaDon.setTrangThai(trangThai);
                                 hoaDonRepository.save(hoaDon);
@@ -109,11 +88,34 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                                 List<HoaDon> result = findHoaDonByTrangThai(1);
                                 respone.put("success", result.toString());
                                 return ResponseEntity.ok().body(respone);
-                            } else if (soLuongUpdate < 0) {
-                                respone.put("err", "Số lượng cửa sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không đủ để giao hàng, vui lòng thử lại sau");
-                                return ResponseEntity.badRequest().body(respone);
+                            } else if (hoaDon.getLoaiHoaDon() == 0 && soLuongUpdate > 0) {
+                                sanPhamChiTiet.setSoLuong(soLuongUpdate);
+                                sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
+                                if (soLuongUpdate >= 0) {
+                                    hoaDonChiTietRepository.deleteByID(6);
+
+                                    List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                                    for (GioHangChiTiet gioHangChiTiet1 : ghct) {
+                                        gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
+                                    }
+                                    sanPhamChiTiet.setTrangThai(false);
+
+                                    TrangThai trangThai = optionalTrangThai.get();
+                                    hoaDon.setTrangThai(trangThai);
+                                    hoaDonRepository.save(hoaDon);
+                                    sanPhamChiTiet.setTrangThai(true);
+
+                                    List<HoaDon> result = findHoaDonByTrangThai(1);
+                                    respone.put("success", result.toString());
+                                    return ResponseEntity.ok().body(respone);
+                                }
+                                sanPhamChiTietRepository.save(sanPhamChiTiet);
+
                             }
-                            sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+                        } else if (soLuongUpdate < 0) {
+                            respone.put("err", "Số lượng cửa sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không đủ để giao hàng, vui lòng thử lại sau");
+                            return ResponseEntity.badRequest().body(respone);
                         }
                     }
                 }
@@ -129,14 +131,32 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Boolean>> capNhatTrangThaiHuyDon(long trang_thai_id, long id_bill, String ghiChu) {
+    public ResponseEntity<Map<String, Boolean>> capNhatTrangThaiHuyDon(long trang_thai_id, long id_bill, String
+            ghiChu) {
         HoaDon hoaDon = hoaDonRepository.findByID(id_bill);
         Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id);
         if (optionalTrangThai.isPresent()) {
             List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
 
             if (hoaDon.getTrangThai().getId() == 3) {
-                if(hoaDon.getLoaiHoaDon() == 0){
+                for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+                    SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+                    sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
+                    sanPhamChiTiet.setTrangThai(true);
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+                    TrangThai trangThai = optionalTrangThai.get();
+                    hoaDon.setTrangThai(trangThai);
+                    hoaDon.setGhiChu(ghiChu);
+                    hoaDonRepository.save(hoaDon);
+                }
+                TrangThai trangThai = optionalTrangThai.get();
+                hoaDon.setTrangThai(trangThai);
+                hoaDon.setGhiChu(ghiChu);
+                hoaDonRepository.save(hoaDon);
+
+            } else if (hoaDon.getTrangThai().getId() == 1) {
+                if (hoaDon.getLoaiHoaDon() == 0) {
                     for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
                         SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
                         sanPhamChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + sanPhamChiTiet.getSoLuong());
@@ -148,13 +168,12 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                         hoaDon.setGhiChu(ghiChu);
                         hoaDonRepository.save(hoaDon);
                     }
-                }else if(hoaDon.getLoaiHoaDon() == 1){
+                } else if (hoaDon.getLoaiHoaDon() == 1) {
                     TrangThai trangThai = optionalTrangThai.get();
                     hoaDon.setTrangThai(trangThai);
                     hoaDon.setGhiChu(ghiChu);
                     hoaDonRepository.save(hoaDon);
                 }
-            } else {
                 TrangThai trangThai = optionalTrangThai.get();
                 hoaDon.setTrangThai(trangThai);
                 hoaDon.setGhiChu(ghiChu);
@@ -166,7 +185,8 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
 
 
     @Override
-    public ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id, long trang_thai_id_sau, String thaoTac, String nguoiThaoTac) {
+    public ResponseEntity<Map<String, Boolean>> capNhatTrangThai_TatCa(long trang_thai_id,
+                                                                       long trang_thai_id_sau, String thaoTac, String nguoiThaoTac) {
         List<HoaDon> list = hoaDonRepository.findHoaDonByTrangThai(trang_thai_id);
         for (HoaDon hoaDon : list) {
             Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id_sau);
@@ -186,7 +206,8 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
     }
 
     @Override
-    public List<HoaDon> capNhatTrangThai_DaChon(HoaDonDTO hoaDonDTO, long trang_thai_id, String thaoTac, String nguoiThaoTac) {
+    public List<HoaDon> capNhatTrangThai_DaChon(HoaDonDTO hoaDonDTO, long trang_thai_id, String thaoTac, String
+            nguoiThaoTac) {
         for (Long id_hoaDon : hoaDonDTO.getId_hoaDon()) {
             HoaDon hoaDon = hoaDonRepository.findByID(id_hoaDon);
             Optional<TrangThai> optionalTrangThai = trangThaiRepository.findById(trang_thai_id);

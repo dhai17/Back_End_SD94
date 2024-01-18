@@ -100,11 +100,10 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
                     respone.put("err", "Sản phẩm đã ngừng kinh doanh");
                     return ResponseEntity.badRequest().body(respone);
                 } else {
-                    if (gioHangChiTiet.getSoLuong() > sanPhamChiTiet.getSoLuongTam()) {
+                    if (gioHangChiTiet.getSoLuong() > sanPhamChiTiet.getSoLuong()) {
                         respone.put("err", "Số lượng của sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không được vượt quá " + sanPhamChiTiet.getSoLuong());
                         return ResponseEntity.badRequest().body(respone);
                     }
-                    System.out.println(gioHangChiTiet);
                     HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
                     hoaDonChiTiet.setSanPhamChiTiet(gioHangChiTiet.getSanPhamChiTiet());
                     hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
