@@ -275,7 +275,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         } else {
             for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
                 SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
-                int soLuongBanDau = sanPhamChiTiet.getSoLuong();
+                int soLuongBanDau = sanPhamChiTiet.getSoLuongTam();
                 int soLuongHoaDon = hoaDonChiTiet.getSoLuong();
                 int soLuongCapNhat = soLuongBanDau - soLuongHoaDon;
                 if (soLuongCapNhat < 0) {
@@ -287,7 +287,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
                 }
 
-                if (sanPhamChiTiet.getSoLuong() == 0) {
+                if (sanPhamChiTiet.getSoLuong() >= 0) {
                     sanPhamChiTiet.setTrangThai(false);
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
                     TrangThai trangThai = trangThaiRepository.findByID(7L);

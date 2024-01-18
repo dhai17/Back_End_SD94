@@ -152,17 +152,12 @@ public class MuaNgayServiceImpl implements MuaNgayService {
     @Override
     public ResponseEntity datHang(HoaDonDTO dto) {
         HoaDon hoaDon = hoaDonRepository.findByID(dto.getId());
-//        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
-//        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
-//            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
-//            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
-//            if (sanPhamChiTiet.getSoLuong() <= 0) {
-//                sanPhamChiTiet.setTrangThai(false);
-//            } else {
-//                sanPhamChiTiet.setTrangThai(true);
-//            }
-//            sanPhamChiTietRepository.save(sanPhamChiTiet);
-//        }
+        List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepository.findByIDBill(hoaDon.getId());
+        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
+            sanPhamChiTiet.setSoLuongTam(sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong());
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+        }
 
         TrangThai trangThai = trangThaiRepository.findByID(1L);
 

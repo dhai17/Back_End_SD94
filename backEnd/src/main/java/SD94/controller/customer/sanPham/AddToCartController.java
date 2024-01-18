@@ -73,7 +73,7 @@ public class AddToCartController {
 
                 if (optionalGioHangChiTiet.isPresent()) {
                     GioHangChiTiet gioHangChiTiet = optionalGioHangChiTiet.get();
-                    int soLuongDuocThemTiep = sanPhamChiTiet.getSoLuong() - gioHangChiTiet.getSoLuong();
+                    int soLuongDuocThemTiep = sanPhamChiTiet.getSoLuongTam() - gioHangChiTiet.getSoLuong();
                     int check = soLuongDuocThemTiep - dto.getSoLuong();
                     if (gioHangChiTiet.getSoLuong() == sanPhamChiTiet.getSoLuong()) {
                         Map<String, String> respone = new HashMap<>();
