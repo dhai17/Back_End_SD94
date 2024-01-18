@@ -114,7 +114,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         HoaDon hoaDon = hoaDonRepository.findByID(dto.getId_hoaDon());
         Optional<HoaDonChiTiet> optionalHDCT = hoaDonChiTietRepository.checkHDCT(hoaDon.getId(), sanPhamChiTiet.getId());
 
-        int soLuongBanDau = sanPhamChiTiet.getSoLuongTam();
+        int soLuongBanDau = sanPhamChiTiet.getSoLuong();
         int soLuongThem = dto.getSoLuong();
         if (soLuongThem > soLuongBanDau) {
             respone.put("err", "Số lượng nhập vào lớn hơn số lượng hiện có");
