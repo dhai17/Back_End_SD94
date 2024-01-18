@@ -78,7 +78,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                         int soLuongSPHoaDon = hoaDonChiTiet.getSoLuong();
                         int soLuongUpdate = soLuong - soLuongSPHoaDon;
                         if (soLuongUpdate >= 0) {
-                            if (hoaDon.getLoaiHoaDon() == 1 && soLuongUpdate >= 0) {
+                            if (hoaDon.getLoaiHoaDon() == 1) {
                                 TrangThai trangThai = optionalTrangThai.get();
                                 hoaDon.setTrangThai(trangThai);
                                 hoaDonRepository.save(hoaDon);
@@ -87,7 +87,7 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                                 List<HoaDon> result = findHoaDonByTrangThai(1);
                                 respone.put("success", result.toString());
                                 return ResponseEntity.ok().body(respone);
-                            } else if (hoaDon.getLoaiHoaDon() == 0 && soLuongUpdate > 0) {
+                            } else if (hoaDon.getLoaiHoaDon() == 0) {
                                 sanPhamChiTiet.setSoLuong(soLuongUpdate);
                                 sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
                                 if (soLuongUpdate >= 0) {
