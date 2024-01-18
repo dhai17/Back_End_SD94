@@ -219,24 +219,6 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         List<GioHangChiTiet> gioHangChiTiets = cartDetailsRepository.findByCartID(gioHang.getId());
         List<HoaDonChiTiet> hoaDonChiTiets = billDetailsRepository.findByIDBill(hoaDon.getId());
 
-        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
-            SanPhamChiTiet spct = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
-            int soLuong = spct.getSoLuong();
-            int soLuongSPHoaDon = hoaDonChiTiet.getSoLuong();
-            int soLuongUpdate = soLuong - soLuongSPHoaDon;
-
-            if (soLuongUpdate < 0) {
-                respone.put("err", "Hiện tại sản phẩm " + spct.getSanPham().getTenSanPham() + " kích cỡ " + spct.getKichCo().getKichCo() + " màu sắc " + spct.getMauSac().getTenMauSac() + " chúng tôi chỉ còn số lượng là " + spct.getSoLuong() + " bạn vui lòng đặt hàng và thanh toán lại!");
-                return ResponseEntity.badRequest().body(respone);
-            } else {
-                for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
-                    SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
-                    sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
-                    sanPhamChiTietRepository.save(sanPhamChiTiet);
-                }
-            }
-        }
-
         TrangThai trangThai = trangThaiRepository.findByID(1L);
         hoaDon.setGhiChu(dto.getGhiChu());
         hoaDon.setTongTienHoaDon(dto.getTongTienHoaDon());
@@ -258,6 +240,26 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         ls.setNgayTao(new Date());
         ls.setThaoTac("Đặt hàng thanh toán khi nhận hàng");
         lsHoaDonRepository.save(ls);
+
+        if(hoaDon.getLoaiHoaDon() == 1){
+            for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+                SanPhamChiTiet spct = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
+                int soLuong = spct.getSoLuong();
+                int soLuongSPHoaDon = hoaDonChiTiet.getSoLuong();
+                int soLuongUpdate = soLuong - soLuongSPHoaDon;
+
+                if (soLuongUpdate < 0) {
+                    respone.put("err", "Hiện tại sản phẩm " + spct.getSanPham().getTenSanPham() + " kích cỡ " + spct.getKichCo().getKichCo() + " màu sắc " + spct.getMauSac().getTenMauSac() + " chúng tôi chỉ còn số lượng là " + spct.getSoLuong() + " bạn vui lòng đặt hàng và thanh toán lại!");
+                    return ResponseEntity.badRequest().body(respone);
+                } else {
+                    for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
+                        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
+                        sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
+                        sanPhamChiTietRepository.save(sanPhamChiTiet);
+                    }
+                }
+            }
+        }
 
         if (hoaDon.getEmailNguoiNhan() != null && !hoaDon.getEmailNguoiNhan().isEmpty()) {
             try {
