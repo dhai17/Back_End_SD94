@@ -172,12 +172,12 @@ public class ChinhSuaHoaDonController {
         HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepository.findById(dto.getId()).get();
 
         SanPhamChiTiet sanPhamChiTiet = dto.getSanPhamChiTiet();
-        int tongSoLuong = sanPhamChiTiet.getSoLuongTam() + hoaDonChiTiet.getSoLuong();
+        int tongSoLuong = sanPhamChiTiet.getSoLuongTam();
         int soLuongUpdate = dto.getSoLuongcapNhat();
         int soLuongDuocThemTiep = (sanPhamChiTiet.getSoLuongTam() + hoaDonChiTiet.getSoLuong()) - hoaDonChiTiet.getSoLuong();
         int thanhTienUpdate = (int) (soLuongUpdate * sanPhamChiTiet.getSanPham().getGia());
         int thanhTienMoiThem = thanhTienUpdate - hoaDonChiTiet.getThanhTien();
-        System.out.println(tongSoLuong);
+
         if (tongSoLuong < soLuongUpdate) {
             respone.put("err", "Bạn đã có " + hoaDonChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
             return ResponseEntity.badRequest().body(respone);
