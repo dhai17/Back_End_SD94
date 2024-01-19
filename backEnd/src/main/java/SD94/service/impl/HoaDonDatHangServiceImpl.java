@@ -77,17 +77,58 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                         int soLuong = sanPhamChiTiet.getSoLuong();
                         int soLuongSPHoaDon = hoaDonChiTiet.getSoLuong();
                         int soLuongUpdate = soLuong - soLuongSPHoaDon;
-                        if (soLuongUpdate >= 0) {
-                            if (hoaDon.getLoaiHoaDon() == 1) {
-                                TrangThai trangThai = optionalTrangThai.get();
-                                hoaDon.setTrangThai(trangThai);
-                                hoaDonRepository.save(hoaDon);
-                                sanPhamChiTiet.setTrangThai(true);
 
-                                List<HoaDon> result = findHoaDonByTrangThai(1);
-                                respone.put("success", result.toString());
-                                return ResponseEntity.ok().body(respone);
-                            } else if (hoaDon.getLoaiHoaDon() == 0) {
+//                        if (soLuongUpdate >= 0) {
+//                            if (hoaDon.getLoaiHoaDon() == 1) {
+//                                TrangThai trangThai = optionalTrangThai.get();
+//                                hoaDon.setTrangThai(trangThai);
+//                                hoaDonRepository.save(hoaDon);
+//                                sanPhamChiTiet.setTrangThai(true);
+//
+//                                List<HoaDon> result = findHoaDonByTrangThai(1);
+//                                respone.put("success", result.toString());
+//                                return ResponseEntity.ok().body(respone);
+//                            } else if (hoaDon.getLoaiHoaDon() == 0) {
+//                                sanPhamChiTiet.setSoLuong(soLuongUpdate);
+//                                sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
+//                                if (soLuongUpdate >= 0) {
+//                                    hoaDonChiTietRepository.deleteByID(6);
+//
+//                                    List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+//                                    for (GioHangChiTiet gioHangChiTiet1 : ghct) {
+//                                        gioHangChiTietRepository.deleteById(gioHangChiTiet1.getId());
+//                                    }
+//                                    sanPhamChiTiet.setTrangThai(false);
+//
+//                                    TrangThai trangThai = optionalTrangThai.get();
+//                                    hoaDon.setTrangThai(trangThai);
+//                                    hoaDonRepository.save(hoaDon);
+//                                    sanPhamChiTiet.setTrangThai(true);
+//
+//                                    List<HoaDon> result = findHoaDonByTrangThai(1);
+//                                    respone.put("success", result.toString());
+//                                    return ResponseEntity.ok().body(respone);
+//                                }
+//                                sanPhamChiTietRepository.save(sanPhamChiTiet);
+//                            }
+//                        } else if (soLuongUpdate < 0) {
+//                            respone.put("err", "Số lượng cửa sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không đủ để giao hàng, vui lòng thử lại sau");
+//                            return ResponseEntity.badRequest().body(respone);
+//                        }
+
+                        if (hoaDon.getLoaiHoaDon() == 1) {
+                            TrangThai trangThai = optionalTrangThai.get();
+                            hoaDon.setTrangThai(trangThai);
+                            hoaDonRepository.save(hoaDon);
+//                            sanPhamChiTiet.setTrangThai(true);
+                            List<HoaDon> result = findHoaDonByTrangThai(1);
+                            respone.put("success", result.toString());
+                            return ResponseEntity.ok().body(respone);
+                        } else if (hoaDon.getLoaiHoaDon() == 0) {
+                            if (soLuongUpdate < 0) {
+                                respone.put("err", "Số lượng cửa sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không đủ để giao hàng, vui lòng thử lại sau");
+                                return ResponseEntity.badRequest().body(respone);
+                            }else {
                                 sanPhamChiTiet.setSoLuong(soLuongUpdate);
                                 sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
                                 if (soLuongUpdate >= 0) {
@@ -110,9 +151,6 @@ public class HoaDonDatHangServiceImpl implements HoaDonDatHangService {
                                 }
                                 sanPhamChiTietRepository.save(sanPhamChiTiet);
                             }
-                        } else if (soLuongUpdate < 0) {
-                            respone.put("err", "Số lượng cửa sản phẩm " + sanPhamChiTiet.getSanPham().getTenSanPham() + " không đủ để giao hàng, vui lòng thử lại sau");
-                            return ResponseEntity.badRequest().body(respone);
                         }
                     }
                 }

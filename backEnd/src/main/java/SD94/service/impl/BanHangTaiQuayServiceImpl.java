@@ -122,7 +122,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         } else {
             if (optionalHDCT.isPresent()) {
                 HoaDonChiTiet hoaDonChiTiet = optionalHDCT.get();
-                int soLuongDuocThemTiep = sanPhamChiTiet.getSoLuongTam() - hoaDonChiTiet.getSoLuong();
+                int soLuongDuocThemTiep = sanPhamChiTiet.getSoLuong() - hoaDonChiTiet.getSoLuong();
                 int check = soLuongDuocThemTiep - dto.getSoLuong();
                 if (hoaDonChiTiet.getSoLuong() == sanPhamChiTiet.getSoLuongTam()) {
                     respone.put("err", "Bạn đã có " + hoaDonChiTiet.getSoLuong() + " sản phẩm này trong giỏ hàng, bạn không thể thêm tiếp vì vượt quá số lượng của sản phẩm");
@@ -275,7 +275,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         } else {
             for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
                 SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
-                int soLuongBanDau = sanPhamChiTiet.getSoLuongTam();
+                int soLuongBanDau = sanPhamChiTiet.getSoLuong();
                 int soLuongHoaDon = hoaDonChiTiet.getSoLuong();
                 int soLuongCapNhat = soLuongBanDau - soLuongHoaDon;
                 if (soLuongCapNhat < 0) {
@@ -287,8 +287,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
                 }
 
-                if (sanPhamChiTiet.getSoLuong() >= 0) {
-                    sanPhamChiTiet.setTrangThai(false);
+                if (sanPhamChiTiet.getSoLuong() > 0) {
                     sanPhamChiTietRepository.save(sanPhamChiTiet);
                     TrangThai trangThai = trangThaiRepository.findByID(7L);
                     hoaDon.setTrangThai(trangThai);
@@ -300,6 +299,23 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                     for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
                         gioHangChiTietRepository.deleteById(gioHangChiTiet.getId());
                     }
+                } else if (sanPhamChiTiet.getSoLuong() == 0) {
+                    sanPhamChiTiet.setTrangThai(false);
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
+                    TrangThai trangThai = trangThaiRepository.findByID(7L);
+                    hoaDon.setTrangThai(trangThai);
+                    hoaDonRepository.save(hoaDon);
+
+                    hoaDonChiTietRepository.deleteByID(6);
+
+                    List<GioHangChiTiet> gioHangChiTiets = gioHangChiTietRepository.findCartBySPCTID(sanPhamChiTiet.getId());
+                    for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
+                        gioHangChiTietRepository.deleteById(gioHangChiTiet.getId());
+                    }
+                } else {
+                    sanPhamChiTiet.setTrangThai(false);
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
                 }
             }
 
@@ -312,6 +328,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
+
     @Transactional
     @Override
     public ResponseEntity<?> xoaHDCT(HoaDonChiTietDTO dto) {

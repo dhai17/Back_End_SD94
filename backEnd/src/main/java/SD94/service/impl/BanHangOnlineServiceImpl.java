@@ -112,7 +112,7 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
                     hoaDonChiTiet.setHoaDon(hoaDon);
                     billDetailsRepository.save(hoaDonChiTiet);
                 }
-            }else {
+            } else {
                 respone.put("err", "Đã có lỗi xảy ra vui lòng thử lại sau");
                 return ResponseEntity.badRequest().body(respone);
             }
@@ -241,24 +241,16 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         ls.setThaoTac("Đặt hàng thanh toán khi nhận hàng");
         lsHoaDonRepository.save(ls);
 
-        if(hoaDon.getLoaiHoaDon() == 1){
+        GioHang hang = gioHangRepository.findbyCustomerID(khachHang.getId());
+        List<GioHangChiTiet> ghct = gioHangChiTietRepository.findCartBySPCTID(hang.getId());
+        for (GioHangChiTiet gioHangChiTiet : ghct) {
             for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
-                SanPhamChiTiet spct = sanPhamChiTietRepository.findByID(hoaDonChiTiet.getSanPhamChiTiet().getId());
-                int soLuong = spct.getSoLuong();
-                int soLuongSPHoaDon = hoaDonChiTiet.getSoLuong();
-                int soLuongUpdate = soLuong - soLuongSPHoaDon;
-
-                if (soLuongUpdate < 0) {
-                    respone.put("err", "Hiện tại sản phẩm " + spct.getSanPham().getTenSanPham() + " kích cỡ " + spct.getKichCo().getKichCo() + " màu sắc " + spct.getMauSac().getTenMauSac() + " chúng tôi chỉ còn số lượng là " + spct.getSoLuong() + " bạn vui lòng đặt hàng và thanh toán lại!");
-                    return ResponseEntity.badRequest().body(respone);
-                } else {
-                    for (GioHangChiTiet gioHangChiTiet : gioHangChiTiets) {
-                        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findByID(gioHangChiTiet.getSanPhamChiTiet().getId());
-                        sanPhamChiTiet.setSoLuongTam(soLuongUpdate);
-                        sanPhamChiTietRepository.save(sanPhamChiTiet);
-                    }
+                if (hoaDonChiTiet.getSanPhamChiTiet().getId() == gioHangChiTiet.getSanPhamChiTiet().getId()) {
+                    System.out.println("done");
+                    gioHangChiTietRepository.deleteById(gioHangChiTiet.getId());
                 }
             }
+
         }
 
         if (hoaDon.getEmailNguoiNhan() != null && !hoaDon.getEmailNguoiNhan().isEmpty()) {
